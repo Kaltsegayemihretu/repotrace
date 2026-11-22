@@ -152,6 +152,65 @@ class LabTests(AppCase):
         self.assertTrue(all(len(l) == 5 for l in graph['links']))
         self.assertTrue(data['questions'])
 
+    def test_reversing_runs_the_same_two_commits_in_the_opposite_direction(self):
+        base = self.commit(CHAIN, message='Start')
+        head = self.commit({'extra.py': 'def brand_new():\n    return 1\n'}, message='Add brand_new')
+        ask = {'repo': str(self.repo), 'base': base, 'head': head}
+        forward = self.lab_job(ask)['view']['data']['reviews'][0]
+        backward = self.lab_job({**ask, 'reverse': True})['view']['data']['reviews'][0]
+        self.assertEqual((forward['reversed'], backward['reversed']), (False, True))
+        self.assertEqual((forward['base_commit'], forward['head_commit']), (base, head))
+        self.assertEqual((backward['base_commit'], backward['head_commit']), (head, base), 'the engine really ran newer to older, after exactly one swap')
+        self.assertEqual(forward['selection'], backward['selection'], 'both remember the pair that was chosen')
+        self.assertEqual([(c['name'], c['change']) for c in forward['changed']], [('brand_new', 'added')])
+        self.assertEqual([(c['name'], c['change']) for c in backward['changed']], [('brand_new', 'deleted')], 'what was added going forward is removed going back')
+        self.assertEqual((forward['label'], backward['label']), ('Add brand_new', 'Add brand_new'), 'the title names the change being undone')
+        again = self.lab_job({'repo': str(self.repo), **backward['selection'], 'reverse': not backward['reversed']})['view']['data']['reviews'][0]
+        self.assertEqual((again['base_commit'], again['head_commit'], again['reversed']), (base, head, False), 'the review button flips once, never twice')
+        self.assertEqual(self.git('rev-parse', 'HEAD'), head, 'reversing only turns the analysis around; the repository is untouched')
+        self.assertEqual(self.git('status', '--porcelain'), '')
+
+    def test_the_direction_is_applied_in_exactly_one_place(self):
+        self.assertEqual(app.lab_direction('older', 'newer', False), ('older', 'newer', False))
+        self.assertEqual(app.lab_direction('older', 'newer', True), ('newer', 'older', True))
+        self.assertEqual(app.lab_direction('', '', True), ('', '', False), 'there is nothing to reverse without a comparison')
+
+    def test_the_steps_are_reported_once_and_in_the_order_the_page_shows_them(self):
+        base, head = self.two_commits()
+        job = self.lab_job({'repo': str(self.repo), 'base': base, 'head': head})
+        order = ['check', 'map', 'analyze_before', 'analyze_after', 'compare', 'impact', 'finish']
+        self.assertEqual([s for s in order if s in job['seen']], job['seen'], 'no step repeated, none out of order')
+        self.assertIn('map', job['seen'])
+        self.assertEqual(list(job['marks'].values()), sorted(job['marks'].values()), 'the clock only moves forward')
+        explore = Path(self._tmp.name) / 'plain2'
+        explore.mkdir()
+        (explore / 'a.py').write_text('def f():\n    return 1\n')
+        self.assertEqual(self.lab_job({'repo': str(explore)})['seen'], ['check', 'map', 'finish'])
+
+    def test_a_running_job_can_be_cancelled_and_says_so(self):
+        job = app.Job({'kind': 'lab'})
+        self.state.jobs[job.id] = job
+        started = threading.Event()
+
+        def work():
+            try:
+                for step in range(300):
+                    job.update('map', str(step))
+                    started.set()
+                    time.sleep(0.02)
+                with job.lock:
+                    job.state = 'done'
+            except app.Cancelled:
+                with job.lock:
+                    job.state = 'cancelled'
+        threading.Thread(target=work, daemon=True).start()
+        self.assertTrue(started.wait(5))
+        status, data, _ = self.call('POST', '/api/cancel', {'job': job.id})
+        self.assertEqual((status, data), (200, {'ok': True}))
+        self.assertEqual(self.wait_for_job(job.id, 10)['state'], 'cancelled')
+        self.assertEqual(self.call('POST', '/api/cancel', {'job': 'unknown'})[1], {'ok': False})
+        self.assertEqual(self.call('POST', '/api/cancel', {'job': job.id}, token=False)[0], 401)
+
     def test_exploring_needs_no_second_version_and_no_git(self):
         plain = Path(self._tmp.name) / 'plain'
         plain.mkdir()

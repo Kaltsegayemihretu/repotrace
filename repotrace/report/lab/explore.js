@@ -178,6 +178,16 @@ function reviewStyle(v) {
   if (a) return {ring: '#ffd75e', w: a.dist === 1 ? 2.6 : 1.6, tag: a.dist === 1 ? 'uses it' : 'indirect'};
   return null;
 }
+function themeInk() {
+  const light = document.documentElement.style.colorScheme === 'light';
+  const contrast = false;
+  return {
+    text: contrast ? '#ffffff' : light ? '#172033' : '#e8ecf2',
+    plate: contrast ? 'rgba(0,0,0,.92)' : light ? 'rgba(255,255,255,.92)' : 'rgba(14,17,22,.8)',
+    hole: light ? '#ffffff' : '#0e1116',
+    holeInk: contrast ? '#ffffff' : light ? '#172033' : '#e8ecf2',
+  };
+}
 function draw() {
   const w = W(), hgt = H();
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -212,12 +222,12 @@ function draw() {
     ctx.beginPath();
     if (n.k === 'class') ctx.rect(s.x - r, s.y - r, r * 2, r * 2); else ctx.arc(s.x, s.y, r, 0, 6.283);
     if (n.gone) { ctx.setLineDash([4, 3]); ctx.lineWidth = 2; ctx.strokeStyle = col; ctx.stroke(); ctx.setLineDash([]); }
-    else if (isT) { ctx.fillStyle = '#0e1116'; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = col; ctx.stroke(); }
+    else if (isT) { const ink = themeInk(); ctx.fillStyle = ink.hole; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = col; ctx.stroke(); }
     else { ctx.fillStyle = col; ctx.fill(); }
     if (rv) { ctx.beginPath(); ctx.arc(s.x, s.y, r + 5, 0, 6.283); ctx.lineWidth = rv.w; ctx.strokeStyle = rv.ring; ctx.stroke(); }
     const sel = S.mode === 'review' ? S.rfocus && rep(S.rfocus[0]) === v : S.selected === v;
     if (sel) { ctx.beginPath(); ctx.arc(s.x, s.y, r + 9, 0, 6.283); ctx.lineWidth = 2; ctx.strokeStyle = '#ffd75e'; ctx.globalAlpha = 1; ctx.stroke(); }
-    if (n.k === 'dir') { ctx.fillStyle = isT ? '#e8ecf2' : '#0b1020'; ctx.globalAlpha = alpha * 0.9; ctx.font = '600 ' + Math.max(10, r * 0.7) + 'px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(kids[v].length), s.x, s.y + 0.5); }
+    if (n.k === 'dir') { const ink = themeInk(); ctx.fillStyle = isT ? ink.holeInk : (ink.hole === '#ffffff' ? '#172033' : '#0b1020'); ctx.globalAlpha = alpha * 0.9; ctx.font = '600 ' + Math.max(10, r * 0.7) + 'px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(kids[v].length), s.x, s.y + 0.5); }
     drawn.push({v, s, r, rv, sel});
   }
   const placed = [], prio = d => (d.sel ? 0 : fs && fs.strong.has(d.v) ? 1 : fs && fs.soft.has(d.v) ? 2 : d.rv ? 2 : N[d.v].k === 'dir' ? 3 : N[d.v].k === 'file' ? 4 : 5);
@@ -232,8 +242,9 @@ function draw() {
     if (p > 1 && placed.some(b => !(box.x1 < b.x0 || box.x0 > b.x1 || box.y1 < b.y0 || box.y0 > b.y1))) continue;
     placed.push(box);
     ctx.globalAlpha = inFocus(d.v) ? 1 : d.rv ? 0.6 : 0.25;
-    ctx.fillStyle = 'rgba(14,17,22,.8)'; ctx.fillRect(box.x0, box.y0, box.x1 - box.x0, box.y1 - box.y0);
-    ctx.fillStyle = '#e8ecf2'; ctx.fillText(text, x, y);
+    const ink = themeInk();
+    ctx.fillStyle = ink.plate; ctx.fillRect(box.x0, box.y0, box.x1 - box.x0, box.y1 - box.y0);
+    ctx.fillStyle = ink.text; ctx.fillText(text, x, y);
     if (tag) { ctx.font = '650 11px system-ui'; ctx.fillStyle = d.rv ? d.rv.ring : '#c08cff'; ctx.fillText(tag, x, y + 14); }
   }
   ctx.globalAlpha = 1;
@@ -660,6 +671,21 @@ function paintReview() {
 
 /* ------------------------------------------------------------ command palette */
 const P = {items: [], i: 0};
+const FIND_KEY = 'repotrace-find-history';
+const REVIEW_TABS = [['overview', 'What to check'], ['changes', 'Changed code'], ['tests', 'Related tests'], ['limits', 'Limits and history'], ['recommendations', 'Recommendations']];
+function findHistory() {
+  try {
+    const value = JSON.parse(localStorage.getItem(FIND_KEY) || '[]');
+    return Array.isArray(value) ? value.filter(item => typeof item === 'string' && item.trim()).slice(0, 8) : [];
+  } catch (e) { return []; }
+}
+function rememberFind(text) {
+  const typed = String(text || '').trim();
+  if (!typed) return;
+  const next = [typed].concat(findHistory().filter(item => item.toLowerCase() !== typed.toLowerCase())).slice(0, 8);
+  try { localStorage.setItem(FIND_KEY, JSON.stringify(next)); } catch (e) {}
+}
+function clearFind() { try { localStorage.removeItem(FIND_KEY); } catch (e) {} paintPalette(); }
 function openPalette() { $('#palette').hidden = false; $('#pin').value = ''; $('#pin').focus(); paintPalette(); }
 function closePalette() { $('#palette').hidden = true; }
 function paintPalette() {
@@ -668,22 +694,43 @@ function paintPalette() {
   if (!q) D.questions.forEach(x => items.push({type: 'ask', q: x, label: x, sub: 'Ask'}));
   else {
     const ask = q.split(/\s+/).length >= 2 || q.endsWith('?');
-    if (ask) items.push({type: 'ask', q, label: q, sub: 'Ask the code'});
+    if (ask) items.push({type: 'ask', q, label: q, sub: 'Word search'});
     M.filter(n => n.k !== 'dir' && (n.q.toLowerCase().includes(ql) || n.file.toLowerCase().includes(ql)))
       .map(n => ({n, r: n.n.toLowerCase() === ql ? 0 : n.n.toLowerCase().startsWith(ql) ? 1 : n.q.toLowerCase().includes(ql) ? 2 : 3})).sort((a, b) => a.r - b.r || a.n.q.length - b.n.q.length).slice(0, 8)
       .forEach(({n}) => items.push({type: 'go', id: n.i, label: n.k === 'fn' ? n.q + '()' : n.k === 'file' ? n.n : n.q, sub: (n.k === 'fn' ? 'function' : n.k) + ' · ' + n.file}));
-    if (!ask) items.push({type: 'ask', q, label: q, sub: 'Ask the code'});
+    if (!ask) items.push({type: 'ask', q, label: q, sub: 'Word search'});
   }
-  P.items = items; P.i = 0;
+  const shown = S.review || (D.reviews || [])[0];
+  if (shown) {
+    REVIEW_TABS.forEach(([tab, label]) => {
+      if (!q || label.toLowerCase().includes(ql) || tab.includes(ql)) items.push({type: 'review', tab, label, sub: 'Review section'});
+    });
+    if (q.length >= 2) (shown.recommendations || []).forEach(rec => {
+      const text = ((rec.recommendation || '') + ' ' + ((rec.evidence && rec.evidence.summary) || '')).toLowerCase();
+      if (text.includes(ql)) items.push({type: 'review', tab: 'recommendations', label: rec.recommendation, sub: 'Recommendation'});
+    });
+  }
+  if (!q) findHistory().forEach(text => items.push({type: 'recent', q: text, label: text, sub: 'Recent search'}));
+  P.items = items.slice(0, 24); P.i = 0;
   const box = $('#pres'); box.replaceChildren();
   let lastType = null;
-  items.forEach((it, k) => {
-    if (it.type !== lastType) { box.append(h('div', {class: 'grp'}, it.type === 'ask' ? (q ? 'Ask' : 'Try asking') : 'Go to')); lastType = it.type; }
-    box.append(h('button', {role: 'option', 'aria-selected': String(k === P.i), onclick: () => choose(it), onmousemove: () => { P.i = k; mark(); }}, h('span', null, it.type === 'ask' ? '? ' : '', it.label), h('span', {class: 'k2'}, it.sub)));
+  const groupName = type => type === 'ask' ? (q ? 'Ask' : 'Try asking') : type === 'recent' ? 'Recent searches' : type === 'review' ? 'Review' : 'Go to';
+  P.items.forEach((it, k) => {
+    if (it.type !== lastType) { box.append(h('div', {class: 'grp'}, groupName(it.type))); lastType = it.type; }
+    box.append(h('button', {role: 'option', 'aria-selected': String(k === P.i), onclick: () => choose(it), onmousemove: () => { P.i = k; mark(); }}, h('span', {class: 'plabel'}, it.type === 'ask' || it.type === 'recent' ? '? ' : '', it.label), h('span', {class: 'k2'}, it.sub)));
   });
+  if (!q && findHistory().length) box.append(h('button', {type: 'button', class: 'clear-find', onclick: event => { event.preventDefault(); clearFind(); }}, 'Clear recent searches'));
 }
-const mark = () => [...$('#pres').querySelectorAll('button')].forEach((b, k) => b.setAttribute('aria-selected', String(k === P.i)));
-function choose(it) { closePalette(); if (it.type === 'ask') return runAsk(it.q); if (S.mode !== 'explore') enterExplore(false); S.ask = null; goTo(it.id); }
+const mark = () => [...$('#pres').querySelectorAll('[role=option]')].forEach((b, k) => b.setAttribute('aria-selected', String(k === P.i)));
+function choose(it) {
+  const typed = $('#pin').value.trim();
+  if (typed) rememberFind(typed);
+  else if (it.type === 'ask' || it.type === 'recent') rememberFind(it.q);
+  closePalette();
+  if (it.type === 'review') { emit({rt: 'open-review', tab: it.tab, index: S.review ? Math.max(0, D.reviews.indexOf(S.review)) : 0}); return; }
+  if (it.type === 'ask' || it.type === 'recent') return runAsk(it.q);
+  if (S.mode !== 'explore') enterExplore(false); S.ask = null; goTo(it.id);
+}
 $('#cmd').onclick = openPalette;
 $('#palette').addEventListener('mousedown', e => { if (e.target.id === 'palette') closePalette(); });
 $('#pin').addEventListener('input', paintPalette);
@@ -730,6 +777,7 @@ window.__xp = {S, D, get N() { return N; }, get G() { return G; }, get GK() { re
 window.__xpHandle = m => {
   if (m.rt === 'palette') openPalette();
   else if (m.rt === 'navigate') navigateTo(m);
+  else if (m.rt === 'theme') redraw = true;          // the colours changed: paint the canvas again
 };
 // The app brings this page back to the front. Same place as before: change nothing. Otherwise go where it asks.
 function navigateTo(m) {

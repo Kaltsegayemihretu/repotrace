@@ -27,6 +27,7 @@ from repotrace.graph.graph_explore import Explorer, is_test_file
 from repotrace.graph.graph_index import GraphIndex
 from repotrace.graph.structure import build_structure
 from repotrace.report.overview import build_overview
+from repotrace.report.recommendations import build_recommendations
 
 CODE_LINES, CODE_CHARS = 30, 1600
 SNIPPET_CONTEXT = 2
@@ -478,7 +479,25 @@ def build_review(report, view, reports, repo=None, name='project'):
               'concerns': concerns[:14], 'candidates': candidates[:10], 'affected': affected, 'tests': tests, 'removed_tests': removed_tests, 'history': hints,
               'test_plan': {k: v for k, v in plan.items() if k != 'tests'},
               'history_window': window, 'gaps': [g for g in gaps if g]}
+    review['unresolved'] = _unresolved_calls(nodes, changed)
+    review['recommendations'] = build_recommendations(review)
     return review, after_graph
+
+
+def _unresolved_calls(nodes, changed):
+    """Calls the analyzer could not trace inside changed definitions that still exist."""
+    out = []
+    for change in changed:
+        node = change.get('node')
+        if not isinstance(node, int) or isinstance(node, bool) or node < 0 or node >= len(nodes):
+            continue
+        info = nodes[node]
+        if info.get('gone'):
+            continue
+        count = info.get('unres') or 0
+        if count:
+            out.append({'name': change['name'], 'file': change['file'], 'count': int(count), 'node': node})
+    return out
 
 
 def _merge_tests(report, nodes, after_by_id, node_of_change, by_file_name, after_src):

@@ -41,7 +41,8 @@ MAX_BODY = 64 * 1024
 MAX_JOBS = 12
 TEMPLATE = Path(__file__).resolve().parent.parent / 'report' / 'dashboard_template.html'
 LAB_DIR = Path(__file__).resolve().parent.parent / 'report' / 'lab'
-LAB_FILES = {'app.js': 'application/javascript', 'model.js': 'application/javascript', 'picker.js': 'application/javascript', 'style.css': 'text/css',
+LAB_FILES = {'app.js': 'application/javascript', 'model.js': 'application/javascript', 'picker.js': 'application/javascript',
+             'theme.js': 'application/javascript', 'style.css': 'text/css',
              'explore.html': 'text/html', 'explore.js': 'application/javascript', 'explore.css': 'text/css', 'icon.svg': 'image/svg+xml'}
 LAB_CSP = ("default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; frame-src 'self'; "
            "base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
@@ -196,12 +197,28 @@ def browse_for_folder():
 
 # ------------------------------------------------------------------ jobs
 
+class Cancelled(Exception):
+    """The person stopped the job. Raised from the progress callback, so the work unwinds at its next step."""
+
+
+def lab_direction(base, head, reverse):
+    """The one place a reversal is applied: (analysis_base, analysis_head, reversed).
+
+    The analysis always runs base -> head. Reversing swaps the two commits once, here, and nowhere else,
+    so asking again with the same pair and the opposite answer always gives the opposite direction.
+    Only the analysis is turned around; the repository is never touched."""
+    reverse = bool(reverse) and bool(base) and bool(head)
+    return (head, base, True) if reverse else (base, head, False)
+
+
 class Job:
     def __init__(self, params):
         self.id = uuid.uuid4().hex[:12]
         self.params = params
         self.state, self.stage, self.detail = 'running', 'check', ''
         self.seen = ['check']
+        self.marks = {'check': 0.0}    # seconds after the start at which each step began
+        self.cancelled = threading.Event()
         self.error = self.view = None
         self.explorers = {}
         self.snapshot = None           # a map keeps the source it was made from: {file: (text, sha256)}
@@ -209,10 +226,13 @@ class Job:
         self.lock = threading.Lock()
 
     def update(self, stage, detail=''):
+        if self.cancelled.is_set():
+            raise Cancelled()
         with self.lock:
             self.stage, self.detail = stage, detail
             if stage not in self.seen:
                 self.seen.append(stage)
+                self.marks[stage] = round(time.time() - self.created, 1)
 
     def run_map(self):
         """Map the folder as it is on disk: no Git history and no second version needed."""
@@ -248,7 +268,7 @@ class Job:
         roots = p['source_roots'] or None
         if roots is None and not pytest_source_roots(folder)[0]:      # pytest's own declared paths win; else suggest src/ or the top folder
             roots = suggest_roots(python_files_on_disk(folder))['roots']
-        self.update('analyze_after', 'Reading every file and linking the calls')
+        self.update('map', 'Reading every file and linking the calls')
         report = analyze_repository(folder, source_roots=roots)
         if not report.get('files') or report['status'] == 'error':
             raise ValueError(no_map_message(folder, report, roots or ['.']))
@@ -261,13 +281,29 @@ class Job:
         reviews, graphs = [], {}
         if p.get('base') and p.get('head'):
             keep = {}
-            change = analyze_change_impact(folder, p['base'], p['head'], source_roots=roots, include_possible=True, progress=self.update, keep=keep)
+
+            def tell(stage, detail):
+                if stage == 'check':       # the engine repeats its own check; the page is already past that step
+                    return
+                self.update(stage, detail)
+
+            change = analyze_change_impact(folder, p['base'], p['head'], source_roots=roots, include_possible=True, progress=tell, keep=keep)
             self.update('finish', 'Preparing the screens')
             view = build_view(change, str(folder))
             review, graph = lab_data.build_review(change, view, keep['reports'], str(folder), folder.name)
+            reverse = bool(p.get('reverse'))
+            # `selection` is the pair the person chose, before any reversal: asking for it again with the opposite answer flips the direction.
+            review['reversed'] = reverse
+            review['selection'] = ({'base': review['head_commit'], 'head': review['base_commit']} if reverse
+                                   else {'base': review['base_commit'], 'head': review['head_commit']})
+            if reverse:                    # the title names the change being undone: the newer version, which is the analysis' starting point
+                review['label'] = (view['base'].get('subject') or '').strip() or review['label']
             reviews, graphs = [review], {review['graph']: graph}
+        else:
+            self.update('finish', 'Preparing the screens')
         data = lab_data.payload(folder.name, main_graph, reviews, graphs)
         data['project']['mode'] = 'live'
+        data['project']['repo'] = str(folder)
         with self.lock:
             self.view, self.explorers, self.snapshot, self.state = {'kind': 'lab', 'data': data}, {}, {}, 'done'
 
@@ -289,6 +325,9 @@ class Job:
                 if 'indexes' in keep else {}
             with self.lock:
                 self.view, self.explorers, self.state = view, explorers, 'done'
+        except Cancelled:
+            with self.lock:
+                self.state = 'cancelled'
         except GitError as exc:
             with self.lock:
                 self.error, self.state = {'message': friendly(exc), 'kind': 'input'}, 'error'
@@ -305,7 +344,7 @@ class Job:
     def public(self, with_view=False):
         with self.lock:
             out = {'id': self.id, 'state': self.state, 'stage': self.stage, 'detail': self.detail,
-                   'seen': list(self.seen), 'error': self.error, 'seconds': round(time.time() - self.created, 1)}
+                   'seen': list(self.seen), 'marks': dict(self.marks), 'error': self.error, 'seconds': round(time.time() - self.created, 1)}
             if with_view and self.state == 'done':
                 out['view'] = self.view
             return out
@@ -559,11 +598,17 @@ def make_server(host='127.0.0.1', port=0, **kwargs):
                     base, head = str(data.get('base') or '').strip(), str(data.get('head') or '').strip()
                     if bool(base) != bool(head):
                         raise ValueError('Choose both versions to compare, or neither.')
+                    base, head, reverse = lab_direction(base, head, data.get('reverse'))
                     roots = [str(r) for r in (data.get('source_roots') or []) if isinstance(r, str)]
                     if not state.is_temporary(str(folder)):
                         state.remember(str(folder), folder.name)
-                    job = state.start({'kind': 'lab', 'repo': str(folder), 'base': base, 'head': head, 'source_roots': roots, 'include_possible': True})
+                    job = state.start({'kind': 'lab', 'repo': str(folder), 'base': base, 'head': head, 'source_roots': roots, 'include_possible': True, 'reverse': reverse})
                     self.json(200, {'job': job.id})
+                elif path == '/api/cancel':
+                    job = state.jobs.get(str(data.get('job') or ''))
+                    if job:
+                        job.cancelled.set()
+                    self.json(200, {'ok': bool(job)})
                 elif path == '/api/example':
                     example = next((e for e in examples.catalog() if e['id'] == data.get('id')), None)
                     comparison = next((c for c in (example or {}).get('comparisons', []) if c['id'] == data.get('comparison')), None)
