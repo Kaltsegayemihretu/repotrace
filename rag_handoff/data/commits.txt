@@ -1,0 +1,7 @@
+7e2496f59a4968f96ecc16a61123c80f310c7264 7e2496f 2026-11-09 Step 07: rename read_course_by_id to fetch_course_by_id (one caller forgotten)
+f33909e2a086ec9cdbb4a006a2c6d65fbe6ad418 f33909e 2026-11-09 Step 06: add count_records to the parent BaseRepository
+38f18eb2eea0d7ab985ddfefbd03173df8379eab 38f18eb 2026-11-09 Step 05: add a phone field to Student and update where it is used
+e7723bb564c175b7c45b0031faa0870774ae6716 e7723bb 2026-11-09 Step 04: change MAXIMUM_SEATS from 100 to 50
+71ea796b05c974b21fd0960e80f188f341c7978f 71ea796 2026-11-09 Step 03: change only comments and blank lines in student_service.py
+d71834833eb12a709c2143afe3ba9e36c9ca6fdd d718348 2026-11-09 Step 02: rewrite is_valid_email body (same behaviour, different code)
+c4e508a7f18ba89a515d0dd30adf9075d16c1254 c4e508a 2026-11-09 Step 01: add the full starting Student Management System

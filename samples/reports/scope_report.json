@@ -1,0 +1,370 @@
+{
+  "schema_version": "0.3",
+  "status": "ok",
+  "file": "scope_example.py",
+  "analyzer_python": "3.9.6",
+  "diagnostics": [],
+  "symbols": [
+    {
+      "id": "scope_example.py::save@4:0",
+      "name": "save",
+      "qualified_name": "save",
+      "kind": "FUNCTION",
+      "is_async": false,
+      "parent_id": "scope_example.py::module",
+      "file": "scope_example.py",
+      "span": {
+        "line": 4,
+        "column": 0,
+        "end_line": 5,
+        "end_column": 8
+      },
+      "start_line_including_decorators": 4,
+      "docstring": null,
+      "decorators": [],
+      "source": "def save():\n    pass",
+      "syntax_sha256": "d073327f4fe9c5d22c08099959f2065afbb3d82c61ca87dd2c1d3ac7fb672a48",
+      "parameters": [],
+      "return_annotation": null,
+      "type_comment": null,
+      "type_parameters": []
+    },
+    {
+      "id": "scope_example.py::first@8:0",
+      "name": "first",
+      "qualified_name": "first",
+      "kind": "FUNCTION",
+      "is_async": false,
+      "parent_id": "scope_example.py::module",
+      "file": "scope_example.py",
+      "span": {
+        "line": 8,
+        "column": 0,
+        "end_line": 9,
+        "end_column": 10
+      },
+      "start_line_including_decorators": 8,
+      "docstring": null,
+      "decorators": [],
+      "source": "def first():\n    save()  # Connects to the module's save function.",
+      "syntax_sha256": "327204f31978aba5b8dae6dd4bf6b142daa5214d49dcebf48971139408732d43",
+      "parameters": [],
+      "return_annotation": null,
+      "type_comment": null,
+      "type_parameters": []
+    },
+    {
+      "id": "scope_example.py::second@12:0",
+      "name": "second",
+      "qualified_name": "second",
+      "kind": "FUNCTION",
+      "is_async": false,
+      "parent_id": "scope_example.py::module",
+      "file": "scope_example.py",
+      "span": {
+        "line": 12,
+        "column": 0,
+        "end_line": 13,
+        "end_column": 10
+      },
+      "start_line_including_decorators": 12,
+      "docstring": null,
+      "decorators": [],
+      "source": "def second(save):\n    save()  # Unknown: save is supplied by whoever calls second.",
+      "syntax_sha256": "baa95a4ef06a73a463e691c6249dd26b9e82f334c0e622e0c1b11f09e13afdc3",
+      "parameters": [
+        {
+          "name": "save",
+          "kind": "POSITIONAL_OR_KEYWORD",
+          "annotation": null,
+          "default": null,
+          "required": true
+        }
+      ],
+      "return_annotation": null,
+      "type_comment": null,
+      "type_parameters": []
+    },
+    {
+      "id": "scope_example.py::outer@16:0",
+      "name": "outer",
+      "qualified_name": "outer",
+      "kind": "FUNCTION",
+      "is_async": false,
+      "parent_id": "scope_example.py::module",
+      "file": "scope_example.py",
+      "span": {
+        "line": 16,
+        "column": 0,
+        "end_line": 23,
+        "end_column": 11
+      },
+      "start_line_including_decorators": 16,
+      "docstring": null,
+      "decorators": [],
+      "source": "def outer():\n    def helper():\n        pass\n\n    def inner():\n        helper()  # Connects to outer.helper.\n\n    inner()  # Connects to outer.inner.",
+      "syntax_sha256": "4c9ef9dc641fb5a6994f85cb419f81698cb4c564a7caef127f6638f36fc0dcf3",
+      "parameters": [],
+      "return_annotation": null,
+      "type_comment": null,
+      "type_parameters": []
+    },
+    {
+      "id": "scope_example.py::outer.helper@17:4",
+      "name": "helper",
+      "qualified_name": "outer.helper",
+      "kind": "NESTED_FUNCTION",
+      "is_async": false,
+      "parent_id": "scope_example.py::outer@16:0",
+      "file": "scope_example.py",
+      "span": {
+        "line": 17,
+        "column": 4,
+        "end_line": 18,
+        "end_column": 12
+      },
+      "start_line_including_decorators": 17,
+      "docstring": null,
+      "decorators": [],
+      "source": "    def helper():\n        pass",
+      "syntax_sha256": "864a31277fa7a697ffa36a26c7b30bb589f49051002c20c5b0770f33e5bb8842",
+      "parameters": [],
+      "return_annotation": null,
+      "type_comment": null,
+      "type_parameters": []
+    },
+    {
+      "id": "scope_example.py::outer.inner@20:4",
+      "name": "inner",
+      "qualified_name": "outer.inner",
+      "kind": "NESTED_FUNCTION",
+      "is_async": false,
+      "parent_id": "scope_example.py::outer@16:0",
+      "file": "scope_example.py",
+      "span": {
+        "line": 20,
+        "column": 4,
+        "end_line": 21,
+        "end_column": 16
+      },
+      "start_line_including_decorators": 20,
+      "docstring": null,
+      "decorators": [],
+      "source": "    def inner():\n        helper()  # Connects to outer.helper.",
+      "syntax_sha256": "4d332b348190ed93bf41dfc9ce5bd232b66bd9453d9ff27e6bc54a8f3e53f8eb",
+      "parameters": [],
+      "return_annotation": null,
+      "type_comment": null,
+      "type_parameters": []
+    }
+  ],
+  "imports": [],
+  "calls": [
+    {
+      "id": "scope_example.py::call@9:4:9:10",
+      "enclosing_symbol_id": "scope_example.py::first@8:0",
+      "context": "FUNCTION_BODY",
+      "file": "scope_example.py",
+      "span": {
+        "line": 9,
+        "column": 4,
+        "end_line": 9,
+        "end_column": 10
+      },
+      "expression": "save",
+      "arguments": [],
+      "keywords": [],
+      "target_id": "scope_example.py::save@4:0",
+      "resolution": "LIKELY",
+      "reason": "'save' resolves to one undecorated function in its visible scope."
+    },
+    {
+      "id": "scope_example.py::call@13:4:13:10",
+      "enclosing_symbol_id": "scope_example.py::second@12:0",
+      "context": "FUNCTION_BODY",
+      "file": "scope_example.py",
+      "span": {
+        "line": 13,
+        "column": 4,
+        "end_line": 13,
+        "end_column": 10
+      },
+      "expression": "save",
+      "arguments": [],
+      "keywords": [],
+      "target_id": null,
+      "resolution": "UNRESOLVED",
+      "reason": "'save' refers to a parameter; its callable target is unknown."
+    },
+    {
+      "id": "scope_example.py::call@21:8:21:16",
+      "enclosing_symbol_id": "scope_example.py::outer.inner@20:4",
+      "context": "FUNCTION_BODY",
+      "file": "scope_example.py",
+      "span": {
+        "line": 21,
+        "column": 8,
+        "end_line": 21,
+        "end_column": 16
+      },
+      "expression": "helper",
+      "arguments": [],
+      "keywords": [],
+      "target_id": "scope_example.py::outer.helper@17:4",
+      "resolution": "LIKELY",
+      "reason": "'helper' resolves to one undecorated function in its visible scope."
+    },
+    {
+      "id": "scope_example.py::call@23:4:23:11",
+      "enclosing_symbol_id": "scope_example.py::outer@16:0",
+      "context": "FUNCTION_BODY",
+      "file": "scope_example.py",
+      "span": {
+        "line": 23,
+        "column": 4,
+        "end_line": 23,
+        "end_column": 11
+      },
+      "expression": "inner",
+      "arguments": [],
+      "keywords": [],
+      "target_id": "scope_example.py::outer.inner@20:4",
+      "resolution": "LIKELY",
+      "reason": "'inner' resolves to one undecorated function in its visible scope."
+    }
+  ],
+  "edges": [
+    {
+      "kind": "CONTAINS",
+      "source": "scope_example.py::module",
+      "target": "scope_example.py::save@4:0",
+      "evidence": {
+        "line": 4,
+        "column": 0,
+        "end_line": 5,
+        "end_column": 8
+      }
+    },
+    {
+      "kind": "CONTAINS",
+      "source": "scope_example.py::module",
+      "target": "scope_example.py::first@8:0",
+      "evidence": {
+        "line": 8,
+        "column": 0,
+        "end_line": 9,
+        "end_column": 10
+      }
+    },
+    {
+      "kind": "CONTAINS",
+      "source": "scope_example.py::module",
+      "target": "scope_example.py::second@12:0",
+      "evidence": {
+        "line": 12,
+        "column": 0,
+        "end_line": 13,
+        "end_column": 10
+      }
+    },
+    {
+      "kind": "CONTAINS",
+      "source": "scope_example.py::module",
+      "target": "scope_example.py::outer@16:0",
+      "evidence": {
+        "line": 16,
+        "column": 0,
+        "end_line": 23,
+        "end_column": 11
+      }
+    },
+    {
+      "kind": "CONTAINS",
+      "source": "scope_example.py::outer@16:0",
+      "target": "scope_example.py::outer.helper@17:4",
+      "evidence": {
+        "line": 17,
+        "column": 4,
+        "end_line": 18,
+        "end_column": 12
+      }
+    },
+    {
+      "kind": "CONTAINS",
+      "source": "scope_example.py::outer@16:0",
+      "target": "scope_example.py::outer.inner@20:4",
+      "evidence": {
+        "line": 20,
+        "column": 4,
+        "end_line": 21,
+        "end_column": 16
+      }
+    },
+    {
+      "kind": "CALLS",
+      "source": "scope_example.py::first@8:0",
+      "target": "scope_example.py::save@4:0",
+      "call_id": "scope_example.py::call@9:4:9:10",
+      "resolution": "LIKELY",
+      "evidence": {
+        "file": "scope_example.py",
+        "line": 9,
+        "column": 4,
+        "end_line": 9,
+        "end_column": 10
+      },
+      "reason": "'save' resolves to one undecorated function in its visible scope."
+    },
+    {
+      "kind": "CALLS",
+      "source": "scope_example.py::outer.inner@20:4",
+      "target": "scope_example.py::outer.helper@17:4",
+      "call_id": "scope_example.py::call@21:8:21:16",
+      "resolution": "LIKELY",
+      "evidence": {
+        "file": "scope_example.py",
+        "line": 21,
+        "column": 8,
+        "end_line": 21,
+        "end_column": 16
+      },
+      "reason": "'helper' resolves to one undecorated function in its visible scope."
+    },
+    {
+      "kind": "CALLS",
+      "source": "scope_example.py::outer@16:0",
+      "target": "scope_example.py::outer.inner@20:4",
+      "call_id": "scope_example.py::call@23:4:23:11",
+      "resolution": "LIKELY",
+      "evidence": {
+        "file": "scope_example.py",
+        "line": 23,
+        "column": 4,
+        "end_line": 23,
+        "end_column": 11
+      },
+      "reason": "'inner' resolves to one undecorated function in its visible scope."
+    }
+  ],
+  "limitations": [
+    "Bare calls in functions and lambdas use lexical scope lookup and are linked as LIKELY.",
+    "Reassignments and conditional definitions remain ambiguous; full execution order is not modeled.",
+    "Dynamic namespace mutation and external monkey-patching are not modeled; impact analysis is pending.",
+    "IDs are snapshot-local; repository identity and revision matching come later.",
+    "Calls inside branches and comprehensions are potential call sites, not execution guarantees.",
+    "Comprehension calls, generic type scopes and annotation evaluation are not resolved yet.",
+    "Python syntax support depends on the interpreter running this analyzer."
+  ],
+  "encoding": "utf-8",
+  "size_bytes": 398,
+  "content_sha256": "b52c1ae271fb3a30713f1c66c652db6efacafecbd28e2e4d17059e23bc95bfc5",
+  "source": "\"\"\"The same name can mean different things in different functions.\"\"\"\n\n\ndef save():\n    pass\n\n\ndef first():\n    save()  # Connects to the module's save function.\n\n\ndef second(save):\n    save()  # Unknown: save is supplied by whoever calls second.\n\n\ndef outer():\n    def helper():\n        pass\n\n    def inner():\n        helper()  # Connects to outer.helper.\n\n    inner()  # Connects to outer.inner.\n",
+  "line_count": 23,
+  "module_id": "scope_example.py::module",
+  "docstring": "The same name can mean different things in different functions.",
+  "resolution_summary": {
+    "total_calls": 4,
+    "linked_calls": 3,
+    "unresolved_calls": 1
+  }
+}

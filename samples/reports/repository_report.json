@@ -1,0 +1,768 @@
+{
+  "schema_version": "0.2",
+  "report_kind": "repository",
+  "status": "ok",
+  "root": "/Users/israelhayalsew/Desktop/repotrace-mvp/demo_repository",
+  "analyzer_python": "3.9.6",
+  "file_schema_version": "0.5",
+  "files": [
+    {
+      "schema_version": "0.5",
+      "report_kind": "single_file",
+      "status": "ok",
+      "file": "orders.py",
+      "analyzer_python": "3.9.6",
+      "diagnostics": [],
+      "symbols": [
+        {
+          "id": "orders.py::place_order@4:0",
+          "name": "place_order",
+          "qualified_name": "place_order",
+          "kind": "FUNCTION",
+          "is_async": false,
+          "parent_id": "orders.py::module",
+          "file": "orders.py",
+          "span": {
+            "line": 4,
+            "column": 0,
+            "end_line": 5,
+            "end_column": 30
+          },
+          "start_line_including_decorators": 4,
+          "docstring": null,
+          "decorators": [],
+          "source": "def place_order():\n    return calculate_total(50)",
+          "syntax_sha256": "f8b0bd8e2178a5c379ecd95c0f6ba043021c9cedde1b4704baef3b60d4a0fd22",
+          "parameters": [],
+          "return_annotation": null,
+          "type_comment": null,
+          "type_parameters": []
+        }
+      ],
+      "imports": [
+        {
+          "kind": "ImportFrom",
+          "scope_id": "orders.py::module",
+          "file": "orders.py",
+          "span": {
+            "line": 1,
+            "column": 0,
+            "end_line": 1,
+            "end_column": 35
+          },
+          "module": "pricing",
+          "level": 0,
+          "names": [
+            {
+              "name": "calculate_total",
+              "alias": null
+            }
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "id": "orders.py::call@5:11:5:30",
+          "enclosing_symbol_id": "orders.py::place_order@4:0",
+          "context": "FUNCTION_BODY",
+          "file": "orders.py",
+          "span": {
+            "line": 5,
+            "column": 11,
+            "end_line": 5,
+            "end_column": 30
+          },
+          "expression": "calculate_total",
+          "arguments": [
+            "50"
+          ],
+          "keywords": [],
+          "target_id": "pricing.py::calculate_total@1:0",
+          "resolution": "LIKELY",
+          "reason": "Explicit import identifies this function under the selected source roots and ordinary initialized-module bindings.",
+          "resolution_kind": "import",
+          "target_file": "pricing.py",
+          "reason_code": "EXPLICIT_IMPORT",
+          "import_evidence": {
+            "file": "orders.py",
+            "span": {
+              "line": 1,
+              "column": 0,
+              "end_line": 1,
+              "end_column": 35
+            },
+            "statement": "from pricing import calculate_total",
+            "bound_name": "calculate_total"
+          }
+        }
+      ],
+      "edges": [
+        {
+          "kind": "CONTAINS",
+          "source": "orders.py::module",
+          "target": "orders.py::place_order@4:0",
+          "evidence": {
+            "line": 4,
+            "column": 0,
+            "end_line": 5,
+            "end_column": 30
+          }
+        },
+        {
+          "kind": "CALLS",
+          "source": "orders.py::place_order@4:0",
+          "target": "pricing.py::calculate_total@1:0",
+          "call_id": "orders.py::call@5:11:5:30",
+          "resolution": "LIKELY",
+          "resolution_kind": "import",
+          "reason": "Explicit import identifies this function under the selected source roots and ordinary initialized-module bindings.",
+          "evidence": {
+            "file": "orders.py",
+            "line": 5,
+            "column": 11,
+            "end_line": 5,
+            "end_column": 30
+          },
+          "import_evidence": {
+            "file": "orders.py",
+            "span": {
+              "line": 1,
+              "column": 0,
+              "end_line": 1,
+              "end_column": 35
+            },
+            "statement": "from pricing import calculate_total",
+            "bound_name": "calculate_total"
+          }
+        }
+      ],
+      "limitations": [
+        "Bare calls in functions and lambdas use lexical scope lookup and are linked as LIKELY.",
+        "Reassignments and conditional definitions remain ambiguous; full execution order is not modeled.",
+        "Dynamic namespace mutation and external monkey-patching are not modeled; impact analysis is pending.",
+        "IDs are local to this project snapshot; matching across revisions or projects is not implemented.",
+        "Calls inside branches and comprehensions are potential call sites, not execution guarantees.",
+        "Comprehension calls, generic type scopes and annotation evaluation are not resolved yet.",
+        "Python syntax support depends on the interpreter running this analyzer."
+      ],
+      "module_id": "orders.py::module",
+      "file_key_kind": "repository_relative",
+      "encoding": "utf-8",
+      "size_bytes": 88,
+      "content_sha256": "ea1cb777cce30cd150253f0cc09f4f783232b16f355ab3b11b1a65eff9866190",
+      "source": "from pricing import calculate_total\n\n\ndef place_order():\n    return calculate_total(50)\n",
+      "line_count": 5,
+      "docstring": null,
+      "resolution_summary": {
+        "total_calls": 1,
+        "linked_calls": 1,
+        "unresolved_calls": 0
+      },
+      "module_names": [
+        "orders"
+      ],
+      "resolution_scope": "project"
+    },
+    {
+      "schema_version": "0.5",
+      "report_kind": "single_file",
+      "status": "ok",
+      "file": "payments/utils.py",
+      "analyzer_python": "3.9.6",
+      "diagnostics": [],
+      "symbols": [
+        {
+          "id": "payments/utils.py::normalize@1:0",
+          "name": "normalize",
+          "qualified_name": "normalize",
+          "kind": "FUNCTION",
+          "is_async": false,
+          "parent_id": "payments/utils.py::module",
+          "file": "payments/utils.py",
+          "span": {
+            "line": 1,
+            "column": 0,
+            "end_line": 2,
+            "end_column": 16
+          },
+          "start_line_including_decorators": 1,
+          "docstring": null,
+          "decorators": [],
+          "source": "def normalize(value):\n    return value",
+          "syntax_sha256": "a24d24cdc68bacd3ab6e83ee88d31bc0de0363fbea8c39bfbbec242a8fee6e35",
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "POSITIONAL_OR_KEYWORD",
+              "annotation": null,
+              "default": null,
+              "required": true
+            }
+          ],
+          "return_annotation": null,
+          "type_comment": null,
+          "type_parameters": []
+        },
+        {
+          "id": "payments/utils.py::prepare_payment@5:0",
+          "name": "prepare_payment",
+          "qualified_name": "prepare_payment",
+          "kind": "FUNCTION",
+          "is_async": false,
+          "parent_id": "payments/utils.py::module",
+          "file": "payments/utils.py",
+          "span": {
+            "line": 5,
+            "column": 0,
+            "end_line": 6,
+            "end_column": 27
+          },
+          "start_line_including_decorators": 5,
+          "docstring": null,
+          "decorators": [],
+          "source": "def prepare_payment(value):\n    return normalize(value)",
+          "syntax_sha256": "603d47867621ec093fdee493802ebc023280e5d15a112548b9c35c5d1c7d25da",
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "POSITIONAL_OR_KEYWORD",
+              "annotation": null,
+              "default": null,
+              "required": true
+            }
+          ],
+          "return_annotation": null,
+          "type_comment": null,
+          "type_parameters": []
+        }
+      ],
+      "imports": [],
+      "calls": [
+        {
+          "id": "payments/utils.py::call@6:11:6:27",
+          "enclosing_symbol_id": "payments/utils.py::prepare_payment@5:0",
+          "context": "FUNCTION_BODY",
+          "file": "payments/utils.py",
+          "span": {
+            "line": 6,
+            "column": 11,
+            "end_line": 6,
+            "end_column": 27
+          },
+          "expression": "normalize",
+          "arguments": [
+            "value"
+          ],
+          "keywords": [],
+          "target_id": "payments/utils.py::normalize@1:0",
+          "resolution": "LIKELY",
+          "reason": "'normalize' resolves to one undecorated function in its visible scope.",
+          "resolution_kind": "local"
+        }
+      ],
+      "edges": [
+        {
+          "kind": "CONTAINS",
+          "source": "payments/utils.py::module",
+          "target": "payments/utils.py::normalize@1:0",
+          "evidence": {
+            "line": 1,
+            "column": 0,
+            "end_line": 2,
+            "end_column": 16
+          }
+        },
+        {
+          "kind": "CONTAINS",
+          "source": "payments/utils.py::module",
+          "target": "payments/utils.py::prepare_payment@5:0",
+          "evidence": {
+            "line": 5,
+            "column": 0,
+            "end_line": 6,
+            "end_column": 27
+          }
+        },
+        {
+          "kind": "CALLS",
+          "source": "payments/utils.py::prepare_payment@5:0",
+          "target": "payments/utils.py::normalize@1:0",
+          "call_id": "payments/utils.py::call@6:11:6:27",
+          "resolution": "LIKELY",
+          "resolution_kind": "local",
+          "reason": "'normalize' resolves to one undecorated function in its visible scope.",
+          "evidence": {
+            "file": "payments/utils.py",
+            "line": 6,
+            "column": 11,
+            "end_line": 6,
+            "end_column": 27
+          }
+        }
+      ],
+      "limitations": [
+        "Bare calls in functions and lambdas use lexical scope lookup and are linked as LIKELY.",
+        "Reassignments and conditional definitions remain ambiguous; full execution order is not modeled.",
+        "Dynamic namespace mutation and external monkey-patching are not modeled; impact analysis is pending.",
+        "IDs are local to this project snapshot; matching across revisions or projects is not implemented.",
+        "Calls inside branches and comprehensions are potential call sites, not execution guarantees.",
+        "Comprehension calls, generic type scopes and annotation evaluation are not resolved yet.",
+        "Python syntax support depends on the interpreter running this analyzer."
+      ],
+      "module_id": "payments/utils.py::module",
+      "file_key_kind": "repository_relative",
+      "encoding": "utf-8",
+      "size_bytes": 97,
+      "content_sha256": "3fc2676294adf2411482103d3cdecb296b8f4622958a8ffc92929ab8a7b9c9ad",
+      "source": "def normalize(value):\n    return value\n\n\ndef prepare_payment(value):\n    return normalize(value)\n",
+      "line_count": 6,
+      "docstring": null,
+      "resolution_summary": {
+        "total_calls": 1,
+        "linked_calls": 1,
+        "unresolved_calls": 0
+      },
+      "module_names": [
+        "payments.utils"
+      ],
+      "resolution_scope": "project"
+    },
+    {
+      "schema_version": "0.5",
+      "report_kind": "single_file",
+      "status": "ok",
+      "file": "pricing.py",
+      "analyzer_python": "3.9.6",
+      "diagnostics": [],
+      "symbols": [
+        {
+          "id": "pricing.py::calculate_total@1:0",
+          "name": "calculate_total",
+          "qualified_name": "calculate_total",
+          "kind": "FUNCTION",
+          "is_async": false,
+          "parent_id": "pricing.py::module",
+          "file": "pricing.py",
+          "span": {
+            "line": 1,
+            "column": 0,
+            "end_line": 2,
+            "end_column": 20
+          },
+          "start_line_including_decorators": 1,
+          "docstring": null,
+          "decorators": [],
+          "source": "def calculate_total(price):\n    return price * 2",
+          "syntax_sha256": "1a2d0d91b3b00e3df6fe59984132dc92b370ba402ee1f981a3674e18d67aa571",
+          "parameters": [
+            {
+              "name": "price",
+              "kind": "POSITIONAL_OR_KEYWORD",
+              "annotation": null,
+              "default": null,
+              "required": true
+            }
+          ],
+          "return_annotation": null,
+          "type_comment": null,
+          "type_parameters": []
+        }
+      ],
+      "imports": [],
+      "calls": [],
+      "edges": [
+        {
+          "kind": "CONTAINS",
+          "source": "pricing.py::module",
+          "target": "pricing.py::calculate_total@1:0",
+          "evidence": {
+            "line": 1,
+            "column": 0,
+            "end_line": 2,
+            "end_column": 20
+          }
+        }
+      ],
+      "limitations": [
+        "Bare calls in functions and lambdas use lexical scope lookup and are linked as LIKELY.",
+        "Reassignments and conditional definitions remain ambiguous; full execution order is not modeled.",
+        "Dynamic namespace mutation and external monkey-patching are not modeled; impact analysis is pending.",
+        "IDs are local to this project snapshot; matching across revisions or projects is not implemented.",
+        "Calls inside branches and comprehensions are potential call sites, not execution guarantees.",
+        "Comprehension calls, generic type scopes and annotation evaluation are not resolved yet.",
+        "Python syntax support depends on the interpreter running this analyzer."
+      ],
+      "module_id": "pricing.py::module",
+      "file_key_kind": "repository_relative",
+      "encoding": "utf-8",
+      "size_bytes": 49,
+      "content_sha256": "8ab5cb1e3056d4377e8512b20783135dca91c3ceb4affb000dc663759393106f",
+      "source": "def calculate_total(price):\n    return price * 2\n",
+      "line_count": 2,
+      "docstring": null,
+      "resolution_summary": {
+        "total_calls": 0,
+        "linked_calls": 0,
+        "unresolved_calls": 0
+      },
+      "module_names": [
+        "pricing"
+      ],
+      "resolution_scope": "project"
+    },
+    {
+      "schema_version": "0.5",
+      "report_kind": "single_file",
+      "status": "ok",
+      "file": "users/utils.py",
+      "analyzer_python": "3.9.6",
+      "diagnostics": [],
+      "symbols": [
+        {
+          "id": "users/utils.py::normalize@1:0",
+          "name": "normalize",
+          "qualified_name": "normalize",
+          "kind": "FUNCTION",
+          "is_async": false,
+          "parent_id": "users/utils.py::module",
+          "file": "users/utils.py",
+          "span": {
+            "line": 1,
+            "column": 0,
+            "end_line": 2,
+            "end_column": 16
+          },
+          "start_line_including_decorators": 1,
+          "docstring": null,
+          "decorators": [],
+          "source": "def normalize(value):\n    return value",
+          "syntax_sha256": "a24d24cdc68bacd3ab6e83ee88d31bc0de0363fbea8c39bfbbec242a8fee6e35",
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "POSITIONAL_OR_KEYWORD",
+              "annotation": null,
+              "default": null,
+              "required": true
+            }
+          ],
+          "return_annotation": null,
+          "type_comment": null,
+          "type_parameters": []
+        },
+        {
+          "id": "users/utils.py::prepare_user@5:0",
+          "name": "prepare_user",
+          "qualified_name": "prepare_user",
+          "kind": "FUNCTION",
+          "is_async": false,
+          "parent_id": "users/utils.py::module",
+          "file": "users/utils.py",
+          "span": {
+            "line": 5,
+            "column": 0,
+            "end_line": 6,
+            "end_column": 27
+          },
+          "start_line_including_decorators": 5,
+          "docstring": null,
+          "decorators": [],
+          "source": "def prepare_user(value):\n    return normalize(value)",
+          "syntax_sha256": "23271ae7efdc11e677c3b189deff5f1b4e03f5250969ebe850e3c8ba9d5a5993",
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "POSITIONAL_OR_KEYWORD",
+              "annotation": null,
+              "default": null,
+              "required": true
+            }
+          ],
+          "return_annotation": null,
+          "type_comment": null,
+          "type_parameters": []
+        }
+      ],
+      "imports": [],
+      "calls": [
+        {
+          "id": "users/utils.py::call@6:11:6:27",
+          "enclosing_symbol_id": "users/utils.py::prepare_user@5:0",
+          "context": "FUNCTION_BODY",
+          "file": "users/utils.py",
+          "span": {
+            "line": 6,
+            "column": 11,
+            "end_line": 6,
+            "end_column": 27
+          },
+          "expression": "normalize",
+          "arguments": [
+            "value"
+          ],
+          "keywords": [],
+          "target_id": "users/utils.py::normalize@1:0",
+          "resolution": "LIKELY",
+          "reason": "'normalize' resolves to one undecorated function in its visible scope.",
+          "resolution_kind": "local"
+        }
+      ],
+      "edges": [
+        {
+          "kind": "CONTAINS",
+          "source": "users/utils.py::module",
+          "target": "users/utils.py::normalize@1:0",
+          "evidence": {
+            "line": 1,
+            "column": 0,
+            "end_line": 2,
+            "end_column": 16
+          }
+        },
+        {
+          "kind": "CONTAINS",
+          "source": "users/utils.py::module",
+          "target": "users/utils.py::prepare_user@5:0",
+          "evidence": {
+            "line": 5,
+            "column": 0,
+            "end_line": 6,
+            "end_column": 27
+          }
+        },
+        {
+          "kind": "CALLS",
+          "source": "users/utils.py::prepare_user@5:0",
+          "target": "users/utils.py::normalize@1:0",
+          "call_id": "users/utils.py::call@6:11:6:27",
+          "resolution": "LIKELY",
+          "resolution_kind": "local",
+          "reason": "'normalize' resolves to one undecorated function in its visible scope.",
+          "evidence": {
+            "file": "users/utils.py",
+            "line": 6,
+            "column": 11,
+            "end_line": 6,
+            "end_column": 27
+          }
+        }
+      ],
+      "limitations": [
+        "Bare calls in functions and lambdas use lexical scope lookup and are linked as LIKELY.",
+        "Reassignments and conditional definitions remain ambiguous; full execution order is not modeled.",
+        "Dynamic namespace mutation and external monkey-patching are not modeled; impact analysis is pending.",
+        "IDs are local to this project snapshot; matching across revisions or projects is not implemented.",
+        "Calls inside branches and comprehensions are potential call sites, not execution guarantees.",
+        "Comprehension calls, generic type scopes and annotation evaluation are not resolved yet.",
+        "Python syntax support depends on the interpreter running this analyzer."
+      ],
+      "module_id": "users/utils.py::module",
+      "file_key_kind": "repository_relative",
+      "encoding": "utf-8",
+      "size_bytes": 94,
+      "content_sha256": "369f939190373188adecabe401923b1e2674920ff31bda989b320e7cfa75b18b",
+      "source": "def normalize(value):\n    return value\n\n\ndef prepare_user(value):\n    return normalize(value)\n",
+      "line_count": 6,
+      "docstring": null,
+      "resolution_summary": {
+        "total_calls": 1,
+        "linked_calls": 1,
+        "unresolved_calls": 0
+      },
+      "module_names": [
+        "users.utils"
+      ],
+      "resolution_scope": "project"
+    }
+  ],
+  "skipped": [],
+  "diagnostics": [],
+  "summary": {
+    "files_discovered": 4,
+    "files_analyzed": 4,
+    "files_failed": 0,
+    "skipped_entries": 0,
+    "symbols": 6,
+    "imports": 1,
+    "calls": 3,
+    "linked_calls": 3,
+    "unresolved_calls": 0,
+    "local_linked_calls": 2,
+    "import_linked_calls": 1
+  },
+  "limitations": [
+    "Supported local and explicit-import function targets are potential links, not proof of execution.",
+    "Import lookup assumes selected source roots and ordinary initialized-module bindings.",
+    "Runtime import hooks, sys.path changes and circular initialization timing are not simulated.",
+    "Re-exports, wildcard imports, constructors and object-method dispatch remain unresolved.",
+    "Only supported function-body calls are linked; other call sites remain recorded.",
+    "Explicit imported-module attribute writes invalidate targets; arbitrary alias mutation is not modeled.",
+    "This is a working-folder scan, not a Git revision comparison.",
+    "IDs are meaningful within this root and snapshot, not globally or across revisions.",
+    "Excluded directories are recorded once; their contents are not enumerated.",
+    "Symbolic links are not followed. Gitignore rules are not interpreted.",
+    "Tests are read as source, never executed. Pytest-specific discovery comes later.",
+    "Input size is bounded, but this is not a sandbox for hostile repositories."
+  ],
+  "settings": {
+    "excluded_directory_names": [
+      ".eggs",
+      ".env",
+      ".git",
+      ".hg",
+      ".mypy_cache",
+      ".nox",
+      ".pytest_cache",
+      ".ruff_cache",
+      ".svn",
+      ".tox",
+      ".venv",
+      "__pycache__",
+      "build",
+      "dist",
+      "env",
+      "node_modules",
+      "venv"
+    ],
+    "max_file_bytes": 2097152,
+    "follow_symlinks": false,
+    "source_roots": [
+      "."
+    ],
+    "resolve_imports": true
+  },
+  "project_index": {
+    "modules": [
+      {
+        "name": "orders",
+        "status": "available",
+        "files": [
+          "orders.py"
+        ]
+      },
+      {
+        "name": "payments",
+        "status": "namespace",
+        "files": []
+      },
+      {
+        "name": "payments.utils",
+        "status": "available",
+        "files": [
+          "payments/utils.py"
+        ]
+      },
+      {
+        "name": "pricing",
+        "status": "available",
+        "files": [
+          "pricing.py"
+        ]
+      },
+      {
+        "name": "users",
+        "status": "namespace",
+        "files": []
+      },
+      {
+        "name": "users.utils",
+        "status": "available",
+        "files": [
+          "users/utils.py"
+        ]
+      }
+    ],
+    "definitions": [
+      {
+        "symbol_id": "orders.py::place_order@4:0",
+        "file": "orders.py",
+        "modules": [
+          "orders"
+        ],
+        "qualified_name": "place_order",
+        "kind": "FUNCTION",
+        "span": {
+          "line": 4,
+          "column": 0,
+          "end_line": 5,
+          "end_column": 30
+        }
+      },
+      {
+        "symbol_id": "payments/utils.py::normalize@1:0",
+        "file": "payments/utils.py",
+        "modules": [
+          "payments.utils"
+        ],
+        "qualified_name": "normalize",
+        "kind": "FUNCTION",
+        "span": {
+          "line": 1,
+          "column": 0,
+          "end_line": 2,
+          "end_column": 16
+        }
+      },
+      {
+        "symbol_id": "payments/utils.py::prepare_payment@5:0",
+        "file": "payments/utils.py",
+        "modules": [
+          "payments.utils"
+        ],
+        "qualified_name": "prepare_payment",
+        "kind": "FUNCTION",
+        "span": {
+          "line": 5,
+          "column": 0,
+          "end_line": 6,
+          "end_column": 27
+        }
+      },
+      {
+        "symbol_id": "pricing.py::calculate_total@1:0",
+        "file": "pricing.py",
+        "modules": [
+          "pricing"
+        ],
+        "qualified_name": "calculate_total",
+        "kind": "FUNCTION",
+        "span": {
+          "line": 1,
+          "column": 0,
+          "end_line": 2,
+          "end_column": 20
+        }
+      },
+      {
+        "symbol_id": "users/utils.py::normalize@1:0",
+        "file": "users/utils.py",
+        "modules": [
+          "users.utils"
+        ],
+        "qualified_name": "normalize",
+        "kind": "FUNCTION",
+        "span": {
+          "line": 1,
+          "column": 0,
+          "end_line": 2,
+          "end_column": 16
+        }
+      },
+      {
+        "symbol_id": "users/utils.py::prepare_user@5:0",
+        "file": "users/utils.py",
+        "modules": [
+          "users.utils"
+        ],
+        "qualified_name": "prepare_user",
+        "kind": "FUNCTION",
+        "span": {
+          "line": 5,
+          "column": 0,
+          "end_line": 6,
+          "end_column": 27
+        }
+      }
+    ]
+  }
+}

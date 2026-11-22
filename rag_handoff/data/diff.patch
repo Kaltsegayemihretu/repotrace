@@ -1,0 +1,26 @@
+diff --git a/studentapp/services/course_service.py b/studentapp/services/course_service.py
+index e14da6b..b97b29f 100644
+--- a/studentapp/services/course_service.py
++++ b/studentapp/services/course_service.py
+@@ -32,7 +32,7 @@ class CourseService:
+ 
+     # Returns one course, or stops with an error if the id does not exist.
+     def find_course_by_id(self, course_id):
+-        course = self.repository.read_course_by_id(course_id)
++        course = self.repository.fetch_course_by_id(course_id)
+         if course is None:
+             raise ValueError(f"Course {course_id} was not found.")
+         return course
+diff --git a/studentapp/storage/course_repository.py b/studentapp/storage/course_repository.py
+index c38a3ec..f3c7b99 100644
+--- a/studentapp/storage/course_repository.py
++++ b/studentapp/storage/course_repository.py
+@@ -22,7 +22,7 @@ class CourseRepository(BaseRepository):
+         return courses
+ 
+     # Returns one course by id, or None if there is no such course.
+-    def read_course_by_id(self, course_id):
++    def fetch_course_by_id(self, course_id):
+         record = self.find_record_by_id(course_id)
+         if record is None:
+             return None

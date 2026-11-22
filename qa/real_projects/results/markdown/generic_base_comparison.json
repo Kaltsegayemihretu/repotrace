@@ -1,0 +1,581 @@
+{
+  "method": "Static reanalysis of the same local development snapshots; trace rescoring uses the previously recorded full-suite traces for markdown and tinydb. No blind projects were inspected.",
+  "implementation": "Recognize an imported typing.Generic[...] base while reserving standard-library attribute names. Every added edge remains POSSIBLE.",
+  "projects": [
+    {
+      "project": "markdown",
+      "before": {
+        "files_discovered": 74,
+        "files_analyzed": 74,
+        "files_failed": 0,
+        "skipped_entries": 0,
+        "symbols": 1629,
+        "imports": 349,
+        "calls": 4727,
+        "linked_calls": 149,
+        "unresolved_calls": 4578,
+        "possible_calls": 2021,
+        "implicit_calls": 6,
+        "candidate_limited_calls": 2,
+        "unknown_target_calls": 2557,
+        "call_categories": {
+          "builtin_object_method": 197,
+          "builtin_reference": 340,
+          "external_or_missing": 230,
+          "import_not_found": 6,
+          "internal_linked": 149,
+          "internal_possible": 2021,
+          "unresolved": 1642,
+          "unsupported_context": 142
+        },
+        "local_linked_calls": 54,
+        "import_linked_calls": 95
+      },
+      "after": {
+        "files_discovered": 74,
+        "files_analyzed": 74,
+        "files_failed": 0,
+        "skipped_entries": 0,
+        "symbols": 1629,
+        "imports": 349,
+        "calls": 4736,
+        "linked_calls": 149,
+        "unresolved_calls": 4587,
+        "possible_calls": 2076,
+        "implicit_calls": 15,
+        "candidate_limited_calls": 2,
+        "unknown_target_calls": 2511,
+        "call_categories": {
+          "builtin_object_method": 197,
+          "builtin_reference": 340,
+          "external_or_missing": 230,
+          "import_not_found": 6,
+          "internal_linked": 149,
+          "internal_possible": 2076,
+          "unresolved": 1596,
+          "unsupported_context": 142
+        },
+        "local_linked_calls": 54,
+        "import_linked_calls": 95
+      },
+      "added_links": 55,
+      "removed_links": 0,
+      "commit": "2c96e36ba4750cf18583d62e2fcecff49e077419",
+      "snapshot_kind": "recorded evaluation copy"
+    },
+    {
+      "project": "tinydb",
+      "before": {
+        "files_discovered": 21,
+        "files_analyzed": 21,
+        "files_failed": 0,
+        "skipped_entries": 0,
+        "symbols": 408,
+        "imports": 84,
+        "calls": 1555,
+        "linked_calls": 151,
+        "unresolved_calls": 1404,
+        "possible_calls": 207,
+        "implicit_calls": 11,
+        "candidate_limited_calls": 0,
+        "unknown_target_calls": 1197,
+        "call_categories": {
+          "builtin_object_method": 29,
+          "builtin_reference": 280,
+          "external_or_missing": 27,
+          "import_not_found": 31,
+          "internal_linked": 151,
+          "internal_possible": 207,
+          "unresolved": 789,
+          "unsupported_context": 41
+        },
+        "local_linked_calls": 17,
+        "import_linked_calls": 134
+      },
+      "after": {
+        "files_discovered": 21,
+        "files_analyzed": 21,
+        "files_failed": 0,
+        "skipped_entries": 0,
+        "symbols": 408,
+        "imports": 84,
+        "calls": 1555,
+        "linked_calls": 151,
+        "unresolved_calls": 1404,
+        "possible_calls": 207,
+        "implicit_calls": 11,
+        "candidate_limited_calls": 0,
+        "unknown_target_calls": 1197,
+        "call_categories": {
+          "builtin_object_method": 29,
+          "builtin_reference": 280,
+          "external_or_missing": 27,
+          "import_not_found": 31,
+          "internal_linked": 151,
+          "internal_possible": 207,
+          "unresolved": 789,
+          "unsupported_context": 41
+        },
+        "local_linked_calls": 17,
+        "import_linked_calls": 134
+      },
+      "added_links": 0,
+      "removed_links": 0,
+      "commit": "edff96aeb2616402e9489d46e90a592c05565621",
+      "snapshot_kind": "recorded evaluation copy"
+    },
+    {
+      "project": "cachetools",
+      "before": {
+        "files_discovered": 22,
+        "files_analyzed": 22,
+        "files_failed": 0,
+        "skipped_entries": 1,
+        "symbols": 767,
+        "imports": 121,
+        "calls": 4201,
+        "linked_calls": 77,
+        "unresolved_calls": 4124,
+        "possible_calls": 171,
+        "implicit_calls": 0,
+        "candidate_limited_calls": 0,
+        "unknown_target_calls": 3953,
+        "call_categories": {
+          "builtin_object_method": 11,
+          "builtin_reference": 586,
+          "external_or_missing": 110,
+          "import_not_found": 37,
+          "internal_linked": 77,
+          "internal_possible": 171,
+          "unresolved": 3135,
+          "unsupported_context": 74
+        },
+        "local_linked_calls": 74,
+        "import_linked_calls": 3
+      },
+      "after": {
+        "files_discovered": 22,
+        "files_analyzed": 22,
+        "files_failed": 0,
+        "skipped_entries": 1,
+        "symbols": 767,
+        "imports": 121,
+        "calls": 4201,
+        "linked_calls": 77,
+        "unresolved_calls": 4124,
+        "possible_calls": 171,
+        "implicit_calls": 0,
+        "candidate_limited_calls": 0,
+        "unknown_target_calls": 3953,
+        "call_categories": {
+          "builtin_object_method": 11,
+          "builtin_reference": 586,
+          "external_or_missing": 110,
+          "import_not_found": 37,
+          "internal_linked": 77,
+          "internal_possible": 171,
+          "unresolved": 3135,
+          "unsupported_context": 74
+        },
+        "local_linked_calls": 74,
+        "import_linked_calls": 3
+      },
+      "added_links": 0,
+      "removed_links": 0,
+      "commit": "498bd83c1938d9dd5d9aaf4dab3043fb15fb1e42",
+      "snapshot_kind": "local development checkout"
+    },
+    {
+      "project": "more-itertools",
+      "before": {
+        "files_discovered": 7,
+        "files_analyzed": 7,
+        "files_failed": 0,
+        "skipped_entries": 1,
+        "symbols": 1572,
+        "imports": 80,
+        "calls": 6112,
+        "linked_calls": 94,
+        "unresolved_calls": 6018,
+        "possible_calls": 52,
+        "implicit_calls": 3,
+        "candidate_limited_calls": 0,
+        "unknown_target_calls": 5966,
+        "call_categories": {
+          "builtin_object_method": 68,
+          "builtin_reference": 2284,
+          "external_or_missing": 717,
+          "internal_linked": 94,
+          "internal_possible": 52,
+          "unresolved": 2767,
+          "unsupported_context": 130
+        },
+        "local_linked_calls": 80,
+        "import_linked_calls": 14
+      },
+      "after": {
+        "files_discovered": 7,
+        "files_analyzed": 7,
+        "files_failed": 0,
+        "skipped_entries": 1,
+        "symbols": 1572,
+        "imports": 80,
+        "calls": 6112,
+        "linked_calls": 94,
+        "unresolved_calls": 6018,
+        "possible_calls": 52,
+        "implicit_calls": 3,
+        "candidate_limited_calls": 0,
+        "unknown_target_calls": 5966,
+        "call_categories": {
+          "builtin_object_method": 68,
+          "builtin_reference": 2284,
+          "external_or_missing": 717,
+          "internal_linked": 94,
+          "internal_possible": 52,
+          "unresolved": 2767,
+          "unsupported_context": 130
+        },
+        "local_linked_calls": 80,
+        "import_linked_calls": 14
+      },
+      "added_links": 0,
+      "removed_links": 0,
+      "commit": "c0ede7fcd50340170bc7f428b7b658f6e767a34c",
+      "snapshot_kind": "local development checkout"
+    },
+    {
+      "project": "python-dotenv",
+      "before": {
+        "files_discovered": 20,
+        "files_analyzed": 20,
+        "files_failed": 0,
+        "skipped_entries": 5,
+        "symbols": 213,
+        "imports": 95,
+        "calls": 1064,
+        "linked_calls": 75,
+        "unresolved_calls": 989,
+        "possible_calls": 66,
+        "implicit_calls": 0,
+        "candidate_limited_calls": 0,
+        "unknown_target_calls": 923,
+        "call_categories": {
+          "builtin_object_method": 22,
+          "builtin_reference": 94,
+          "external_or_missing": 142,
+          "import_not_found": 94,
+          "internal_linked": 75,
+          "internal_possible": 66,
+          "unresolved": 291,
+          "unsupported_context": 280
+        },
+        "local_linked_calls": 32,
+        "import_linked_calls": 43
+      },
+      "after": {
+        "files_discovered": 20,
+        "files_analyzed": 20,
+        "files_failed": 0,
+        "skipped_entries": 5,
+        "symbols": 213,
+        "imports": 95,
+        "calls": 1064,
+        "linked_calls": 75,
+        "unresolved_calls": 989,
+        "possible_calls": 66,
+        "implicit_calls": 0,
+        "candidate_limited_calls": 0,
+        "unknown_target_calls": 923,
+        "call_categories": {
+          "builtin_object_method": 22,
+          "builtin_reference": 94,
+          "external_or_missing": 142,
+          "import_not_found": 94,
+          "internal_linked": 75,
+          "internal_possible": 66,
+          "unresolved": 291,
+          "unsupported_context": 280
+        },
+        "local_linked_calls": 32,
+        "import_linked_calls": 43
+      },
+      "added_links": 0,
+      "removed_links": 0,
+      "commit": "4fbc6ff07215367ece731006855e732d1405992c",
+      "snapshot_kind": "local development checkout"
+    }
+  ],
+  "markdown_commit_pairs": [
+    {
+      "base": "4177c1b8f38541b40111f0258919e000d1a76a50",
+      "head": "2c96e36ba4750cf18583d62e2fcecff49e077419",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 64,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "a4d442886060b28f5b51458b00c9c48ca27fe82c",
+      "head": "dc26ab5c5926bcce53bddf715c590511c8a55dce",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 62,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "f368c7d914944fbd0d8e4fab0cf33580c87c59e4",
+      "head": "a4d442886060b28f5b51458b00c9c48ca27fe82c",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 31,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "7d0d95ab1aab67c2a944b63debabff10e2dcdade",
+      "head": "f368c7d914944fbd0d8e4fab0cf33580c87c59e4",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 991,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "26e43de464fb2d682df917d4fcaf4d376f767564",
+      "head": "7d0d95ab1aab67c2a944b63debabff10e2dcdade",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 1012,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "86d1e46b40673a85b68b75bb88a96d553647d07c",
+      "head": "26e43de464fb2d682df917d4fcaf4d376f767564",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 22,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "6f69248cc23651727b168b62bf0f12fd0bf2b8a0",
+      "head": "86d1e46b40673a85b68b75bb88a96d553647d07c",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 37,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "0bfd8c3efb728fd47e910a7564d80503f6dac9b8",
+      "head": "a198bb39b2cfd0c6a976bc5498a31224fe3f05a0",
+      "old_candidates": 758,
+      "new_candidates": 758,
+      "shortlist": 20,
+      "old_relevant_truth": 1038,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "3f2c5510bd8d64a73ec18342f740371bcde9b20c",
+      "head": "0bfd8c3efb728fd47e910a7564d80503f6dac9b8",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 813,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "8bfb9aaa49399b3c5104bc85402097f6cd11b67d",
+      "head": "3f2c5510bd8d64a73ec18342f740371bcde9b20c",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 984,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "527b81ee8add2782e97db5c27e35ba46c1779b71",
+      "head": "8bfb9aaa49399b3c5104bc85402097f6cd11b67d",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 31,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "b97b56cb3d65b46eb976ef69c8718fc8de431b69",
+      "head": "527b81ee8add2782e97db5c27e35ba46c1779b71",
+      "old_candidates": 735,
+      "new_candidates": 735,
+      "shortlist": 20,
+      "old_relevant_truth": 1014,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "0f0a8604181d982e5e60bfdd6ab39d74ebe51432",
+      "head": "e76f0b739b5c081f5b6da56a0a5b647c07e4252c",
+      "old_candidates": 2,
+      "new_candidates": 2,
+      "shortlist": 2,
+      "old_relevant_truth": 62,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "5e335ef7e7be8ff6692363c56d1352e71b8ef279",
+      "head": "0f0a8604181d982e5e60bfdd6ab39d74ebe51432",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 1,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "b29a5b6de169b8f331c37c392f58b5183f728e0e",
+      "head": "5e335ef7e7be8ff6692363c56d1352e71b8ef279",
+      "old_candidates": 12,
+      "new_candidates": 12,
+      "shortlist": 12,
+      "old_relevant_truth": 70,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "59f6dbc53bf4688c66ca832abb66c6a424f0626f",
+      "head": "b29a5b6de169b8f331c37c392f58b5183f728e0e",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 1,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "3d70cfccdc0b54c0783edd5e7d168c5d8bfc0b1e",
+      "head": "59f6dbc53bf4688c66ca832abb66c6a424f0626f",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 90,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "b41e0aaf1181f1a8cb200cf5a815aad7c0020d23",
+      "head": "3d70cfccdc0b54c0783edd5e7d168c5d8bfc0b1e",
+      "old_candidates": 22,
+      "new_candidates": 22,
+      "shortlist": 20,
+      "old_relevant_truth": 0,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "90cdcf5f5388ceb1d58c5e22dd81cab93983d938",
+      "head": "a27428b6f6cc74662fdd471293438eedcdf0079f",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 44,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "2258b48e551d0df7b149ea9c33969bea7c7a0a2b",
+      "head": "97233efa01b888ee0fa84b60ab2601bc72182277",
+      "old_candidates": 705,
+      "new_candidates": 705,
+      "shortlist": 20,
+      "old_relevant_truth": 984,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "3ade80d7c2cad90c8961c80d9640d80a09afd33f",
+      "head": "0bf535bc406c95dad66050f07c8402af03fe07d5",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 948,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "7a29324e03725fe279790c2f59d13ebda0eecbe1",
+      "head": "7c265bc79d8946ac42bb61a39f9052c8e261340f",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 243,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "30025751dcb06d348ed046c47b84cb26c72be0f6",
+      "head": "7a29324e03725fe279790c2f59d13ebda0eecbe1",
+      "old_candidates": 686,
+      "new_candidates": 686,
+      "shortlist": 20,
+      "old_relevant_truth": 956,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "b2125dae9ab769618df76944e122c17c96cc7591",
+      "head": "30025751dcb06d348ed046c47b84cb26c72be0f6",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 927,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "0d6afd131223dc5f1d0c68d60ebb9513221d5c43",
+      "head": "5d1363ce4b86ea91c204b6215bb038df40e7119d",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 5,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "c74b8d84aee380847dd28d16f6b827d027623908",
+      "head": "175fb5aeccf658adc5d96761277bb4b925666799",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 40,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "4c8a8d6dba941046f9d43e67ab02e628419bbac1",
+      "head": "c74b8d84aee380847dd28d16f6b827d027623908",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 205,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "136df23a5ae798347c1edc5f5c023e663254ca26",
+      "head": "8a9ae23fd33bf1d810b81d801f2f7530c6c98212",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 81,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "152a16fb1a926eabbfc5ab1af83f2b6cf9979314",
+      "head": "136df23a5ae798347c1edc5f5c023e663254ca26",
+      "old_candidates": 0,
+      "new_candidates": 0,
+      "shortlist": 0,
+      "old_relevant_truth": 1,
+      "previously_missed_now_connected": 0
+    },
+    {
+      "base": "7be0cff7318f9e0abf8a9481a4238a86e626530a",
+      "head": "152a16fb1a926eabbfc5ab1af83f2b6cf9979314",
+      "old_candidates": 1,
+      "new_candidates": 1,
+      "shortlist": 1,
+      "old_relevant_truth": 863,
+      "previously_missed_now_connected": 0
+    }
+  ]
+}

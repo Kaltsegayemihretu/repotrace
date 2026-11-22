@@ -1,0 +1,551 @@
+{
+  "schema_version": "0.2",
+  "report_kind": "repository",
+  "status": "ok",
+  "root": "/Users/israelhayalsew/Desktop/repotrace-mvp/demo_impact",
+  "analyzer_python": "3.9.6",
+  "file_schema_version": "0.5",
+  "files": [
+    {
+      "schema_version": "0.5",
+      "report_kind": "single_file",
+      "status": "ok",
+      "file": "checkout.py",
+      "analyzer_python": "3.9.6",
+      "diagnostics": [],
+      "symbols": [
+        {
+          "id": "checkout.py::checkout@4:0",
+          "name": "checkout",
+          "qualified_name": "checkout",
+          "kind": "FUNCTION",
+          "is_async": false,
+          "parent_id": "checkout.py::module",
+          "file": "checkout.py",
+          "span": {
+            "line": 4,
+            "column": 0,
+            "end_line": 5,
+            "end_column": 29
+          },
+          "start_line_including_decorators": 4,
+          "docstring": null,
+          "decorators": [],
+          "source": "def checkout(price):\n    return place_order(price)",
+          "syntax_sha256": "07a81ee281cd381e6689e98e1b8387530d26ccbc4a8d37d208b22c135551aabd",
+          "parameters": [
+            {
+              "name": "price",
+              "kind": "POSITIONAL_OR_KEYWORD",
+              "annotation": null,
+              "default": null,
+              "required": true
+            }
+          ],
+          "return_annotation": null,
+          "type_comment": null,
+          "type_parameters": []
+        }
+      ],
+      "imports": [
+        {
+          "kind": "ImportFrom",
+          "scope_id": "checkout.py::module",
+          "file": "checkout.py",
+          "span": {
+            "line": 1,
+            "column": 0,
+            "end_line": 1,
+            "end_column": 30
+          },
+          "module": "orders",
+          "level": 0,
+          "names": [
+            {
+              "name": "place_order",
+              "alias": null
+            }
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "id": "checkout.py::call@5:11:5:29",
+          "enclosing_symbol_id": "checkout.py::checkout@4:0",
+          "context": "FUNCTION_BODY",
+          "file": "checkout.py",
+          "span": {
+            "line": 5,
+            "column": 11,
+            "end_line": 5,
+            "end_column": 29
+          },
+          "expression": "place_order",
+          "arguments": [
+            "price"
+          ],
+          "keywords": [],
+          "target_id": "orders.py::place_order@4:0",
+          "resolution": "LIKELY",
+          "reason": "Explicit import identifies this function under the selected source roots and ordinary initialized-module bindings.",
+          "resolution_kind": "import",
+          "target_file": "orders.py",
+          "reason_code": "EXPLICIT_IMPORT",
+          "import_evidence": {
+            "file": "checkout.py",
+            "span": {
+              "line": 1,
+              "column": 0,
+              "end_line": 1,
+              "end_column": 30
+            },
+            "statement": "from orders import place_order",
+            "bound_name": "place_order"
+          }
+        }
+      ],
+      "edges": [
+        {
+          "kind": "CONTAINS",
+          "source": "checkout.py::module",
+          "target": "checkout.py::checkout@4:0",
+          "evidence": {
+            "line": 4,
+            "column": 0,
+            "end_line": 5,
+            "end_column": 29
+          }
+        },
+        {
+          "kind": "CALLS",
+          "source": "checkout.py::checkout@4:0",
+          "target": "orders.py::place_order@4:0",
+          "call_id": "checkout.py::call@5:11:5:29",
+          "resolution": "LIKELY",
+          "resolution_kind": "import",
+          "reason": "Explicit import identifies this function under the selected source roots and ordinary initialized-module bindings.",
+          "evidence": {
+            "file": "checkout.py",
+            "line": 5,
+            "column": 11,
+            "end_line": 5,
+            "end_column": 29
+          },
+          "import_evidence": {
+            "file": "checkout.py",
+            "span": {
+              "line": 1,
+              "column": 0,
+              "end_line": 1,
+              "end_column": 30
+            },
+            "statement": "from orders import place_order",
+            "bound_name": "place_order"
+          }
+        }
+      ],
+      "limitations": [
+        "Bare calls in functions and lambdas use lexical scope lookup and are linked as LIKELY.",
+        "Reassignments and conditional definitions remain ambiguous; full execution order is not modeled.",
+        "Dynamic namespace mutation and external monkey-patching are not modeled; impact analysis is pending.",
+        "IDs are local to this project snapshot; matching across revisions or projects is not implemented.",
+        "Calls inside branches and comprehensions are potential call sites, not execution guarantees.",
+        "Comprehension calls, generic type scopes and annotation evaluation are not resolved yet.",
+        "Python syntax support depends on the interpreter running this analyzer."
+      ],
+      "module_id": "checkout.py::module",
+      "file_key_kind": "repository_relative",
+      "encoding": "utf-8",
+      "size_bytes": 84,
+      "content_sha256": "11f9c4e34ec89f64066fac4d19fb9b42f0a33f1da1221741b8d5a1c320f62622",
+      "source": "from orders import place_order\n\n\ndef checkout(price):\n    return place_order(price)\n",
+      "line_count": 5,
+      "docstring": null,
+      "resolution_summary": {
+        "total_calls": 1,
+        "linked_calls": 1,
+        "unresolved_calls": 0
+      },
+      "module_names": [
+        "checkout"
+      ],
+      "resolution_scope": "project"
+    },
+    {
+      "schema_version": "0.5",
+      "report_kind": "single_file",
+      "status": "ok",
+      "file": "orders.py",
+      "analyzer_python": "3.9.6",
+      "diagnostics": [],
+      "symbols": [
+        {
+          "id": "orders.py::place_order@4:0",
+          "name": "place_order",
+          "qualified_name": "place_order",
+          "kind": "FUNCTION",
+          "is_async": false,
+          "parent_id": "orders.py::module",
+          "file": "orders.py",
+          "span": {
+            "line": 4,
+            "column": 0,
+            "end_line": 5,
+            "end_column": 33
+          },
+          "start_line_including_decorators": 4,
+          "docstring": null,
+          "decorators": [],
+          "source": "def place_order(price):\n    return calculate_total(price)",
+          "syntax_sha256": "dfca1f4968c0dccf2f6d47c4587d4271b18f7069147b3539de94954847ae2779",
+          "parameters": [
+            {
+              "name": "price",
+              "kind": "POSITIONAL_OR_KEYWORD",
+              "annotation": null,
+              "default": null,
+              "required": true
+            }
+          ],
+          "return_annotation": null,
+          "type_comment": null,
+          "type_parameters": []
+        }
+      ],
+      "imports": [
+        {
+          "kind": "ImportFrom",
+          "scope_id": "orders.py::module",
+          "file": "orders.py",
+          "span": {
+            "line": 1,
+            "column": 0,
+            "end_line": 1,
+            "end_column": 35
+          },
+          "module": "pricing",
+          "level": 0,
+          "names": [
+            {
+              "name": "calculate_total",
+              "alias": null
+            }
+          ]
+        }
+      ],
+      "calls": [
+        {
+          "id": "orders.py::call@5:11:5:33",
+          "enclosing_symbol_id": "orders.py::place_order@4:0",
+          "context": "FUNCTION_BODY",
+          "file": "orders.py",
+          "span": {
+            "line": 5,
+            "column": 11,
+            "end_line": 5,
+            "end_column": 33
+          },
+          "expression": "calculate_total",
+          "arguments": [
+            "price"
+          ],
+          "keywords": [],
+          "target_id": "pricing.py::calculate_total@1:0",
+          "resolution": "LIKELY",
+          "reason": "Explicit import identifies this function under the selected source roots and ordinary initialized-module bindings.",
+          "resolution_kind": "import",
+          "target_file": "pricing.py",
+          "reason_code": "EXPLICIT_IMPORT",
+          "import_evidence": {
+            "file": "orders.py",
+            "span": {
+              "line": 1,
+              "column": 0,
+              "end_line": 1,
+              "end_column": 35
+            },
+            "statement": "from pricing import calculate_total",
+            "bound_name": "calculate_total"
+          }
+        }
+      ],
+      "edges": [
+        {
+          "kind": "CONTAINS",
+          "source": "orders.py::module",
+          "target": "orders.py::place_order@4:0",
+          "evidence": {
+            "line": 4,
+            "column": 0,
+            "end_line": 5,
+            "end_column": 33
+          }
+        },
+        {
+          "kind": "CALLS",
+          "source": "orders.py::place_order@4:0",
+          "target": "pricing.py::calculate_total@1:0",
+          "call_id": "orders.py::call@5:11:5:33",
+          "resolution": "LIKELY",
+          "resolution_kind": "import",
+          "reason": "Explicit import identifies this function under the selected source roots and ordinary initialized-module bindings.",
+          "evidence": {
+            "file": "orders.py",
+            "line": 5,
+            "column": 11,
+            "end_line": 5,
+            "end_column": 33
+          },
+          "import_evidence": {
+            "file": "orders.py",
+            "span": {
+              "line": 1,
+              "column": 0,
+              "end_line": 1,
+              "end_column": 35
+            },
+            "statement": "from pricing import calculate_total",
+            "bound_name": "calculate_total"
+          }
+        }
+      ],
+      "limitations": [
+        "Bare calls in functions and lambdas use lexical scope lookup and are linked as LIKELY.",
+        "Reassignments and conditional definitions remain ambiguous; full execution order is not modeled.",
+        "Dynamic namespace mutation and external monkey-patching are not modeled; impact analysis is pending.",
+        "IDs are local to this project snapshot; matching across revisions or projects is not implemented.",
+        "Calls inside branches and comprehensions are potential call sites, not execution guarantees.",
+        "Comprehension calls, generic type scopes and annotation evaluation are not resolved yet.",
+        "Python syntax support depends on the interpreter running this analyzer."
+      ],
+      "module_id": "orders.py::module",
+      "file_key_kind": "repository_relative",
+      "encoding": "utf-8",
+      "size_bytes": 96,
+      "content_sha256": "91c5616b9b36d255376dcd5eb421d6104f32519978cb03b5c44154b8bbb17c82",
+      "source": "from pricing import calculate_total\n\n\ndef place_order(price):\n    return calculate_total(price)\n",
+      "line_count": 5,
+      "docstring": null,
+      "resolution_summary": {
+        "total_calls": 1,
+        "linked_calls": 1,
+        "unresolved_calls": 0
+      },
+      "module_names": [
+        "orders"
+      ],
+      "resolution_scope": "project"
+    },
+    {
+      "schema_version": "0.5",
+      "report_kind": "single_file",
+      "status": "ok",
+      "file": "pricing.py",
+      "analyzer_python": "3.9.6",
+      "diagnostics": [],
+      "symbols": [
+        {
+          "id": "pricing.py::calculate_total@1:0",
+          "name": "calculate_total",
+          "qualified_name": "calculate_total",
+          "kind": "FUNCTION",
+          "is_async": false,
+          "parent_id": "pricing.py::module",
+          "file": "pricing.py",
+          "span": {
+            "line": 1,
+            "column": 0,
+            "end_line": 2,
+            "end_column": 23
+          },
+          "start_line_including_decorators": 1,
+          "docstring": null,
+          "decorators": [],
+          "source": "def calculate_total(price):\n    return price * 1.15",
+          "syntax_sha256": "13b495bf869f0e15c2e43c75eaa9e7338a1df633d749aad207f9eee8a078fe0b",
+          "parameters": [
+            {
+              "name": "price",
+              "kind": "POSITIONAL_OR_KEYWORD",
+              "annotation": null,
+              "default": null,
+              "required": true
+            }
+          ],
+          "return_annotation": null,
+          "type_comment": null,
+          "type_parameters": []
+        }
+      ],
+      "imports": [],
+      "calls": [],
+      "edges": [
+        {
+          "kind": "CONTAINS",
+          "source": "pricing.py::module",
+          "target": "pricing.py::calculate_total@1:0",
+          "evidence": {
+            "line": 1,
+            "column": 0,
+            "end_line": 2,
+            "end_column": 23
+          }
+        }
+      ],
+      "limitations": [
+        "Bare calls in functions and lambdas use lexical scope lookup and are linked as LIKELY.",
+        "Reassignments and conditional definitions remain ambiguous; full execution order is not modeled.",
+        "Dynamic namespace mutation and external monkey-patching are not modeled; impact analysis is pending.",
+        "IDs are local to this project snapshot; matching across revisions or projects is not implemented.",
+        "Calls inside branches and comprehensions are potential call sites, not execution guarantees.",
+        "Comprehension calls, generic type scopes and annotation evaluation are not resolved yet.",
+        "Python syntax support depends on the interpreter running this analyzer."
+      ],
+      "module_id": "pricing.py::module",
+      "file_key_kind": "repository_relative",
+      "encoding": "utf-8",
+      "size_bytes": 52,
+      "content_sha256": "99459ac74f3ba8eb758d65d77eb61eb171d8f155c50e714649c1536ce67c3152",
+      "source": "def calculate_total(price):\n    return price * 1.15\n",
+      "line_count": 2,
+      "docstring": null,
+      "resolution_summary": {
+        "total_calls": 0,
+        "linked_calls": 0,
+        "unresolved_calls": 0
+      },
+      "module_names": [
+        "pricing"
+      ],
+      "resolution_scope": "project"
+    }
+  ],
+  "skipped": [],
+  "diagnostics": [],
+  "summary": {
+    "files_discovered": 3,
+    "files_analyzed": 3,
+    "files_failed": 0,
+    "skipped_entries": 0,
+    "symbols": 3,
+    "imports": 2,
+    "calls": 2,
+    "linked_calls": 2,
+    "unresolved_calls": 0,
+    "local_linked_calls": 0,
+    "import_linked_calls": 2
+  },
+  "limitations": [
+    "Supported local and explicit-import function targets are potential links, not proof of execution.",
+    "Import lookup assumes selected source roots and ordinary initialized-module bindings.",
+    "Runtime import hooks, sys.path changes and circular initialization timing are not simulated.",
+    "Re-exports, wildcard imports, constructors and object-method dispatch remain unresolved.",
+    "Only supported function-body calls are linked; other call sites remain recorded.",
+    "Explicit imported-module attribute writes invalidate targets; arbitrary alias mutation is not modeled.",
+    "This is a working-folder scan, not a Git revision comparison.",
+    "IDs are meaningful within this root and snapshot, not globally or across revisions.",
+    "Excluded directories are recorded once; their contents are not enumerated.",
+    "Symbolic links are not followed. Gitignore rules are not interpreted.",
+    "Tests are read as source, never executed. Pytest-specific discovery comes later.",
+    "Input size is bounded, but this is not a sandbox for hostile repositories."
+  ],
+  "settings": {
+    "excluded_directory_names": [
+      ".eggs",
+      ".env",
+      ".git",
+      ".hg",
+      ".mypy_cache",
+      ".nox",
+      ".pytest_cache",
+      ".ruff_cache",
+      ".svn",
+      ".tox",
+      ".venv",
+      "__pycache__",
+      "build",
+      "dist",
+      "env",
+      "node_modules",
+      "venv"
+    ],
+    "max_file_bytes": 2097152,
+    "follow_symlinks": false,
+    "source_roots": [
+      "."
+    ],
+    "resolve_imports": true
+  },
+  "project_index": {
+    "modules": [
+      {
+        "name": "checkout",
+        "status": "available",
+        "files": [
+          "checkout.py"
+        ]
+      },
+      {
+        "name": "orders",
+        "status": "available",
+        "files": [
+          "orders.py"
+        ]
+      },
+      {
+        "name": "pricing",
+        "status": "available",
+        "files": [
+          "pricing.py"
+        ]
+      }
+    ],
+    "definitions": [
+      {
+        "symbol_id": "checkout.py::checkout@4:0",
+        "file": "checkout.py",
+        "modules": [
+          "checkout"
+        ],
+        "qualified_name": "checkout",
+        "kind": "FUNCTION",
+        "span": {
+          "line": 4,
+          "column": 0,
+          "end_line": 5,
+          "end_column": 29
+        }
+      },
+      {
+        "symbol_id": "orders.py::place_order@4:0",
+        "file": "orders.py",
+        "modules": [
+          "orders"
+        ],
+        "qualified_name": "place_order",
+        "kind": "FUNCTION",
+        "span": {
+          "line": 4,
+          "column": 0,
+          "end_line": 5,
+          "end_column": 33
+        }
+      },
+      {
+        "symbol_id": "pricing.py::calculate_total@1:0",
+        "file": "pricing.py",
+        "modules": [
+          "pricing"
+        ],
+        "qualified_name": "calculate_total",
+        "kind": "FUNCTION",
+        "span": {
+          "line": 1,
+          "column": 0,
+          "end_line": 2,
+          "end_column": 23
+        }
+      }
+    ]
+  }
+}

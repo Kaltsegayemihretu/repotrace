@@ -1,0 +1,150 @@
+{
+  "schema_version": "0.1",
+  "report_kind": "impact",
+  "status": "ok",
+  "repository_root": "/Users/israelhayalsew/Desktop/repotrace-mvp/demo_impact",
+  "source_report_status": "ok",
+  "target": {
+    "id": "pricing.py::calculate_total@1:0",
+    "file": "pricing.py",
+    "qualified_name": "calculate_total",
+    "kind": "FUNCTION",
+    "span": {
+      "line": 1,
+      "column": 0,
+      "end_line": 2,
+      "end_column": 23
+    }
+  },
+  "affected": [
+    {
+      "symbol": {
+        "id": "orders.py::place_order@4:0",
+        "file": "orders.py",
+        "qualified_name": "place_order",
+        "kind": "FUNCTION",
+        "span": {
+          "line": 4,
+          "column": 0,
+          "end_line": 5,
+          "end_column": 33
+        }
+      },
+      "distance": 1,
+      "relationship": "direct",
+      "next_toward_target": "pricing.py::calculate_total@1:0",
+      "witness_call": {
+        "source": "orders.py::place_order@4:0",
+        "target": "pricing.py::calculate_total@1:0",
+        "call_site_count": 1,
+        "evidence": {
+          "call_id": "orders.py::call@5:11:5:33",
+          "file": "orders.py",
+          "span": {
+            "line": 5,
+            "column": 11,
+            "end_line": 5,
+            "end_column": 33
+          },
+          "resolution": "LIKELY",
+          "resolution_kind": "import",
+          "reason": "Explicit import identifies this function under the selected source roots and ordinary initialized-module bindings.",
+          "import_evidence": {
+            "file": "orders.py",
+            "span": {
+              "line": 1,
+              "column": 0,
+              "end_line": 1,
+              "end_column": 35
+            },
+            "statement": "from pricing import calculate_total",
+            "bound_name": "calculate_total"
+          }
+        }
+      },
+      "unresolved_outgoing_calls": 0
+    },
+    {
+      "symbol": {
+        "id": "checkout.py::checkout@4:0",
+        "file": "checkout.py",
+        "qualified_name": "checkout",
+        "kind": "FUNCTION",
+        "span": {
+          "line": 4,
+          "column": 0,
+          "end_line": 5,
+          "end_column": 29
+        }
+      },
+      "distance": 2,
+      "relationship": "indirect",
+      "next_toward_target": "orders.py::place_order@4:0",
+      "witness_call": {
+        "source": "checkout.py::checkout@4:0",
+        "target": "orders.py::place_order@4:0",
+        "call_site_count": 1,
+        "evidence": {
+          "call_id": "checkout.py::call@5:11:5:29",
+          "file": "checkout.py",
+          "span": {
+            "line": 5,
+            "column": 11,
+            "end_line": 5,
+            "end_column": 29
+          },
+          "resolution": "LIKELY",
+          "resolution_kind": "import",
+          "reason": "Explicit import identifies this function under the selected source roots and ordinary initialized-module bindings.",
+          "import_evidence": {
+            "file": "checkout.py",
+            "span": {
+              "line": 1,
+              "column": 0,
+              "end_line": 1,
+              "end_column": 30
+            },
+            "statement": "from orders import place_order",
+            "bound_name": "place_order"
+          }
+        }
+      },
+      "unresolved_outgoing_calls": 0
+    }
+  ],
+  "summary": {
+    "affected_functions": 2,
+    "direct_callers": 1,
+    "indirect_callers": 1,
+    "affected_files": [
+      "checkout.py",
+      "orders.py"
+    ]
+  },
+  "traversal": {
+    "max_depth": 20,
+    "max_nodes": 1000,
+    "max_edges": 100000,
+    "examined_call_pairs": 2,
+    "limits_reached": [],
+    "complete_for_recorded_graph": true
+  },
+  "coverage": {
+    "files_analyzed": 3,
+    "files_failed": 0,
+    "skipped_entries": 0,
+    "diagnostic_count": 0,
+    "symbols": 3,
+    "calls": 2,
+    "linked_calls": 2,
+    "unresolved_calls": 0,
+    "distinct_call_pairs": 2
+  },
+  "warnings": [
+    "Potential review/test candidates, not proof of breakage or runtime execution.",
+    "Only recorded resolved call links are followed; data dependencies and other relationship types are excluded.",
+    "No caller found does not prove that a function is unused or safe to change.",
+    "One shortest witness per caller is retained, not all paths or all call sites.",
+    "IDs and this result belong to the analyzed snapshot; regenerate after source changes."
+  ]
+}

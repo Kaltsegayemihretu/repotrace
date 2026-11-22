@@ -1,0 +1,266 @@
+{
+  "schema_version": "0.1",
+  "report_kind": "trace_score",
+  "recall": {
+    "scopes": {
+      "all_project_code": {
+        "distinct_calls": 1864,
+        "by_tier": {
+          "missed": 1008,
+          "name_only": 502,
+          "uncertain": 204,
+          "confident": 150
+        },
+        "call_weighted": {
+          "missed": 8901,
+          "name_only": 4517,
+          "uncertain": 6233,
+          "confident": 1748
+        },
+        "covered_any_tier": 856,
+        "covered_percent": 45.9,
+        "confident_or_uncertain_percent": 19.0
+      },
+      "source_only": {
+        "distinct_calls": 210,
+        "by_tier": {
+          "name_only": 54,
+          "missed": 77,
+          "uncertain": 65,
+          "confident": 14
+        },
+        "call_weighted": {
+          "name_only": 2496,
+          "missed": 7014,
+          "uncertain": 6064,
+          "confident": 1465
+        },
+        "covered_any_tier": 133,
+        "covered_percent": 63.3,
+        "confident_or_uncertain_percent": 37.6
+      }
+    },
+    "not_scored": {
+      "class body running at import (not a function call)": 23,
+      "called back through library code (callbacks, asyncio, sorted(key=...))": 4,
+      "entered_from_outside (test runner, thread start)": 161
+    },
+    "missed_reasons": [
+      [
+        "unresolved: unresolved",
+        28
+      ],
+      [
+        "unresolved: The receiver has no supported callable declaration.",
+        14
+      ],
+      [
+        "no call recorded on that line (implicit: operator, property, iteration, context manager or class creation)",
+        9
+      ],
+      [
+        "builtin_reference: UNKNOWN_BINDING",
+        8
+      ],
+      [
+        "unresolved: Unknown base classes: TableBase",
+        5
+      ],
+      [
+        "unresolved: Unknown base classes: abc.MutableMapping",
+        4
+      ],
+      [
+        "resolved to different targets than what ran",
+        3
+      ],
+      [
+        "unsupported_context: unsupported_context",
+        3
+      ],
+      [
+        "unresolved: COMPUTED_TARGET",
+        2
+      ],
+      [
+        "builtin_object_method: The callable is a computed expression.",
+        1
+      ]
+    ],
+    "by_pattern": {},
+    "by_difficulty": {},
+    "missed_examples": [
+      {
+        "file": "tinydb/database.py",
+        "line": 95,
+        "caller": "TinyDB.__init__@87:4",
+        "callee": "Middleware.__call__@25:4",
+        "why": "unresolved: unresolved"
+      },
+      {
+        "file": "tinydb/database.py",
+        "line": 95,
+        "caller": "TinyDB.__init__@87:4",
+        "callee": "MemoryStorage.__init__@169:4",
+        "why": "unresolved: unresolved"
+      },
+      {
+        "file": "tinydb/database.py",
+        "line": 95,
+        "caller": "TinyDB.__init__@87:4",
+        "callee": "JSONStorage.__init__@84:4",
+        "why": "unresolved: unresolved"
+      },
+      {
+        "file": "tinydb/database.py",
+        "line": 268,
+        "caller": "TinyDB.__len__@260:4",
+        "callee": "Table.__len__@725:4",
+        "why": "builtin_reference: UNKNOWN_BINDING"
+      },
+      {
+        "file": "tinydb/database.py",
+        "line": 230,
+        "caller": "TinyDB.close@214:4",
+        "callee": "TinyDB.storage@205:4",
+        "why": "unresolved: Unknown base classes: TableBase"
+      },
+      {
+        "file": "tinydb/database.py",
+        "line": 230,
+        "caller": "TinyDB.close@214:4",
+        "callee": "Middleware.__getattr__@67:4",
+        "why": "unresolved: Unknown base classes: TableBase"
+      },
+      {
+        "file": "tinydb/database.py",
+        "line": 188,
+        "caller": "TinyDB.drop_table@176:4",
+        "callee": "TinyDB.storage@205:4",
+        "why": "unresolved: Unknown base classes: TableBase"
+      },
+      {
+        "file": "tinydb/database.py",
+        "line": 202,
+        "caller": "TinyDB.drop_table@176:4",
+        "callee": "TinyDB.storage@205:4",
+        "why": "unresolved: Unknown base classes: TableBase"
+      },
+      {
+        "file": "tinydb/database.py",
+        "line": 170,
+        "caller": "TinyDB.drop_tables@163:4",
+        "callee": "TinyDB.storage@205:4",
+        "why": "unresolved: Unknown base classes: TableBase"
+      },
+      {
+        "file": "tinydb/database.py",
+        "line": 130,
+        "caller": "TinyDB.table@111:4",
+        "callee": "TinyDB.storage@205:4",
+        "why": "unresolved: The receiver has no supported callable declaration."
+      },
+      {
+        "file": "tinydb/database.py",
+        "line": 130,
+        "caller": "TinyDB.table@111:4",
+        "callee": "Table.__init__@94:4",
+        "why": "unresolved: The receiver has no supported callable declaration."
+      },
+      {
+        "file": "tinydb/database.py",
+        "line": 161,
+        "caller": "TinyDB.tables@135:4",
+        "callee": "TinyDB.storage@205:4",
+        "why": "builtin_reference: UNKNOWN_BINDING"
+      },
+      {
+        "file": "tinydb/middlewares.py",
+        "line": 63,
+        "caller": "Middleware.__call__@25:4",
+        "callee": "MemoryStorage.__init__@169:4",
+        "why": "unresolved: The receiver has no supported callable declaration."
+      },
+      {
+        "file": "tinydb/middlewares.py",
+        "line": 63,
+        "caller": "Middleware.__call__@25:4",
+        "callee": "JSONStorage.__init__@84:4",
+        "why": "unresolved: The receiver has no supported callable declaration."
+      },
+      {
+        "file": "tinydb/queries.py",
+        "line": 97,
+        "caller": "QueryInstance.__call__@90:4",
+        "callee": "QueryInstance.__and__.<lambda>@124:29",
+        "why": "unresolved: The receiver has no supported callable declaration."
+      }
+    ]
+  },
+  "precision": {
+    "LIKELY": {
+      "arrows_total": 151,
+      "counts": {
+        "right (called at that line)": 150,
+        "not seen (line ran, target not called)": 1
+      },
+      "judged": 151,
+      "right": 150,
+      "percent_right": 99.3,
+      "not_seen_examples": [
+        {
+          "file": "tests/test_tinydb.py",
+          "line": 87,
+          "expression": "generator",
+          "drawn_targets": [
+            "test_insert_multiple.generator@81:4"
+          ],
+          "what_ran_there": [
+            "Table.insert_multiple@179:4",
+            "TinyDB.__getattr__@251:4"
+          ]
+        }
+      ]
+    },
+    "POSSIBLE": {
+      "arrows_total": 207,
+      "counts": {
+        "right (called at that line)": 207
+      },
+      "judged": 207,
+      "right": 207,
+      "percent_right": 100.0,
+      "not_seen_examples": [],
+      "candidates_per_right_site_seen_percent": 97.3
+    },
+    "NAME_ONLY": {
+      "name shared by several project functions": {
+        "sites_that_ran": 101,
+        "other_objects": 51,
+        "real_calls": 50,
+        "sites_cannot_judge": 6,
+        "percent_real": 49.5
+      },
+      "name unique in the project": {
+        "sites_that_ran": 174,
+        "real_calls": 174,
+        "sites_cannot_judge": 9,
+        "percent_real": 100.0
+      },
+      "common library-style name": {
+        "sites_that_ran": 938,
+        "other_objects": 684,
+        "sites_not_run": 7,
+        "real_calls": 254,
+        "sites_cannot_judge": 12,
+        "percent_real": 27.1
+      }
+    }
+  },
+  "runtime_edges_total": 2052,
+  "limitations": [
+    "Only code that ran is judged; unrun arrows are counted as not judgeable.",
+    "Runtime sees project functions only: a library callee at a drawn line looks like \"not seen\".",
+    "A recorded run is not every possible run; it is evidence from the runs given."
+  ]
+}

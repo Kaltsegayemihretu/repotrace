@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Explore the project</title>
+<link rel="stylesheet" href="explore.css">
+</head>
+<body class="embedded">
+<div id="app">
+  <header id="top">
+    <span class="brand">◉ RepoTrace</span>
+    <div class="tabs" role="group" aria-label="Mode">
+      <button id="mExplore" aria-pressed="true">Explore</button>
+      <button id="mReview" aria-pressed="false">Review a change</button>
+    </div>
+    <button id="cmd" aria-label="Search the project or ask a question">⌕ Find a function, or ask a question <kbd>⌘K</kbd></button>
+    <span id="ver"></span>
+    <span class="badge" title="Real data from a real project, baked into data.js. Not the final app.">Prototype</span>
+  </header>
+
+  <aside id="left" aria-label="Controls">
+    <div id="reviewControls"></div>
+    <h2>View</h2>
+    <div class="lens" role="radiogroup" aria-label="View">
+      <label><input type="radio" name="lens" value="physical" checked><span><b>Physical</b><small>Where the code lives. Grouped by folder.</small></span></label>
+      <label><input type="radio" name="lens" value="logical"><span><b>Logical</b><small>What calls what. Grouped by connections.</small></span></label>
+      <label><input type="radio" name="lens" value="conceptual"><span><b>Conceptual</b><span class="exp">EXPERIMENTAL</span><small>Topics guessed from who-calls-whom and common words. Often wrong.</small></span></label>
+    </div>
+    <h2>Show</h2>
+    <div class="opt">
+      <label><input type="checkbox" id="oSure" checked> Sure links</label>
+      <label><input type="checkbox" id="oMaybe" checked> Maybe links</label>
+      <label><input type="checkbox" id="oTests"> All test code</label>
+    </div>
+    <h2>How to read it</h2>
+    <div class="legend">
+      <div><span class="sw"></span> sure: the code text shows the call</div>
+      <div><span class="sw maybe"></span> maybe: depends on an assumption</div>
+      <div><span class="sw kind"></span> is a kind of (class)</div>
+      <div><span class="dot dbl"></span> double ring: click to open</div>
+      <div><span class="dot" style="background:none"></span> hollow: test code</div>
+      <div class="rv"><span class="dot ring"></span> white ring: changed</div>
+      <div class="rv"><span class="dot yel"></span> yellow ring: may be affected</div>
+      <div class="rv"><span class="dot gone"></span> dashed: removed (old version)</div>
+      <div class="rv"><span class="sw before"></span> dotted: link in the old version</div>
+    </div>
+    <div id="topicsBox" hidden>
+      <h2>Topics <span class="exp">EXPERIMENTAL</span></h2>
+      <p class="note" style="margin-top:0">A guess, not a fact. Judge it by the files listed.</p>
+      <div id="topics" class="legend"></div>
+    </div>
+  </aside>
+
+  <main id="stage">
+    <canvas id="cv" aria-label="Project graph. The same information is in the panel on the right."></canvas>
+    <div class="hud"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button><button id="zfit" aria-label="Fit everything" title="Fit">⤢</button></div>
+    <div id="hint"></div>
+  </main>
+
+  <aside id="right" aria-label="Details" aria-live="polite"></aside>
+
+  <footer id="bottom">
+    <button class="btn" id="back" title="Go back one step (Esc)">← Back</button>
+    <nav class="crumbs" id="crumbs" aria-label="Where you are"></nav>
+    <span class="status" id="status"></span>
+  </footer>
+</div>
+
+<div id="palette" hidden>
+  <div id="pbox" role="dialog" aria-label="Find or ask">
+    <input id="pin" type="text" placeholder="Type a function or file name, or ask: where are retries handled?" autocomplete="off" spellcheck="false">
+    <div id="pres" role="listbox"></div>
+  </div>
+</div>
+<script src="explore.js"></script>
+</body>
+</html>

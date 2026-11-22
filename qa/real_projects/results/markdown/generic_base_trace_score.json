@@ -1,0 +1,264 @@
+{
+  "schema_version": "0.1",
+  "report_kind": "trace_score",
+  "recall": {
+    "scopes": {
+      "all_project_code": {
+        "distinct_calls": 2733,
+        "by_tier": {
+          "name_only": 359,
+          "missed": 196,
+          "uncertain": 2046,
+          "confident": 132
+        },
+        "call_weighted": {
+          "name_only": 648854,
+          "missed": 724043,
+          "uncertain": 2740480,
+          "confident": 353883
+        },
+        "covered_any_tier": 2537,
+        "covered_percent": 92.8,
+        "confident_or_uncertain_percent": 79.7
+      },
+      "source_only": {
+        "distinct_calls": 788,
+        "by_tier": {
+          "name_only": 264,
+          "missed": 77,
+          "uncertain": 375,
+          "confident": 72
+        },
+        "call_weighted": {
+          "name_only": 648741,
+          "missed": 723875,
+          "uncertain": 2738450,
+          "confident": 353818
+        },
+        "covered_any_tier": 711,
+        "covered_percent": 90.2,
+        "confident_or_uncertain_percent": 56.7
+      }
+    },
+    "not_scored": {
+      "class body running at import (not a function call)": 196,
+      "called back through library code (callbacks, asyncio, sorted(key=...))": 56,
+      "entered_from_outside (test runner, thread start)": 964
+    },
+    "missed_reasons": [
+      [
+        "no call recorded on that line (implicit: operator, property, iteration, context manager or class creation)",
+        14
+      ],
+      [
+        "unresolved: unresolved",
+        12
+      ],
+      [
+        "resolved to different targets than what ran",
+        7
+      ],
+      [
+        "unresolved: The expression is not an established class binding.",
+        6
+      ],
+      [
+        "unresolved: The receiver has no supported callable declaration.",
+        6
+      ],
+      [
+        "unsupported_context: unsupported_context",
+        5
+      ],
+      [
+        "unresolved: 're' is external, excluded, or missing from the selected roots.",
+        4
+      ],
+      [
+        "builtin_object_method: The callable is a computed expression.",
+        4
+      ],
+      [
+        "builtin_reference: UNKNOWN_BINDING",
+        3
+      ],
+      [
+        "unresolved: This binding is not a supported function or class definition.",
+        3
+      ],
+      [
+        "unresolved: The callable is a computed expression.",
+        3
+      ],
+      [
+        "unresolved: Only unconditional simple receiver assignments are inferred.",
+        3
+      ]
+    ],
+    "by_pattern": {},
+    "by_difficulty": {},
+    "missed_examples": [
+      {
+        "file": "markdown/blockparser.py",
+        "line": 96,
+        "caller": "BlockParser.__init__@83:4",
+        "callee": "Registry.__init__@310:4",
+        "why": "unresolved: The expression is not an established class binding."
+      },
+      {
+        "file": "markdown/core.py",
+        "line": 127,
+        "caller": "Markdown.__init__@88:4",
+        "callee": "HtmlStash.__init__@219:4",
+        "why": "unresolved: The expression is not an established class binding."
+      },
+      {
+        "file": "markdown/core.py",
+        "line": 221,
+        "caller": "Markdown.build_extension@197:4",
+        "callee": "Extension.__init__@56:4",
+        "why": "unresolved: unresolved"
+      },
+      {
+        "file": "markdown/core.py",
+        "line": 221,
+        "caller": "Markdown.build_extension@197:4",
+        "callee": "AbbrExtension.__init__@42:4",
+        "why": "unresolved: unresolved"
+      },
+      {
+        "file": "markdown/core.py",
+        "line": 221,
+        "caller": "Markdown.build_extension@197:4",
+        "callee": "CodeHiliteExtension.__init__@295:4",
+        "why": "unresolved: unresolved"
+      },
+      {
+        "file": "markdown/core.py",
+        "line": 221,
+        "caller": "Markdown.build_extension@197:4",
+        "callee": "ExtraExtension.__init__@56:4",
+        "why": "unresolved: unresolved"
+      },
+      {
+        "file": "markdown/core.py",
+        "line": 221,
+        "caller": "Markdown.build_extension@197:4",
+        "callee": "FencedCodeExtension.__init__@39:4",
+        "why": "unresolved: unresolved"
+      },
+      {
+        "file": "markdown/core.py",
+        "line": 221,
+        "caller": "Markdown.build_extension@197:4",
+        "callee": "FootnoteExtension.__init__@42:4",
+        "why": "unresolved: unresolved"
+      },
+      {
+        "file": "markdown/core.py",
+        "line": 221,
+        "caller": "Markdown.build_extension@197:4",
+        "callee": "SmartyExtension.__init__@183:4",
+        "why": "unresolved: unresolved"
+      },
+      {
+        "file": "markdown/core.py",
+        "line": 221,
+        "caller": "Markdown.build_extension@197:4",
+        "callee": "TableExtension.__init__@234:4",
+        "why": "unresolved: unresolved"
+      },
+      {
+        "file": "markdown/core.py",
+        "line": 221,
+        "caller": "Markdown.build_extension@197:4",
+        "callee": "TocExtension.__init__@452:4",
+        "why": "unresolved: unresolved"
+      },
+      {
+        "file": "markdown/core.py",
+        "line": 221,
+        "caller": "Markdown.build_extension@197:4",
+        "callee": "WikiLinkExtension.__init__@40:4",
+        "why": "unresolved: unresolved"
+      },
+      {
+        "file": "markdown/core.py",
+        "line": 238,
+        "caller": "Markdown.build_extension@197:4",
+        "callee": "FootnoteExtension.__init__@42:4",
+        "why": "unresolved: COMPUTED_TARGET"
+      },
+      {
+        "file": "markdown/core.py",
+        "line": 379,
+        "caller": "Markdown.convert@322:4",
+        "callee": "to_html_string@232:0",
+        "why": "unresolved: The receiver has no supported callable declaration."
+      },
+      {
+        "file": "markdown/core.py",
+        "line": 379,
+        "caller": "Markdown.convert@322:4",
+        "callee": "to_xhtml_string@237:0",
+        "why": "unresolved: The receiver has no supported callable declaration."
+      }
+    ]
+  },
+  "precision": {
+    "LIKELY": {
+      "arrows_total": 149,
+      "counts": {
+        "not_run (cannot judge)": 17,
+        "right (called at that line)": 132
+      },
+      "judged": 132,
+      "right": 132,
+      "percent_right": 100.0,
+      "not_seen_examples": []
+    },
+    "POSSIBLE": {
+      "arrows_total": 2076,
+      "counts": {
+        "right (called at that line)": 2035,
+        "not_run (cannot judge)": 41
+      },
+      "judged": 2035,
+      "right": 2035,
+      "percent_right": 100.0,
+      "not_seen_examples": [],
+      "candidates_per_right_site_seen_percent": 100.0
+    },
+    "NAME_ONLY": {
+      "name unique in the project": {
+        "sites_not_run": 19,
+        "sites_that_ran": 201,
+        "real_calls": 165,
+        "sites_cannot_judge": 13,
+        "other_objects": 36,
+        "percent_real": 82.1
+      },
+      "name shared by several project functions": {
+        "sites_not_run": 26,
+        "sites_that_ran": 940,
+        "other_objects": 775,
+        "real_calls": 165,
+        "sites_cannot_judge": 1,
+        "percent_real": 17.6
+      },
+      "common library-style name": {
+        "sites_that_ran": 81,
+        "real_calls": 17,
+        "sites_not_run": 3,
+        "other_objects": 64,
+        "percent_real": 21.0
+      }
+    }
+  },
+  "runtime_edges_total": 3949,
+  "limitations": [
+    "Only code that ran is judged; unrun arrows are counted as not judgeable.",
+    "Runtime sees project functions only: a library callee at a drawn line looks like \"not seen\".",
+    "A recorded run is not every possible run; it is evidence from the runs given."
+  ]
+}

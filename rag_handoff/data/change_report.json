@@ -1,0 +1,460 @@
+{
+ "schema_version": "0.2",
+ "report_kind": "change_impact",
+ "status": "ok",
+ "repository": "/privateStudentManagement",
+ "worktree_dirty": false,
+ "base": {
+  "ref": "step-06",
+  "commit": "f33909e2a086ec9cdbb4a006a2c6d65fbe6ad418"
+ },
+ "head": {
+  "ref": "step-07",
+  "commit": "7e2496f59a4968f96ecc16a61123c80f310c7264"
+ },
+ "settings": {
+  "source_roots": [
+   "."
+  ],
+  "excluded_directory_names": [],
+  "include_possible": false,
+  "max_changes": 500,
+  "max_name_matches": 20,
+  "max_depth": 20,
+  "max_nodes": 1000,
+  "max_edges": 100000
+ },
+ "analyzer_python": "3.9.6",
+ "snapshots": {
+  "before": {
+   "commit": "f33909e2a086ec9cdbb4a006a2c6d65fbe6ad418",
+   "status": "ok",
+   "python_files_written": 21,
+   "skipped_from_git": [],
+   "summary": {
+    "files_discovered": 21,
+    "files_analyzed": 21,
+    "files_failed": 0,
+    "skipped_entries": 0,
+    "symbols": 160,
+    "imports": 52,
+    "calls": 402,
+    "linked_calls": 85,
+    "unresolved_calls": 317,
+    "possible_calls": 198,
+    "implicit_calls": 0,
+    "candidate_limited_calls": 0,
+    "unknown_target_calls": 119,
+    "call_categories": {
+     "builtin_object_method": 5,
+     "builtin_reference": 49,
+     "external_or_missing": 14,
+     "internal_linked": 85,
+     "internal_possible": 198,
+     "unresolved": 49,
+     "unsupported_context": 2
+    },
+    "local_linked_calls": 29,
+    "import_linked_calls": 56
+   },
+   "diagnostics": []
+  },
+  "after": {
+   "commit": "7e2496f59a4968f96ecc16a61123c80f310c7264",
+   "status": "ok",
+   "python_files_written": 21,
+   "skipped_from_git": [],
+   "summary": {
+    "files_discovered": 21,
+    "files_analyzed": 21,
+    "files_failed": 0,
+    "skipped_entries": 0,
+    "symbols": 160,
+    "imports": 52,
+    "calls": 402,
+    "linked_calls": 85,
+    "unresolved_calls": 317,
+    "possible_calls": 197,
+    "implicit_calls": 0,
+    "candidate_limited_calls": 0,
+    "unknown_target_calls": 120,
+    "call_categories": {
+     "builtin_object_method": 5,
+     "builtin_reference": 49,
+     "external_or_missing": 14,
+     "internal_linked": 85,
+     "internal_possible": 197,
+     "unresolved": 50,
+     "unsupported_context": 2
+    },
+    "local_linked_calls": 29,
+    "import_linked_calls": 56
+   },
+   "diagnostics": []
+  }
+ },
+ "files": [
+  {
+   "file": "studentapp/services/course_service.py",
+   "change": "modified",
+   "imports_changed": false,
+   "constants_changed": []
+  },
+  {
+   "file": "studentapp/storage/course_repository.py",
+   "change": "modified",
+   "imports_changed": false,
+   "constants_changed": []
+  }
+ ],
+ "changes": [
+  {
+   "file": "studentapp/services/course_service.py",
+   "qualified_name": "CourseService.find_course_by_id",
+   "kind": "METHOD",
+   "change": "modified",
+   "before": {
+    "id": "studentapp/services/course_service.py::CourseService.find_course_by_id@34:4",
+    "span": {
+     "line": 34,
+     "column": 4,
+     "end_line": 38,
+     "end_column": 21
+    },
+    "syntax_sha256": "e1cfbae3bf35de1914bc068bfb4888465ddc4a9272eb69333f019e0d2856e457"
+   },
+   "after": {
+    "id": "studentapp/services/course_service.py::CourseService.find_course_by_id@34:4",
+    "span": {
+     "line": 34,
+     "column": 4,
+     "end_line": 38,
+     "end_column": 21
+    },
+    "syntax_sha256": "4a940c9b11435c8ec43401cc4708d92e5894cf7d03df071ae2e7150a9b442a9f"
+   },
+   "impact": {
+    "before": {
+     "target": {
+      "id": "studentapp/services/course_service.py::CourseService.find_course_by_id@34:4",
+      "file": "studentapp/services/course_service.py",
+      "qualified_name": "CourseService.find_course_by_id",
+      "kind": "METHOD",
+      "span": {
+       "line": 34,
+       "column": 4,
+       "end_line": 38,
+       "end_column": 21
+      }
+     },
+     "status": "ok",
+     "summary": {
+      "affected_functions": 0,
+      "direct_callers": 0,
+      "indirect_callers": 0,
+      "witnesses_with_possible_links": 0,
+      "affected_files": []
+     },
+     "traversal": {
+      "max_depth": 20,
+      "max_nodes": 1000,
+      "max_edges": 100000,
+      "examined_call_pairs": 0,
+      "limits_reached": [],
+      "complete_for_recorded_graph": true
+     },
+     "affected": []
+    },
+    "after": {
+     "target": {
+      "id": "studentapp/services/course_service.py::CourseService.find_course_by_id@34:4",
+      "file": "studentapp/services/course_service.py",
+      "qualified_name": "CourseService.find_course_by_id",
+      "kind": "METHOD",
+      "span": {
+       "line": 34,
+       "column": 4,
+       "end_line": 38,
+       "end_column": 21
+      }
+     },
+     "status": "ok",
+     "summary": {
+      "affected_functions": 0,
+      "direct_callers": 0,
+      "indirect_callers": 0,
+      "witnesses_with_possible_links": 0,
+      "affected_files": []
+     },
+     "traversal": {
+      "max_depth": 20,
+      "max_nodes": 1000,
+      "max_edges": 100000,
+      "examined_call_pairs": 0,
+      "limits_reached": [],
+      "complete_for_recorded_graph": true
+     },
+     "affected": []
+    }
+   },
+   "review_candidates": [],
+   "test_selection": {
+    "tests": [],
+    "removed_tests": [],
+    "other_test_code": []
+   },
+   "name_matches": {
+    "name": "find_course_by_id",
+    "qualified_name": "CourseService.find_course_by_id",
+    "strength": "name_only",
+    "status": "ok",
+    "total": 0,
+    "shown": 0,
+    "truncated": false,
+    "noisy_name": false,
+    "same_name_definitions": 0,
+    "sites": []
+   }
+  },
+  {
+   "file": "studentapp/storage/course_repository.py",
+   "qualified_name": "CourseRepository.fetch_course_by_id",
+   "kind": "METHOD",
+   "change": "added",
+   "after": {
+    "id": "studentapp/storage/course_repository.py::CourseRepository.fetch_course_by_id@25:4",
+    "span": {
+     "line": 25,
+     "column": 4,
+     "end_line": 29,
+     "end_column": 52
+    },
+    "syntax_sha256": "235761ca60af3cad9d3903c4b6f6b6f29eb82478a1e106217b3a80e70f7d2e02"
+   },
+   "impact": {
+    "after": {
+     "target": {
+      "id": "studentapp/storage/course_repository.py::CourseRepository.fetch_course_by_id@25:4",
+      "file": "studentapp/storage/course_repository.py",
+      "qualified_name": "CourseRepository.fetch_course_by_id",
+      "kind": "METHOD",
+      "span": {
+       "line": 25,
+       "column": 4,
+       "end_line": 29,
+       "end_column": 52
+      }
+     },
+     "status": "ok",
+     "summary": {
+      "affected_functions": 0,
+      "direct_callers": 0,
+      "indirect_callers": 0,
+      "witnesses_with_possible_links": 0,
+      "affected_files": []
+     },
+     "traversal": {
+      "max_depth": 20,
+      "max_nodes": 1000,
+      "max_edges": 100000,
+      "examined_call_pairs": 0,
+      "limits_reached": [],
+      "complete_for_recorded_graph": true
+     },
+     "affected": []
+    }
+   },
+   "review_candidates": [],
+   "test_selection": {
+    "tests": [],
+    "removed_tests": [],
+    "other_test_code": []
+   },
+   "name_matches": {
+    "name": "fetch_course_by_id",
+    "qualified_name": "CourseRepository.fetch_course_by_id",
+    "strength": "name_only",
+    "status": "ok",
+    "total": 0,
+    "shown": 0,
+    "truncated": false,
+    "noisy_name": false,
+    "same_name_definitions": 0,
+    "sites": []
+   }
+  },
+  {
+   "file": "studentapp/storage/course_repository.py",
+   "qualified_name": "CourseRepository.read_course_by_id",
+   "kind": "METHOD",
+   "change": "deleted",
+   "before": {
+    "id": "studentapp/storage/course_repository.py::CourseRepository.read_course_by_id@25:4",
+    "span": {
+     "line": 25,
+     "column": 4,
+     "end_line": 29,
+     "end_column": 52
+    },
+    "syntax_sha256": "25bc69b845eb7288b3fda1a76a40977e828b094a5fb871b0587bf204ed2d5793"
+   },
+   "impact": {
+    "before": {
+     "target": {
+      "id": "studentapp/storage/course_repository.py::CourseRepository.read_course_by_id@25:4",
+      "file": "studentapp/storage/course_repository.py",
+      "qualified_name": "CourseRepository.read_course_by_id",
+      "kind": "METHOD",
+      "span": {
+       "line": 25,
+       "column": 4,
+       "end_line": 29,
+       "end_column": 52
+      }
+     },
+     "status": "ok",
+     "summary": {
+      "affected_functions": 0,
+      "direct_callers": 0,
+      "indirect_callers": 0,
+      "witnesses_with_possible_links": 0,
+      "affected_files": []
+     },
+     "traversal": {
+      "max_depth": 20,
+      "max_nodes": 1000,
+      "max_edges": 100000,
+      "examined_call_pairs": 0,
+      "limits_reached": [],
+      "complete_for_recorded_graph": true
+     },
+     "affected": []
+    }
+   },
+   "review_candidates": [],
+   "test_selection": {
+    "tests": [],
+    "removed_tests": [],
+    "other_test_code": []
+   },
+   "name_matches": {
+    "name": "read_course_by_id",
+    "qualified_name": "CourseRepository.read_course_by_id",
+    "strength": "name_only",
+    "status": "ok",
+    "total": 1,
+    "shown": 1,
+    "truncated": false,
+    "noisy_name": false,
+    "same_name_definitions": 0,
+    "sites": [
+     {
+      "file": "studentapp/services/enrollment_service.py",
+      "line": 32,
+      "expression": "self.course_repository.read_course_by_id",
+      "caller": "EnrollmentService.find_course_or_fail",
+      "caller_id": "studentapp/services/enrollment_service.py::EnrollmentService.find_course_or_fail@31:4",
+      "call_id": "studentapp/services/enrollment_service.py::call@32:17:32:68",
+      "is_test": false
+     }
+    ],
+    "meaning": "still_referenced_in_head"
+   }
+  }
+ ],
+ "gaps": [],
+ "warnings": [
+  "IDs and this result belong to the analyzed snapshot; regenerate after source changes.",
+  "Method/constructor candidates are excluded in this mode. Use include_possible / --include-possible to review them separately.",
+  "No caller found does not prove that a function is unused or safe to change.",
+  "One shortest witness per caller is retained, not all paths or all call sites.",
+  "Only selected recorded call links are followed; data dependencies and other relationship types are excluded.",
+  "Potential review/test candidates, not proof of breakage or runtime execution.",
+  "Unresolved calls may hide additional callers, including uncertain candidates and external or dynamic targets.",
+  "Review suggestions are potential places to inspect, not proof of breakage or safety."
+ ],
+ "policy": {
+  "matching_key": "file + qualified_name + kind, only where unique on both sides",
+  "renames_and_moves": "reported as one deleted and one added function (not matched)",
+  "comparison": "syntax without positions, comments or docstrings; those edits are listed as cosmetic",
+  "lambdas": "not matched across commits",
+  "constants": "a changed module-level constant marks the functions that read it as changed",
+  "newly_parseable_file": "functions in a file that did not parse before are listed as added, flagged"
+ },
+ "summary": {
+  "files_changed": 2,
+  "functions_modified": 1,
+  "functions_added": 1,
+  "functions_deleted": 1,
+  "functions_via_constants": 0,
+  "review_candidates": 0,
+  "name_match_sites": 1,
+  "decorator_name_match_sites": 0,
+  "name_match_sites_noisy_names": 0,
+  "gaps": 0
+ },
+ "constants": [],
+ "coverage": {
+  "before": {
+   "files_analyzed": 21,
+   "files_failed": 0,
+   "skipped_entries": 0,
+   "diagnostic_count": 0,
+   "symbols": 160,
+   "calls": 402,
+   "linked_calls": 85,
+   "unresolved_calls": 317,
+   "possible_calls": 198,
+   "unknown_calls": 119,
+   "candidate_limited_calls": 0,
+   "categories": {
+    "builtin_object_method": 5,
+    "builtin_reference": 49,
+    "external_or_missing": 14,
+    "internal_linked": 85,
+    "internal_possible": 198,
+    "unresolved": 49,
+    "unsupported_context": 2
+   },
+   "include_possible": false,
+   "distinct_call_pairs": 64
+  },
+  "after": {
+   "files_analyzed": 21,
+   "files_failed": 0,
+   "skipped_entries": 0,
+   "diagnostic_count": 0,
+   "symbols": 160,
+   "calls": 402,
+   "linked_calls": 85,
+   "unresolved_calls": 317,
+   "possible_calls": 197,
+   "unknown_calls": 120,
+   "candidate_limited_calls": 0,
+   "categories": {
+    "builtin_object_method": 5,
+    "builtin_reference": 49,
+    "external_or_missing": 14,
+    "internal_linked": 85,
+    "internal_possible": 197,
+    "unresolved": 50,
+    "unsupported_context": 2
+   },
+   "include_possible": false,
+   "distinct_call_pairs": 64
+  }
+ },
+ "signature_review": {
+  "summary": {
+   "eligible_functions": 0,
+   "skipped_changed_functions": 0,
+   "scanned_calls": 0,
+   "checked_calls": 0,
+   "skipped_calls": 0,
+   "finding_count": 0,
+   "findings_recorded": 0,
+   "limits_reached": []
+  },
+  "policy": "Checks explicit arguments to recorded LIKELY ordinary/nested function targets in HEAD. A finding means the HEAD call fits the old parameters but not the new ones, under that target-binding assumption. Methods, decorated targets, uncertain/unresolved calls, *args/**kwargs expansion, runtime values and return-type compatibility are not checked. No findings does not mean safe; run the relevant tests."
+ }
+}

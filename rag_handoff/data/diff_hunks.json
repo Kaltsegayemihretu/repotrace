@@ -1,0 +1,58 @@
+{
+ "base": {
+  "ref": "step-06",
+  "commit": "f33909e2a086ec9cdbb4a006a2c6d65fbe6ad418"
+ },
+ "head": {
+  "ref": "step-07",
+  "commit": "7e2496f59a4968f96ecc16a61123c80f310c7264"
+ },
+ "files": [
+  {
+   "file": "studentapp/services/course_service.py",
+   "change": "M",
+   "old_file": "studentapp/services/course_service.py",
+   "hunks": [
+    {
+     "old_lines": [
+      35,
+      35
+     ],
+     "new_lines": [
+      35,
+      35
+     ],
+     "old_symbols": [
+      "studentapp/services/course_service.py::CourseService.find_course_by_id@34:4"
+     ],
+     "new_symbols": [
+      "studentapp/services/course_service.py::CourseService.find_course_by_id@34:4"
+     ]
+    }
+   ]
+  },
+  {
+   "file": "studentapp/storage/course_repository.py",
+   "change": "M",
+   "old_file": "studentapp/storage/course_repository.py",
+   "hunks": [
+    {
+     "old_lines": [
+      25,
+      25
+     ],
+     "new_lines": [
+      25,
+      25
+     ],
+     "old_symbols": [
+      "studentapp/storage/course_repository.py::CourseRepository.read_course_by_id@25:4"
+     ],
+     "new_symbols": [
+      "studentapp/storage/course_repository.py::CourseRepository.fetch_course_by_id@25:4"
+     ]
+    }
+   ]
+  }
+ ]
+}

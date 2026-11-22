@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Explore a real Python project one question, function, and change at a time. A RepoTrace interaction prototype.">
+  <title>RepoTrace — Find your way through code</title>
+  <link rel="icon" href="/lab/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/lab/style.css">
+    <script src="/lab/model.js" defer></script>
+  <script src="/lab/picker.js" defer></script>
+  <script src="/lab/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#content">Skip to workspace</a>
+  <div class="shell">
+    <aside class="rail" aria-label="Project navigation">
+      <button class="brand" data-action="start" aria-label="RepoTrace home"><img src="/lab/icon.svg" alt="" width="30" height="30">RepoTrace<span>LAB</span></button>
+      <div class="project"><span class="project-icon" id="project-icon">·</span><div><strong data-project>…</strong><span id="project-sub">Python project</span></div></div>
+      <div class="rail-label">WORKSPACE</div>
+      <nav id="navigation"></nav>
+      <div class="rail-bottom"><span class="live-dot"></span> <span id="rail-title">RepoTrace</span><p id="rail-note">Nothing is uploaded.<br>No repository is changed.</p><button class="text-button" data-action="about">What works here? <span aria-hidden="true">↗</span></button></div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar"><div class="nav-tools"><button id="back" class="icon-button" data-action="back" aria-label="Back to previous view" title="Back (Alt + Left)">←</button><span id="location">Start</span></div><div class="top-right"><span class="snapshot" id="snapshot"></span><button class="search-shortcut" data-action="find" aria-label="Find code (Command or Control K)"><span>Find code</span><kbd>⌘ K</kbd></button></div></header>
+      <main id="content" tabindex="-1"></main>
+      <footer class="statusbar"><span><i></i> <span data-project>…</span> <span class="dim">/</span> <span id="status-context">Open a project</span></span><button class="text-button" data-action="about">Static analysis · not runtime proof</button></footer>
+    </div>
+  </div>
+  <dialog id="about-dialog" aria-labelledby="about-title"><div class="dialog-top"><span class="eyebrow" id="about-eyebrow">WHAT THIS SHOWS</span><button class="icon-button" data-action="close-about" aria-label="Close information">×</button></div><h2 id="about-title">Real evidence, with its limits</h2><p id="about-intro">RepoTrace reads the code of <span id="about-source">a project</span> without running it. It does not upload, edit, or execute your repository.</p><ul><li>Search matches words in names, paths, comments and code. It is not an AI answer.</li><li>Connections are the analyzer’s recorded links. “Sure” means the call is written in the code; “maybe” means one step depends on an assumption. Neither proves the code runs.</li><li id="about-compare">Change review and test lists come from the comparison you chose. Commands are copied, never executed here.</li><li>History is a hint, not a dependency. Missing links and missing tests are not proof of safety.</li></ul><p>RAG, live repository loading, architecture checks and branch-conflict analysis are not connected in this prototype.</p><button class="primary" data-action="close-about">Back to exploring</button></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <noscript><p class="noscript">Enable JavaScript to use RepoTrace.</p></noscript>
+</body>
+</html>

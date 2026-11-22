@@ -1,0 +1,338 @@
+{
+  "schema_version": "0.3",
+  "status": "ok",
+  "file": "example.py",
+  "analyzer_python": "3.9.6",
+  "diagnostics": [],
+  "symbols": [
+    {
+      "id": "example.py::calculate_total@5:0",
+      "name": "calculate_total",
+      "qualified_name": "calculate_total",
+      "kind": "FUNCTION",
+      "is_async": false,
+      "parent_id": "example.py::module",
+      "file": "example.py",
+      "span": {
+        "line": 5,
+        "column": 0,
+        "end_line": 7,
+        "end_column": 36
+      },
+      "start_line_including_decorators": 5,
+      "docstring": null,
+      "decorators": [],
+      "source": "def calculate_total(price: float, quantity: int = 1, *, tax: float = 0.15) -> float:\n    subtotal = price * quantity\n    return subtotal + subtotal * tax",
+      "syntax_sha256": "300479aace708300f93c8e4d08913e02dac6eb3793b47fd6844d2b97b0064278",
+      "parameters": [
+        {
+          "name": "price",
+          "kind": "POSITIONAL_OR_KEYWORD",
+          "annotation": "float",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "quantity",
+          "kind": "POSITIONAL_OR_KEYWORD",
+          "annotation": "int",
+          "default": "1",
+          "required": false
+        },
+        {
+          "name": "tax",
+          "kind": "KEYWORD_ONLY",
+          "annotation": "float",
+          "default": "0.15",
+          "required": false
+        }
+      ],
+      "return_annotation": "float",
+      "type_comment": null,
+      "type_parameters": []
+    },
+    {
+      "id": "example.py::place_order@10:0",
+      "name": "place_order",
+      "qualified_name": "place_order",
+      "kind": "FUNCTION",
+      "is_async": false,
+      "parent_id": "example.py::module",
+      "file": "example.py",
+      "span": {
+        "line": 10,
+        "column": 0,
+        "end_line": 13,
+        "end_column": 16
+      },
+      "start_line_including_decorators": 10,
+      "docstring": null,
+      "decorators": [],
+      "source": "def place_order(price: float, quantity: int = 1) -> float:\n    total = calculate_total(price, quantity)\n    print(\"Order total:\", total)\n    return total",
+      "syntax_sha256": "809dd9f4e7efac8accc2b85f34ff954c43fdf09c8ab162fe8faf807d0041639b",
+      "parameters": [
+        {
+          "name": "price",
+          "kind": "POSITIONAL_OR_KEYWORD",
+          "annotation": "float",
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "quantity",
+          "kind": "POSITIONAL_OR_KEYWORD",
+          "annotation": "int",
+          "default": "1",
+          "required": false
+        }
+      ],
+      "return_annotation": "float",
+      "type_comment": null,
+      "type_parameters": []
+    },
+    {
+      "id": "example.py::Checkout@16:0",
+      "name": "Checkout",
+      "qualified_name": "Checkout",
+      "kind": "CLASS",
+      "is_async": false,
+      "parent_id": "example.py::module",
+      "file": "example.py",
+      "span": {
+        "line": 16,
+        "column": 0,
+        "end_line": 18,
+        "end_column": 33
+      },
+      "start_line_including_decorators": 16,
+      "docstring": null,
+      "decorators": [],
+      "source": "class Checkout:\n    def submit(self, price: float) -> float:\n        return place_order(price)",
+      "syntax_sha256": "dcd114a3634fb20dde2948293c311fa04d4670903146acd41d2cf59572606e1b",
+      "bases": [],
+      "class_keywords": [],
+      "type_parameters": []
+    },
+    {
+      "id": "example.py::Checkout.submit@17:4",
+      "name": "submit",
+      "qualified_name": "Checkout.submit",
+      "kind": "METHOD",
+      "is_async": false,
+      "parent_id": "example.py::Checkout@16:0",
+      "file": "example.py",
+      "span": {
+        "line": 17,
+        "column": 4,
+        "end_line": 18,
+        "end_column": 33
+      },
+      "start_line_including_decorators": 17,
+      "docstring": null,
+      "decorators": [],
+      "source": "    def submit(self, price: float) -> float:\n        return place_order(price)",
+      "syntax_sha256": "5002eca6cc74da2369679c73ecd8aabef5577a8dd92f7cb6f695534fe1821638",
+      "parameters": [
+        {
+          "name": "self",
+          "kind": "POSITIONAL_OR_KEYWORD",
+          "annotation": null,
+          "default": null,
+          "required": true
+        },
+        {
+          "name": "price",
+          "kind": "POSITIONAL_OR_KEYWORD",
+          "annotation": "float",
+          "default": null,
+          "required": true
+        }
+      ],
+      "return_annotation": "float",
+      "type_comment": null,
+      "type_parameters": []
+    }
+  ],
+  "imports": [
+    {
+      "kind": "ImportFrom",
+      "scope_id": "example.py::module",
+      "file": "example.py",
+      "span": {
+        "line": 2,
+        "column": 0,
+        "end_line": 2,
+        "end_column": 36
+      },
+      "module": "decimal",
+      "level": 0,
+      "names": [
+        {
+          "name": "Decimal",
+          "alias": "Money"
+        }
+      ]
+    }
+  ],
+  "calls": [
+    {
+      "id": "example.py::call@11:12:11:44",
+      "enclosing_symbol_id": "example.py::place_order@10:0",
+      "context": "FUNCTION_BODY",
+      "file": "example.py",
+      "span": {
+        "line": 11,
+        "column": 12,
+        "end_line": 11,
+        "end_column": 44
+      },
+      "expression": "calculate_total",
+      "arguments": [
+        "price",
+        "quantity"
+      ],
+      "keywords": [],
+      "target_id": "example.py::calculate_total@5:0",
+      "resolution": "LIKELY",
+      "reason": "'calculate_total' resolves to one undecorated function in its visible scope."
+    },
+    {
+      "id": "example.py::call@12:4:12:32",
+      "enclosing_symbol_id": "example.py::place_order@10:0",
+      "context": "FUNCTION_BODY",
+      "file": "example.py",
+      "span": {
+        "line": 12,
+        "column": 4,
+        "end_line": 12,
+        "end_column": 32
+      },
+      "expression": "print",
+      "arguments": [
+        "'Order total:'",
+        "total"
+      ],
+      "keywords": [],
+      "target_id": null,
+      "resolution": "UNRESOLVED",
+      "reason": "No definition found in the visible function or module scopes."
+    },
+    {
+      "id": "example.py::call@18:15:18:33",
+      "enclosing_symbol_id": "example.py::Checkout.submit@17:4",
+      "context": "FUNCTION_BODY",
+      "file": "example.py",
+      "span": {
+        "line": 18,
+        "column": 15,
+        "end_line": 18,
+        "end_column": 33
+      },
+      "expression": "place_order",
+      "arguments": [
+        "price"
+      ],
+      "keywords": [],
+      "target_id": "example.py::place_order@10:0",
+      "resolution": "LIKELY",
+      "reason": "'place_order' resolves to one undecorated function in its visible scope."
+    }
+  ],
+  "edges": [
+    {
+      "kind": "CONTAINS",
+      "source": "example.py::module",
+      "target": "example.py::calculate_total@5:0",
+      "evidence": {
+        "line": 5,
+        "column": 0,
+        "end_line": 7,
+        "end_column": 36
+      }
+    },
+    {
+      "kind": "CONTAINS",
+      "source": "example.py::module",
+      "target": "example.py::place_order@10:0",
+      "evidence": {
+        "line": 10,
+        "column": 0,
+        "end_line": 13,
+        "end_column": 16
+      }
+    },
+    {
+      "kind": "CONTAINS",
+      "source": "example.py::module",
+      "target": "example.py::Checkout@16:0",
+      "evidence": {
+        "line": 16,
+        "column": 0,
+        "end_line": 18,
+        "end_column": 33
+      }
+    },
+    {
+      "kind": "CONTAINS",
+      "source": "example.py::Checkout@16:0",
+      "target": "example.py::Checkout.submit@17:4",
+      "evidence": {
+        "line": 17,
+        "column": 4,
+        "end_line": 18,
+        "end_column": 33
+      }
+    },
+    {
+      "kind": "CALLS",
+      "source": "example.py::place_order@10:0",
+      "target": "example.py::calculate_total@5:0",
+      "call_id": "example.py::call@11:12:11:44",
+      "resolution": "LIKELY",
+      "evidence": {
+        "file": "example.py",
+        "line": 11,
+        "column": 12,
+        "end_line": 11,
+        "end_column": 44
+      },
+      "reason": "'calculate_total' resolves to one undecorated function in its visible scope."
+    },
+    {
+      "kind": "CALLS",
+      "source": "example.py::Checkout.submit@17:4",
+      "target": "example.py::place_order@10:0",
+      "call_id": "example.py::call@18:15:18:33",
+      "resolution": "LIKELY",
+      "evidence": {
+        "file": "example.py",
+        "line": 18,
+        "column": 15,
+        "end_line": 18,
+        "end_column": 33
+      },
+      "reason": "'place_order' resolves to one undecorated function in its visible scope."
+    }
+  ],
+  "limitations": [
+    "Bare calls in functions and lambdas use lexical scope lookup and are linked as LIKELY.",
+    "Reassignments and conditional definitions remain ambiguous; full execution order is not modeled.",
+    "Dynamic namespace mutation and external monkey-patching are not modeled; impact analysis is pending.",
+    "IDs are snapshot-local; repository identity and revision matching come later.",
+    "Calls inside branches and comprehensions are potential call sites, not execution guarantees.",
+    "Comprehension calls, generic type scopes and annotation evaluation are not resolved yet.",
+    "Python syntax support depends on the interpreter running this analyzer."
+  ],
+  "encoding": "utf-8",
+  "size_bytes": 519,
+  "content_sha256": "5429b5e80cf9fa785cae663f083350c1330039626542a63ce63a4ae1583d4243",
+  "source": "\"\"\"Small shop example for learning how the analyzer records evidence.\"\"\"\nfrom decimal import Decimal as Money\n\n\ndef calculate_total(price: float, quantity: int = 1, *, tax: float = 0.15) -> float:\n    subtotal = price * quantity\n    return subtotal + subtotal * tax\n\n\ndef place_order(price: float, quantity: int = 1) -> float:\n    total = calculate_total(price, quantity)\n    print(\"Order total:\", total)\n    return total\n\n\nclass Checkout:\n    def submit(self, price: float) -> float:\n        return place_order(price)\n",
+  "line_count": 18,
+  "module_id": "example.py::module",
+  "docstring": "Small shop example for learning how the analyzer records evidence.",
+  "resolution_summary": {
+    "total_calls": 3,
+    "linked_calls": 2,
+    "unresolved_calls": 1
+  }
+}

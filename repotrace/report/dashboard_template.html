@@ -1,0 +1,1675 @@
+<!doctype html>
+<html lang="en" data-theme="auto" data-size="normal">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<style>
+:root,:root[data-theme="light"]{--bg:#f5f6f9;--panel:#fff;--ink:#1b2130;--muted:#4a5568;--line:#cfd5df;--accent:#2a56d1;--accent-ink:#fff;--sup:#14693b;--sup-bg:#e0f3e8;--pos:#7a4d00;--pos-bg:#fcefd0;--weak:#3f4a60;--weak-bg:#e9edf3;--warn:#a1301d;--warn-bg:#fbe5e0;--ctl:#7a8499;--code:#f0f2f6;--add:#dff2e4;--del:#fbe3e3;--hl:#fff1b0;--soft:#eef2fd}
+:root[data-theme="dark"]{--bg:#11141b;--panel:#1a1f2e;--ink:#e7eaf1;--muted:#a9b3c7;--line:#3a4260;--accent:#8aa8ff;--accent-ink:#0e1220;--sup:#7fdaa4;--sup-bg:#15301f;--pos:#f1c670;--pos-bg:#3a2d10;--weak:#c0c8d8;--weak-bg:#262c3e;--warn:#ff9e8c;--warn-bg:#3c1b16;--ctl:#7d88a8;--code:#131726;--add:#173121;--del:#391c1c;--hl:#494016;--soft:#1e2540}
+@media (prefers-color-scheme:dark){:root[data-theme="auto"]{--bg:#11141b;--panel:#1a1f2e;--ink:#e7eaf1;--muted:#a9b3c7;--line:#3a4260;--accent:#8aa8ff;--accent-ink:#0e1220;--sup:#7fdaa4;--sup-bg:#15301f;--pos:#f1c670;--pos-bg:#3a2d10;--weak:#c0c8d8;--weak-bg:#262c3e;--warn:#ff9e8c;--warn-bg:#3c1b16;--ctl:#7d88a8;--code:#131726;--add:#173121;--del:#391c1c;--hl:#494016;--soft:#1e2540}}
+:root[data-theme="contrast"]{--bg:#000;--panel:#0b0b0b;--ink:#fff;--muted:#ececec;--line:#fff;--accent:#ffd400;--accent-ink:#000;--sup:#8dffbf;--sup-bg:#002a14;--pos:#ffd66b;--pos-bg:#2e2200;--weak:#f2f2f2;--weak-bg:#262626;--warn:#ffb3a6;--warn-bg:#3a0d05;--ctl:#fff;--code:#111;--add:#003d1a;--del:#4a0a0a;--hl:#5c5200;--soft:#14203f}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;overflow-wrap:anywhere}
+code,pre,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:0.8125rem}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[hidden]{display:none!important}
+.top{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;justify-content:space-between;padding:12px 22px;background:var(--panel);border-bottom:1px solid var(--line)}
+.brand{font-weight:800;font-size:1.125rem;letter-spacing:.2px}.brand small{font-weight:400;color:var(--muted);font-size:0.8125rem;margin-left:8px}
+.wrap{max-width:1500px;margin:0 auto;padding:18px 22px}
+.narrow{max-width:820px}
+h1{font-size:1.75rem;line-height:1.2;margin:6px 0 10px}
+h2{font-size:1.1875rem;margin:0 0 6px}h3{font-size:1rem;margin:22px 0 6px}
+.lead{font-size:1.0625rem;color:var(--muted);margin:0 0 20px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
+.card.off{opacity:.55;pointer-events:none}
+.field{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}
+.field label{font-weight:600;display:block;margin-bottom:2px}
+input[type=text],select{padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--bg);min-width:0}
+input[type=text]{flex:1 1 300px}
+select{width:100%}
+.col{flex:1 1 280px;min-width:0}
+.btn{border:1px solid var(--line);background:var(--panel);border-radius:9px;padding:8px 14px;cursor:pointer;font-weight:600}
+.btn:hover:not(:disabled){border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);padding:11px 22px;font-size:1.0625rem}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.link{border:0;background:none;color:var(--accent);padding:2px 4px;font-weight:600;text-decoration:underline;cursor:pointer}
+a.btn{text-decoration:none;display:inline-block;color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.hint{color:var(--muted);font-size:0.875rem;margin:4px 0}
+.ok{color:var(--sup);font-weight:600}
+.err{background:var(--warn-bg);border:1px solid var(--warn);border-radius:10px;padding:10px 14px;margin:12px 0}
+.note{color:var(--muted);margin:4px 0}
+.callout{padding:10px 14px;border-radius:10px;background:var(--weak-bg);margin:12px 0}
+.callout.soft{background:var(--soft)}
+.chip{display:inline-block;padding:1px 9px;border-radius:999px;font-size:0.7812rem;font-weight:650;border:1px solid transparent;white-space:nowrap}
+.chip.supported{color:var(--sup);background:var(--sup-bg)}.chip.possible{color:var(--pos);background:var(--pos-bg)}
+.chip.name_only,.chip.neutral{color:var(--weak);background:var(--weak-bg)}.chip.warn{color:var(--warn);background:var(--warn-bg)}
+.chip.start{color:var(--accent-ink);background:var(--accent)}
+.stage{display:flex;gap:10px;align-items:center;padding:6px 0;color:var(--muted)}
+.stage .dot{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--weak-bg);font-size:0.8125rem;flex:none}
+.stage.done{color:var(--ink)}.stage.done .dot{background:var(--sup-bg);color:var(--sup)}
+.stage.now{color:var(--ink);font-weight:650}.stage.now .dot{background:var(--accent);color:var(--accent-ink)}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:s 0.8s linear infinite}
+@keyframes s{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}html{scroll-behavior:auto}}
+.bar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:0 0 6px}
+.legend{display:grid;grid-template-columns:auto 1fr;gap:8px 12px;align-items:start;margin:8px 0}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px}
+#detail{padding:20px 22px}
+#detail h2{font-size:1.3125rem}
+details>summary{cursor:pointer;font-weight:650}
+pre{margin:6px 0;padding:9px 11px;background:var(--code);border-radius:8px;overflow:auto;max-width:100%}
+.diffline{display:block;white-space:pre}.diffline.add{background:var(--add)}.diffline.del{background:var(--del)}
+.cand{border:1px solid var(--line);border-radius:10px;margin:8px 0;background:var(--panel)}
+.cand>button{display:flex;width:100%;gap:8px;align-items:center;flex-wrap:wrap;text-align:left;padding:10px 13px;border:0;background:none;cursor:pointer}
+.cand .cname{font-weight:650}.cand .body{padding:0 14px 14px}
+.flags{display:flex;flex-wrap:wrap;gap:4px}
+ol.chain{padding-left:20px;margin:4px 0}
+.snip{display:grid;grid-template-columns:auto 1fr;gap:0 10px}.snip .ln{color:var(--muted);text-align:right;user-select:none}.snip .hl{background:var(--hl)}
+.empty{padding:16px;border:1px dashed var(--line);border-radius:10px;color:var(--muted)}
+.filters{display:flex;gap:14px;flex-wrap:wrap;margin:6px 0}.filters label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+
+.tab{border:1px solid var(--line);background:var(--panel);padding:8px 16px;border-radius:10px;cursor:pointer;font-weight:650}
+.tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.gp{padding:0;overflow:hidden;min-width:0}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg button{border:0;background:var(--panel);padding:5px 11px;cursor:pointer;font-weight:600}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.tb-label{font-size:0.8125rem;color:var(--muted);margin-right:4px}
+.tb label{display:inline-flex;gap:5px;align-items:center;cursor:pointer;font-size:0.875rem}
+.canvas{overflow:auto;max-height:72vh;min-height:230px;background:var(--bg);position:relative}
+.canvas svg{display:block}
+.keyline{display:flex;flex-wrap:wrap;gap:6px 18px;padding:8px 12px;border-top:1px solid var(--line);font-size:0.8125rem;color:var(--muted);align-items:center}
+.keyline svg{vertical-align:middle}
+.node{cursor:pointer;outline:none}
+.node rect.body{fill:var(--panel);stroke:var(--line);stroke-width:1.5}
+.node .bar{stroke:none}
+.node.root rect.body{fill:var(--soft);stroke:var(--accent);stroke-width:3}
+.node.changed rect.body{stroke:var(--warn);stroke-width:2.5}
+.node.test rect.body{stroke-dasharray:4 3}
+.node.weak rect.body{stroke-dasharray:2 3}
+.node.group rect.back{fill:var(--panel);stroke:var(--line);stroke-width:1.5}
+.node.more rect.body{fill:var(--weak-bg);stroke-dasharray:3 3}
+.node:hover rect.body,.node:focus-visible rect.body{stroke:var(--accent);stroke-width:2.5}
+.node.selected rect.body{stroke:var(--accent);stroke-width:4}
+.node text{fill:var(--ink);font-size:0.9375rem;pointer-events:none}
+.node text.sub{fill:var(--muted);font-size:0.75rem}
+.node text.nm{font-weight:650}
+.edge{fill:none;stroke-width:2}
+.edge.supported{stroke:var(--sup)}.edge.possible{stroke:var(--pos);stroke-dasharray:7 5}.edge.name_only{stroke:var(--weak);stroke-dasharray:2 5}
+.edge.wraps{stroke-width:3}
+.hasfocus .edge{opacity:.12}.hasfocus .node{opacity:.4}
+.hasfocus .edge.hl{opacity:1;stroke-width:3.2}.hasfocus .node.hl{opacity:1}
+.colhead{fill:var(--muted);font-size:0.8438rem;font-weight:650}
+.hint2{padding:26px;color:var(--muted);text-align:center}
+.side .chip{white-space:normal}
+.dense .edge{stroke-width:1.3;opacity:.55}
+.hidden-note{font-size:0.8125rem;color:var(--muted)}
+.expl{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start;margin:6px 0 10px}
+.expl .sbox{position:relative;flex:1 1 320px}
+.expl input{width:100%}
+.sugg{position:absolute;z-index:5;left:0;right:0;top:100%;background:var(--panel);border:1px solid var(--line);border-radius:10px;max-height:320px;overflow:auto;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.sugg button{display:block;width:100%;text-align:left;padding:8px 12px;border:0;background:none;cursor:pointer}
+.sugg button:hover,.sugg button:focus{background:var(--bg)}
+.row2{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+
+html[data-size="large"]{font-size:118%}
+html[data-size="xlarge"]{font-size:136%}
+html[data-motion="reduce"] *{animation:none!important;scroll-behavior:auto!important;transition:none!important}
+html[data-theme="contrast"] .edge{stroke-width:3.2}
+html[data-theme="contrast"] .node rect.body{stroke-width:2.5}
+dl.gloss dt{font-weight:700;margin-top:8px}dl.gloss dd{margin:0 0 0 0}
+.skip{position:absolute;left:8px;top:-60px;background:var(--accent);color:var(--accent-ink);padding:10px 16px;border-radius:8px;z-index:50;font-weight:700;text-decoration:none}
+.skip:focus{top:8px}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.btn,input[type=text],select,.seg,.tab,.gbtn{border-color:var(--ctl)}
+.btn{min-height:2.5rem}
+.seg button{min-height:2.25rem}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin:10px 0}
+.gbtn{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:10px 12px;cursor:pointer;min-height:3.2rem}
+.gbtn:hover{border-color:var(--accent)}
+.gbtn .asp{display:block;font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.gbtn .tt{display:block;font-weight:650}
+.proj{border-top:1px solid var(--line);padding-top:10px;margin-top:12px}
+.proj>summary{font-weight:700;cursor:pointer;font-size:1.05rem}
+.example{border-left:5px solid var(--accent)}
+.example ol{padding-left:1.3rem;margin:8px 0}
+@media (min-width:1000px){.example ol{columns:2;column-gap:36px}}
+.example li{margin:6px 0;break-inside:avoid}
+.example p{margin:6px 0}
+.example h3{margin:10px 0 2px}
+.example li.done{color:var(--muted)}
+.example li.done::marker{content:"\2713  "}
+.tour.top{bottom:auto;top:18px}
+.tour{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:60;width:min(560px,calc(100vw - 24px));background:var(--panel);color:var(--ink);border:2px solid var(--accent);border-radius:14px;padding:14px 16px;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.tour h2{margin:0 0 4px;font-size:1.05rem}
+.tour .count{color:var(--muted);font-size:.85rem}
+.tour-hl{outline:4px solid var(--accent)!important;outline-offset:4px;border-radius:10px;position:relative;z-index:5}
+.prefs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.prefs fieldset{border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.prefs legend{font-weight:700;padding:0 6px}
+.prefs label{display:block;padding:4px 0;cursor:pointer}
+.textver summary{font-weight:650}
+.textver ul{margin:4px 0 10px;padding-left:1.2rem}
+.textver h4{margin:10px 0 2px;font-size:.95rem}
+footer{max-width:1360px;margin:0 auto;padding:6px 28px 34px;color:var(--muted);font-size:0.875rem}
+
+/* ---- calm, graph-first layer ---- */
+.covbar{display:flex;height:12px;border-radius:6px;overflow:hidden;border:1px solid var(--ctl);margin:8px 0}
+.projbar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin:0 0 12px}
+.pfind{position:relative;flex:1 1 320px;max-width:560px}
+.pfind input{width:100%;padding:9px 12px}
+.proj{display:grid;grid-template-columns:minmax(250px,330px) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:900px){.proj{grid-template-columns:minmax(0,1fr)}.outline{position:static!important;max-height:340px!important}}
+.outline{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;padding:6px 0 10px}
+.ohead{display:flex;justify-content:space-between;gap:8px;align-items:baseline;padding:8px 14px 6px}
+.otree{list-style:none;margin:0;padding:0}
+.orow{display:flex;align-items:center}
+.orow.sel{background:var(--soft)}
+.ocaret{flex:none;width:24px;height:28px;border:0;background:none;color:var(--muted);cursor:pointer;padding:0;font-size:.8125rem}
+span.ocaret{cursor:default}
+.olabel{flex:1;min-width:0;display:flex;justify-content:space-between;gap:8px;text-align:left;border:0;background:none;padding:4px 10px 4px 2px;cursor:pointer;font-size:.9375rem;color:var(--ink)}
+.olabel:hover{text-decoration:underline}
+.orow.sel .olabel{font-weight:700}
+.olabel .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.olabel .onote{flex:none;color:var(--muted);font-size:.8125rem}
+.orow.dim .olabel{color:var(--muted);cursor:default}
+.pdetail{padding:22px 26px;min-height:60vh}
+.pdetail h2{font-size:1.5rem;margin:0 0 4px}
+.pdetail h3{font-size:1rem;margin:20px 0 6px}
+.trail{display:flex;flex-wrap:wrap;gap:2px 4px;align-items:center;margin:0 0 8px;color:var(--muted);font-size:.875rem}
+.trail .btn.link{font-weight:550;padding:0 2px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:4px 28px}
+.tagm{display:inline-block;margin-left:6px;padding:0 7px;border-radius:999px;font-size:.75rem;font-weight:650;color:var(--pos);background:var(--pos-bg)}
+.tagt{display:inline-block;margin-left:6px;padding:0 7px;border-radius:999px;font-size:.75rem;color:var(--weak);background:var(--weak-bg)}
+.pic{margin:6px 0 4px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.pic .canvas{min-height:120px;max-height:460px}
+.lead2{font-size:1.0625rem;margin:6px 0 4px}
+.startrow2{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}
+.sbox{cursor:pointer;outline:none}
+.sbox rect.card{fill:var(--panel);stroke:var(--line);stroke-width:1.4}
+.sbox rect.head{fill:var(--soft)}
+.sbox.mod rect.head{fill:var(--weak-bg)}
+.sbox.test rect.card{stroke-dasharray:4 3}
+.sbox.ghost rect.card{fill:var(--bg);stroke-dasharray:2 4}
+.sbox:hover rect.card,.sbox:focus-visible rect.card{stroke:var(--accent);stroke-width:2.5}
+.sbox.selected rect.card{stroke:var(--accent);stroke-width:3.5}
+.sbox text{fill:var(--ink);font-size:.9375rem;pointer-events:none}
+.sbox text.tag{fill:var(--muted);font-size:.7188rem;letter-spacing:.06em;text-transform:uppercase}
+.sbox text.mem{font-size:.8438rem}
+.sbox text.dim{fill:var(--muted)}
+.sbox line.sep{stroke:var(--line)}
+.sedge{fill:none;stroke-width:1.8}
+.sedge.inherits{stroke:var(--ink);stroke-width:2}
+.sedge.holds{stroke:var(--accent);stroke-width:2.2}
+.sedge.sure{stroke:var(--sup)}.sedge.maybe{stroke:var(--pos);stroke-dasharray:7 5}
+.slabel{fill:var(--muted);font-size:.75rem;paint-order:stroke;stroke:var(--bg);stroke-width:4px;pointer-events:none}
+.shasfocus .sedge{opacity:.12}.shasfocus .sbox{opacity:.4}
+.shasfocus .sedge.hl{opacity:1}.shasfocus .sbox.hl{opacity:1}
+.mlist{list-style:none;margin:4px 0 10px;padding:0}
+.mlist li{margin:2px 0}
+.mlist .btn.link{font-weight:550;text-decoration:none;padding:1px 2px;min-height:0}
+.mrow{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.mrow .btn{min-height:0;padding:3px 10px;font-size:.875rem}
+.trail .btn.link{min-height:0}
+.mlist .mono{font-size:.8438rem}
+.covbar span{display:block;height:100%}
+.covbar .c-sure{background:var(--sup)}.covbar .c-maybe{background:var(--pos)}.covbar .c-out{background:var(--line)}.covbar .c-lost{background:var(--weak)}
+.covlist{list-style:none;margin:6px 0 10px;padding:0}.covlist li{margin:3px 0}
+.dot{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:8px;vertical-align:-1px}
+.dot.c-sure{background:var(--sup)}.dot.c-maybe{background:var(--pos)}.dot.c-out{background:var(--line);border:1px solid var(--ctl)}.dot.c-lost{background:var(--weak)}
+.startrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0}
+.startrow .lab{font-weight:650;margin-right:4px}
+.cta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:4px 0 14px}
+.story{background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:16px;padding:18px 22px;margin:14px 0}
+.story h2{font-size:1.0625rem;margin:0 0 6px}
+.story ul{margin:6px 0 12px;padding-left:1.2rem}
+.story li{margin:5px 0;font-size:1.0625rem}
+.check{border-radius:10px;padding:10px 14px;font-size:1.0625rem}
+.check.ok{background:var(--sup-bg);color:var(--sup)}
+.check.look{background:var(--warn-bg);color:var(--warn)}
+.check.info{background:var(--soft);color:var(--ink)}
+code{background:var(--code);border-radius:5px;padding:0 5px}
+.item.more-btn{border-style:dashed;color:var(--muted)}
+body{line-height:1.6}
+.top{position:relative;display:flex;align-items:center;gap:14px;padding:14px 28px;background:transparent;border-bottom:0}
+.brand{font-weight:750;font-size:1.0625rem;letter-spacing:.2px}
+.ctx{flex:1 1 auto;min-width:0;color:var(--muted);font-size:.9375rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topright{display:flex;gap:8px;align-items:center;margin-left:auto}
+.menu{position:absolute;right:28px;top:calc(100% - 4px);z-index:40;min-width:230px;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 32px rgba(15,23,42,.18);padding:6px}
+.mi{display:block;width:100%;text-align:left;background:none;border:0;border-radius:8px;padding:10px 12px;cursor:pointer;color:var(--ink);text-decoration:none;font-weight:600;font-size:1rem}
+.mi:hover,.mi:focus-visible{background:var(--bg)}
+.wrap{max-width:1360px;padding:6px 28px 28px}
+.narrow{max-width:760px}
+h1{letter-spacing:-.01em}
+.card{border-radius:16px;padding:22px 24px;box-shadow:0 1px 2px rgba(15,23,42,.05)}
+.btn{border-radius:10px;font-weight:600}
+.btn.quiet{border-color:transparent;background:none;color:var(--muted)}
+.btn.quiet:hover:not(:disabled){color:var(--ink);border-color:var(--line)}
+.headline{margin:4px 0 18px;padding:0 2px}
+.headline:focus{outline:none}
+.headline h1{font-size:1.875rem;line-height:1.2;margin:0 0 4px}
+.headline .sub{font-size:1.125rem;color:var(--muted);margin:0}
+.headline .sub b{color:var(--ink);font-weight:650}
+.headline .meta{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin-top:10px;font-size:.9375rem;color:var(--muted)}
+.picker{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.picker input{flex:0 1 220px;min-width:0;padding:7px 11px}
+#list{display:flex;flex-wrap:wrap;gap:8px}
+.item{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--ctl);background:var(--panel);border-radius:999px;padding:6px 14px;cursor:pointer;font-weight:600}
+.item:hover{border-color:var(--accent)}
+.item[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.item .name{font-weight:650}
+.item .count{font-size:.8125rem;opacity:.85}
+.work{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+@media (max-width:1100px){.work{grid-template-columns:minmax(0,1fr)}}
+.work>*{min-width:0}
+.panel{border-radius:16px;box-shadow:0 1px 2px rgba(15,23,42,.05)}
+.side{padding:20px 22px;max-height:calc(100vh - 32px);overflow:auto;position:sticky;top:12px}
+@media (max-width:1100px){.side{position:static;max-height:none}}
+.toolbar{padding:12px 16px;gap:10px 18px}
+.toolbar .tb{display:inline-flex;align-items:center;gap:6px}
+.toolbar .push{margin-left:auto}
+.more-opts{border-top:1px solid var(--line);padding:0 16px}
+.more-opts>summary{padding:9px 0;color:var(--muted);font-weight:600;font-size:.9375rem}
+.more-opts .optrow{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;padding:2px 0 12px}
+.canvas{min-height:56vh;max-height:78vh}
+.keyline{padding:10px 16px;gap:6px 20px}
+.listview{margin:14px 0}
+.listview>summary{color:var(--muted);padding:4px 2px}
+.headline-note{color:var(--muted);margin:8px 0 0}
+.example{border-left:5px solid var(--accent)}
+.two{display:grid;gap:14px}
+.cmpline{font-size:1.0625rem;margin:6px 0 4px}
+.cmpline b{font-weight:650}
+.node rect.body{fill:var(--panel);stroke:var(--line);stroke-width:1.25}
+.node.root rect.body{stroke-width:2.5}
+.node text{font-size:1rem}
+.node text.sub{font-size:.8125rem}
+.edge{stroke-width:1.8;opacity:.85}
+.colhead{font-size:.8125rem;letter-spacing:.04em;text-transform:uppercase;font-weight:650}
+.gbtn{border-radius:12px;padding:12px 14px}
+.gbtn .asp{font-size:.72rem}
+.proj{border-top:0;padding-top:4px}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the main content</a>
+<div id="announce" class="sr" aria-live="polite" role="status"></div>
+<header class="top" role="banner">
+  <div class="brand">RepoTrace</div>
+  <button class="btn quiet" id="againBtn" hidden>← New comparison</button>
+  <div class="ctx" id="ctx"></div>
+  <div class="topright">
+    <button class="btn" id="moreBtn" aria-expanded="false" aria-controls="more" aria-haspopup="true">Menu ▾</button>
+  </div>
+  <div class="menu" id="more" hidden>
+    <a class="mi" id="saveBtn" hidden>Save as one file</a>
+    <button class="mi" id="tourBtn">Take a tour</button>
+    <button class="mi" id="helpBtn" aria-expanded="false" aria-controls="help">Words used</button>
+    <button class="mi" id="dispBtn" aria-expanded="false" aria-controls="display">Display settings</button>
+  </div>
+</header>
+
+<section id="display" class="wrap narrow" hidden aria-label="Display settings">
+  <div class="card">
+    <h2>Display settings</h2>
+    <p class="hint">Saved on this computer. They never change what RepoTrace finds, only how it looks.</p>
+    <div class="prefs">
+      <fieldset><legend>Text size</legend>
+        <label><input type="radio" name="ps" value="normal"> Normal</label>
+        <label><input type="radio" name="ps" value="large"> Large</label>
+        <label><input type="radio" name="ps" value="xlarge"> Extra large</label></fieldset>
+      <fieldset><legend>Colors</legend>
+        <label><input type="radio" name="pt" value="auto"> Match my computer</label>
+        <label><input type="radio" name="pt" value="light"> Light</label>
+        <label><input type="radio" name="pt" value="dark"> Dark</label>
+        <label><input type="radio" name="pt" value="contrast"> High contrast</label></fieldset>
+      <fieldset><legend>Motion</legend>
+        <label><input type="checkbox" id="pm"> Reduce animation</label></fieldset>
+    </div>
+  </div>
+</section>
+
+<section id="help" class="wrap narrow" hidden aria-label="Help">
+  <div class="card">
+    <h2>What RepoTrace does</h2>
+    <p>You pick two saved versions of a Python project. RepoTrace finds the functions that changed between them, then looks for other code that uses those functions, directly or through other functions. Those are the places worth checking after your change.</p>
+    <h3>What it does not do</h3>
+    <p>It never runs your code and never changes your files. It cannot prove that something will break or that something is safe. Python can decide at run time what to call, so some real callers cannot be found by reading code. An empty result never means &ldquo;safe&rdquo;.</p>
+    <h3>How sure is each line?</h3>
+    <div class="legend">
+      <span class="chip supported">● Sure</span><span>The code text shows this call. It is not proven to run, but there is no doubt about the link.</span>
+      <span class="chip possible">◐ Maybe</span><span>Probably a real call, but it depends on an assumption, such as what type an object has. Treat it as a hypothesis and check it.</span>
+      <span class="chip name_only">○ Name only</span><span>Some call has the same name, but the analysis could not tell what it runs. This is the weakest evidence. It exists so that callers it could not follow are not silently lost.</span>
+    </div>
+    <h3>Words used on this page</h3>
+    <dl class="gloss">
+      <dt>Function</dt><dd>A named piece of code, such as <code>calculate_total</code>. Inside a class it is called a method.</dd>
+      <dt>Caller</dt><dd>A function that uses another one. If you change a function, its callers are the places that may behave differently.</dd>
+      <dt>Steps away</dt><dd>How far a caller is from the changed function. Direct callers use it themselves. Two steps away means they use something that uses it.</dd>
+      <dt>Decorator</dt><dd>A line starting with <code>@</code> that wraps a function. Changing a decorator affects every function it wraps.</dd>
+      <dt>Value (constant)</dt><dd>A fixed setting such as <code>TAX = 1.15</code>. Changing it affects every function that reads it.</dd>
+      <dt>Test code</dt><dd>Functions whose job is to test other code. They are real callers, but you may want to hide them to see your own code first.</dd>
+      <dt>What we could not see</dt><dd>What RepoTrace could not check. Read this before trusting a quiet result.</dd>
+    </dl>
+    <h3>Finding your project folder</h3>
+    <p>It is the folder that contains a hidden <code>.git</code> folder. On a Mac, click <b>Browse…</b> on the first screen.</p>
+    <h3>Keyboard</h3>
+    <p>Press <code>/</code> to search. In the picture, press <code>Tab</code> to reach it, then use the arrow keys to move between boxes, <code>Enter</code> to open one, and <code>Esc</code> to return to the changed function. Every picture also has a <b>Text version</b> underneath.</p>
+  </div>
+</section>
+
+<main id="main" tabindex="-1">
+<div id="liveArea" hidden>
+  <section id="setup" class="wrap narrow">
+    <h1>What could my change affect?</h1>
+    <p class="lead">Pick two versions of a Python project. RepoTrace shows which functions changed and what depends on them. It only reads your Git history; it never runs or changes your code.</p>
+
+    <div class="card" id="gallery">
+      <h2>Try an example</h2>
+      <p class="hint">One click opens a real before-and-after with a short explanation and things to try.</p>
+      <div id="galleryBody"><p class="hint">Loading examples…</p></div>
+    </div>
+
+    <div class="card" id="c1">
+      <h2>Or use your own project</h2>
+      <p class="hint">Choose the top folder of your project. Git is only needed to compare two versions.</p>
+      <div class="field">
+        <input id="repoPath" type="text" placeholder="/Users/you/my-project" aria-label="Project folder path" spellcheck="false" autocomplete="off">
+        <button class="btn" id="browseBtn" hidden>Browse…</button>
+      </div>
+      <div class="cta">
+        <button class="btn primary" id="exploreNowBtn">Explore the project map</button>
+        <button class="btn" id="openBtn">Compare two versions</button>
+      </div>
+      <div class="chips" id="recent"></div>
+      <div id="repoMsg" aria-live="polite"></div>
+      <div id="setupErr" class="err" role="alert" hidden></div>
+      <div id="c2" hidden>
+        <h2 style="margin-top:14px">Compare two versions</h2>
+        <p class="cmpline" id="cmpLine"></p>
+        <details id="c2more"><summary>Choose different versions</summary>
+          <p class="hint"><b>Before</b> is where you started. <b>After</b> is the version with your change.</p>
+          <div class="chips" id="presets"></div>
+          <div class="field" style="align-items:flex-start;margin-top:12px">
+            <div class="col"><label for="baseSel">Before (older)</label><select id="baseSel"></select><input id="baseOther" type="text" placeholder="branch, tag or commit id" hidden style="margin-top:6px;width:100%"></div>
+            <div class="col"><label for="headSel">After (newer)</label><select id="headSel"></select><input id="headOther" type="text" placeholder="branch, tag or commit id" hidden style="margin-top:6px;width:100%"></div>
+          </div>
+          <div id="compareMsg" class="hint" aria-live="polite"></div>
+        </details>
+        <details id="c3"><summary>Options</summary>
+          <div class="field" style="margin-top:12px"><label style="font-weight:400"><input type="checkbox" id="optPossible" checked> Also show <b>maybe</b> links (recommended). They are hypotheses, clearly labelled.</label></div>
+          <div class="field" style="align-items:flex-start;margin-top:8px"><div class="col"><label for="roots">Where your code lives</label>
+            <input id="roots" type="text" style="width:100%" aria-describedby="rootsWhy" spellcheck="false">
+            <div class="hint" id="rootsWhy"></div></div></div>
+        </details>
+        <div class="field" style="margin-top:14px"><button class="btn primary" id="goBtn" disabled>Analyze this change</button><span class="hint" id="goHint">Open a project first.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="progress" class="wrap narrow" hidden aria-live="polite">
+    <h1>Analyzing…</h1>
+    <p class="lead">Reading both versions and working out what a change could affect. Nothing is being run or changed.</p>
+    <div class="card" id="stageList"></div>
+    <p class="hint" id="elapsed"></p>
+  </section>
+</div>
+
+<section id="results" class="wrap" hidden>
+  <div class="card example" id="exampleCard" hidden aria-label="About this example"></div>
+  <div class="headline" id="summary" tabindex="-1"></div>
+  <div id="limits" class="callout" hidden aria-label="What we could not see"></div>
+  <div id="viewChange">
+    <nav class="picker" id="nav" aria-label="Changed functions" hidden>
+      <input id="search" type="text" placeholder="Search  ( / )" aria-label="Search changed functions" hidden>
+      <div id="list" role="listbox" aria-label="Changed functions"></div>
+    </nav>
+    <div class="work">
+      <section class="panel gp" aria-label="Impact graph"><div id="gChange"></div></section>
+      <aside class="panel side" id="sideChange" tabindex="-1" aria-live="polite" aria-label="Details"></aside>
+    </div>
+  </div>
+  <div id="viewProject" hidden>
+    <div class="projbar">
+      <div class="pfind">
+        <input id="pSearch" type="text" placeholder="Search a function, class or file  ( / )" aria-label="Search the project" autocomplete="off" spellcheck="false">
+        <div class="sugg" id="pSugg" hidden></div>
+      </div>
+      <label class="tb"><input type="checkbox" id="pTests"> Show test code</label>
+      <button class="btn" id="pChange">See what a change affects →</button>
+    </div>
+    <div class="proj">
+      <nav class="panel outline" id="outline" aria-label="Project outline"></nav>
+      <section class="panel pdetail" id="pdetail" tabindex="-1" aria-live="polite" aria-label="Details"></section>
+    </div>
+  </div>
+</section>
+</main>
+<div class="tour" id="tour" role="dialog" aria-modal="false" aria-labelledby="tourTitle" hidden>
+  <div class="count" id="tourCount"></div><h2 id="tourTitle"></h2><p id="tourText" style="margin:4px 0 10px"></p>
+  <div class="row2"><button class="btn" id="tourBack">Back</button><button class="btn primary" id="tourNext" style="padding:8px 18px;font-size:1rem">Next</button><button class="btn link" id="tourClose">Close tour</button></div>
+</div>
+<footer id="foot" hidden>RepoTrace suggests where to look. It does not prove that anything breaks, or that anything is safe. Sure links come from the code text, not from running it. Maybe links are hypotheses. Name-only links share just a name.</footer>
+
+<script id="data" type="application/json">__DATA__</script>
+<script>
+"use strict";
+const LIVE = !!document.querySelector('meta[name="rt-live"]');
+const TOKEN = LIVE ? document.querySelector('meta[name="rt-token"]').content : '';
+let DATA = JSON.parse(document.getElementById('data').textContent);
+const TIER = {supported: 'Sure', possible: 'Maybe', name_only: 'Name only'};
+const MARK = {supported: '● ', possible: '◐ ', name_only: '○ '};
+const TIP = {
+  supported: 'The code text shows this call. It is not proven to run, but there is no doubt about the link.',
+  possible: 'Probably a real call, but it rests on an assumption (for example what type an object has). Treat it as a hypothesis.',
+  name_only: 'Some call has the same name, but the analysis could not tell what it runs. The weakest evidence.'};
+const $ = (s, r) => (r || document).querySelector(s);
+function h(tag, props, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(props || {})) {
+    if (k === 'class') e.className = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (v === true) e.setAttribute(k, '');
+    else if (v !== false && v != null) e.setAttribute(k, v);
+  }
+  for (const kid of kids.flat(Infinity)) { if (kid == null || kid === false) continue; e.append(kid.nodeType ? kid : document.createTextNode(String(kid))); }
+  return e;
+}
+const chip = (text, cls, tip) => h('span', {class: 'chip ' + (cls || 'neutral'), title: tip || null}, text);
+const tierChip = t => chip(MARK[t] + TIER[t], t, TIP[t]);
+const refLabel = side => {
+  const long = /^[0-9a-f]{40}$/.test(side.ref);
+  return (long ? side.commit.slice(0, 8) : side.ref + ' (' + side.commit.slice(0, 8) + ')') + (side.subject ? ' \u201C' + side.subject + '\u201D' : '');
+};
+const where = (f, l) => (f || '') + (l ? ':' + l : '');
+const inline = text => String(text).split('`').map((t, i) => i % 2 ? h('code', null, t) : t);
+const plural = (n, one, many) => n + ' ' + (n === 1 ? one : (many || one + 's'));
+const state = {showMore: false, selected: null, info: null, job: null};
+
+/* ---------------------------------------------------------------- live app: setup */
+async function api(path, body) {
+  let response;
+  try {
+    response = await fetch(path, {method: body === undefined ? 'GET' : 'POST', headers: {'X-RepoTrace-Token': TOKEN, 'Content-Type': 'application/json'},
+      body: body === undefined ? undefined : JSON.stringify(body)});
+  } catch (e) { throw new Error('Cannot reach RepoTrace. Did you close the terminal window it was started from?'); }
+  let data = {};
+  try { data = await response.json(); } catch (e) { /* not JSON */ }
+  if (!response.ok) throw new Error(data.error || 'Something went wrong (' + response.status + ').');
+  return data;
+}
+function show(which) {
+  for (const id of ['setup', 'progress', 'results']) $('#' + id).hidden = id !== which;
+  $('#foot').hidden = which !== 'results';
+  $('#againBtn').hidden = !(LIVE && which === 'results');
+  $('#againBtn').textContent = state.mode === 'map' ? '\u2190 Back' : '\u2190 New comparison';
+  $('#saveBtn').hidden = !(LIVE && which === 'results' && state.mode !== 'map');
+  if (which !== 'results') $('#ctx').textContent = '';
+}
+function setupError(message) { const box = $('#setupErr'); box.hidden = !message; box.textContent = message || ''; }
+
+async function openRepo(path) {
+  setupError('');
+  $('#repoMsg').replaceChildren();
+  if (!path) { $('#repoMsg').replaceChildren(h('div', {class: 'err'}, 'Type or choose a project folder first.')); return; }
+  $('#openBtn').disabled = true;
+  try {
+    const info = await api('/api/inspect', {repo: path});
+    state.info = info;
+    $('#repoPath').value = info.repo;
+    const msgs = [h('div', {class: 'ok'}, '✓ Found "' + info.name + '": ' + plural(info.commit_count >= 80 ? 80 : info.commit_count, 'recent commit') + ', currently on ' + info.current_branch + '.')];
+    if (info.dirty) msgs.push(h('div', {class: 'hint'}, 'You have uncommitted changes. They are ignored: RepoTrace compares saved commits only.'));
+    if (info.commit_count < 2) msgs.push(h('div', {class: 'err'}, 'This project has only one commit, so there is nothing to compare yet.'));
+    $('#repoMsg').replaceChildren(...msgs);
+    fillCompare(info);
+    refreshRecent();
+  } catch (e) {
+    state.info = null;
+    $('#repoMsg').replaceChildren(h('div', {class: 'err', role: 'alert'}, e.message));
+    $('#c2').hidden = true; updateGo();
+  } finally { $('#openBtn').disabled = false; }
+}
+
+function commitLabel(c) { return c.short + '  ·  ' + c.date + '  ·  ' + c.subject; }
+function optionGroups(info, selectedBase) {
+  const group = (label, items) => items.length ? h('optgroup', {label}, items) : null;
+  const opt = (value, text) => h('option', {value}, text);
+  return [
+    group('Recent commits (newest first)', info.commits.map(c => opt(c.commit, commitLabel(c)))),
+    group('Branches', info.branches.map(b => opt(b.name, b.name + (b.current ? '  (current)' : '') + (b.remote ? '  (remote)' : '')))),
+    group('Tags', info.tags.map(t => opt(t.name, t.name + '  (tag)'))),
+    h('optgroup', {label: 'Something else'}, [opt('__other__', 'Other… (type a branch, tag or commit id)')])];
+}
+function fillCompare(info) {
+  for (const id of ['baseSel', 'headSel']) $('#' + id).replaceChildren(...optionGroups(info).filter(Boolean));
+  const base = info.commits[1] || info.commits[0], head = info.commits[0];
+  $('#baseSel').value = base.commit; $('#headSel').value = head.commit;
+  $('#baseOther').hidden = $('#headOther').hidden = true;
+  const presets = [{label: 'Last commit  (what the latest commit changed)', base: base.commit, head: head.commit}];
+  if (info.default_branch && info.current_branch !== info.default_branch) presets.push({label: 'This branch vs ' + info.default_branch, base: info.default_branch, head: info.current_branch});
+  const oldest = info.commits[Math.min(info.commits.length - 1, 4)];
+  if (info.commits.length > 3) presets.push({label: 'Last ' + (info.commits.indexOf(oldest)) + ' commits together', base: oldest.commit, head: head.commit});
+  $('#presets').replaceChildren(h('span', {class: 'hint'}, 'Quick picks:'), ...presets.map(p => h('button', {class: 'btn', onclick: () => { setSel('baseSel', p.base); setSel('headSel', p.head); }}, p.label)));
+  $('#roots').value = info.source_roots.roots.join(', ');
+  $('#rootsWhy').textContent = info.source_roots.reason + ' Change this only if results look empty.';
+  $('#c2').hidden = false;
+  updateGo();
+}
+function setSel(id, value) {
+  const select = $('#' + id);
+  if (![...select.options].some(o => o.value === value)) { select.value = '__other__'; $('#' + id.replace('Sel', 'Other')).value = value; }
+  else select.value = value;
+  syncOther(); updateGo();
+}
+function syncOther() {
+  $('#baseOther').hidden = $('#baseSel').value !== '__other__';
+  $('#headOther').hidden = $('#headSel').value !== '__other__';
+}
+function chosen(which) { const v = $('#' + which + 'Sel').value; return (v === '__other__' ? $('#' + which + 'Other').value : v).trim(); }
+const refShort = v => /^[0-9a-f]{40}$/.test(v) ? v.slice(0, 8) : v;
+function describeCompare(info, base, head) {
+  const label = v => { const c = info.commits.find(x => x.commit === v); return c ? c.short : refShort(v); };
+  if (info.commits.length > 1 && base === info.commits[1].commit && head === info.commits[0].commit)
+    return h('span', null, 'Comparing the last commit: ', h('b', null, '\u201C' + info.commits[0].subject + '\u201D'));
+  return h('span', null, 'Comparing ', h('b', null, label(base)), ' \u2192 ', h('b', null, label(head)));
+}
+function updateGo() {
+  const info = state.info, base = info ? chosen('base') : '', head = info ? chosen('head') : '';
+  let hint = '', ok = !!info && !!base && !!head;
+  if (!info) hint = 'Open a project first.';
+  else if (info.commit_count < 2) { hint = 'This project needs at least two commits.'; ok = false; }
+  else if (!base || !head) hint = 'Choose both versions.';
+  else if (base === head) { hint = 'Both versions are the same, so there is nothing to compare.'; ok = false; }
+  else {
+    const order = info.commits.map(c => c.commit), i = order.indexOf(base), j = order.indexOf(head);
+    if (i >= 0 && j >= 0 && i < j) hint = 'Heads up: "Before" looks newer than "After". The results will read backwards. Swap them if that was a mistake.';
+    else hint = 'Ready.';
+  }
+  $('#compareMsg').textContent = ok ? hint : '';
+  $('#cmpLine').replaceChildren(...(info && base && head ? [describeCompare(info, base, head)] : []));
+  $('#goHint').textContent = hint;
+  $('#goBtn').disabled = !ok;
+}
+async function refreshRecent() {
+  try {
+    const s = await api('/api/state');
+    $('#recent').replaceChildren(...(s.recent.length ? [h('span', {class: 'hint'}, 'Recent:')] : []), ...s.recent.map(r => h('button', {class: 'btn', title: r.path, onclick: () => { $('#repoPath').value = r.path; $('#repoMsg').replaceChildren(); $('#repoPath').focus(); }}, r.name)));
+    return s;
+  } catch (e) { return null; }
+}
+
+async function analyze(fromExample) {
+  if (fromExample !== true) state.example = null;
+  state.mode = 'change';
+  setupError('');
+  const body = {repo: state.info.repo, base: chosen('base'), head: chosen('head'), include_possible: $('#optPossible').checked,
+    source_roots: $('#roots').value.split(',').map(s => s.trim()).filter(Boolean)};
+  try {
+    const {job} = await api('/api/analyze', body);
+    state.job = job; show('progress'); announce('Analyzing. This usually takes a few seconds.'); poll(job);
+  } catch (e) { setupError(e.message); }
+}
+const STAGE_LABELS = [['check', 'Checking the project and the two versions'], ['analyze_before', 'Reading the older version'], ['analyze_after', 'Reading the newer version'],
+  ['compare', 'Comparing them function by function'], ['impact', 'Finding what could be affected'], ['finish', 'Preparing the page']];
+async function poll(job) {
+  const started = Date.now();
+  while (state.job === job) {
+    let data;
+    try { data = await api('/api/job?id=' + job); } catch (e) { show('setup'); setupError(e.message); return; }
+    renderProgress(data, Date.now() - started);
+    if (data.state === 'done') { DATA = data.view; state.selected = null; DATA.kind === 'map' ? showMap() : showResults(); return; }
+    if (data.state === 'error') { show('setup'); setupError(data.error.message); return; }
+    await new Promise(r => setTimeout(r, 400));
+  }
+}
+const MAP_STAGE_LABELS = [['check', 'Looking for Python files'], ['analyze_after', 'Reading every file and linking the calls'], ['finish', 'Preparing the map']];
+function renderProgress(data, ms) {
+  const labels = state.mode === 'map' ? MAP_STAGE_LABELS : STAGE_LABELS;
+  const idx = labels.findIndex(s => s[0] === data.stage);
+  $('#stageList').replaceChildren(...labels.map(([key, label], i) => {
+    const cls = i < idx ? 'done' : i === idx ? 'now' : '';
+    return h('div', {class: 'stage ' + cls}, h('span', {class: 'dot'}, i < idx ? '✓' : i === idx ? h('span', {class: 'spin'}) : String(i + 1)),
+      h('span', null, label, i === idx && data.detail ? h('div', {class: 'hint'}, data.detail) : null));
+  }));
+  $('#elapsed').textContent = 'Working for ' + Math.round(ms / 1000) + ' s. Large projects take longer.';
+}
+
+/* ---------------------------------------------------------------- results */
+function renderSummary() {
+  const box = $('#summary'), n = DATA.changes.length, st = DATA.story;
+  const cls = DATA.status === 'error' ? 'warn' : 'possible';
+  const words = {partial: 'analysis partly complete', limited: 'analysis hit a limit', error: 'analysis failed'}[DATA.status];
+  const quote = side => '\u201C' + (side.subject || refShort(side.ref)) + '\u201D';
+  const meta = [h('span', null, 'Before: ', quote(DATA.base), '  \u2192  After: ', quote(DATA.head))];
+  if (words) meta.push(chip(words, cls, 'partly complete: some files could not be parsed. hit a limit: a size limit was reached.'));
+  meta.push(h('button', {class: 'btn link', id: 'limitsBtn', 'aria-expanded': 'false', onclick: toggleLimits}, 'What we could not see'));
+  const out = [h('h1', null, n ? (st ? st.headline : plural(n, 'function') + ' changed') : 'No function changed')];
+  if (n && st) out.push(h('div', {class: 'story'}, h('h2', null, 'What happened'), h('ul', null, st.items.map(t => h('li', null, inline(t)))),
+    st.check ? h('div', {class: 'check ' + st.check.level}, inline(st.check.text)) : null));
+  out.push(h('div', {class: 'meta'}, meta));
+  if (!n) {
+    const cosmetic = DATA.files.filter(f => f.change === 'cosmetic').length;
+    out.push(h('p', {class: 'headline-note'}, DATA.status === 'error' ? 'The analysis could not finish. Open "What we could not see" for why.' :
+      'No function changed between these two versions.' + (cosmetic ? ' ' + plural(cosmetic, 'file') + (cosmetic === 1 ? ' differs' : ' differ') + ' only in comments, blank lines or docstrings, which are ignored.' : '') +
+      (DATA.gaps.length ? ' But some things could not be compared. Open "What we could not see" before concluding that nothing needs checking.' : '')));
+  }
+  box.replaceChildren(...out.filter(Boolean));
+}
+function toggleLimits() {
+  const box = $('#limits'), open = box.hidden;
+  if (open) renderLimits();
+  box.hidden = !open;
+  $('#limitsBtn').setAttribute('aria-expanded', String(open));
+}
+function svgKey(tier) {
+  const s = sv('svg', {width: 34, height: 10, viewBox: '0 0 34 10'}, sv('path', {d: 'M1 5 H33', class: 'edge ' + tier}));
+  return s;
+}
+function renderLimits() {
+  const box = $('#limits'), after = (DATA.coverage || {}).after || {};
+  const list = items => h('ul', null, items.map(i => h('li', null, i)));
+  box.replaceChildren(
+    h('h2', null, 'Things to look at yourself'),
+    DATA.gaps.length ? list(DATA.gaps.map(g => [chip(g.type.replace(/_/g, ' '), 'warn'), ' ', h('span', {class: 'mono'}, g.file), ' — ', g.message]))
+      : h('p', {class: 'note'}, 'Nothing was left unread. That still does not mean the change is safe.'),
+    h('h2', null, 'How far to trust this'),
+    list([
+      after.calls ? 'RepoTrace could not follow ' + after.unresolved_calls + ' of ' + after.calls + ' calls in the new version: calls into other people\u2019s libraries, calls decided while the program runs, or objects whose kind it cannot tell. If your changed function is used that way, it will not show up here.' : null,
+      DATA.settings.include_possible ? 'Maybe links are shown, and labelled.' : 'Maybe links are hidden in this run.',
+      'Changes to comments and blank lines are ignored. A rename or a move is shown as one item when the code is identical; otherwise as a deleted function plus a new one.',
+      'Your code was read from ' + DATA.settings.source_roots.map(r => r === '.' ? 'the top of the project' : 'the folder \u201C' + r + '\u201D').join(' and ') + '. If that is the wrong folder, links will be missing.',
+      DATA.source_available ? null : 'Code snippets and diffs are not included (the project folder was not supplied).'].filter(Boolean)),
+    DATA.warnings.length ? h('details', null, h('summary', null, 'All warnings from the analysis (' + DATA.warnings.length + ')'), list(DATA.warnings)) : null);
+}
+function groups() {
+  const byId = new Map(DATA.changes.map(c => [c.id, c])), st = DATA.story;
+  const order = list => list.slice().sort((a, b) => b.candidates.length - a.candidates.length);
+  if (!st) return {main: order(DATA.changes), more: []};
+  const pick = ids => order(ids.map(i => byId.get(i)).filter(Boolean));
+  const main = pick(st.primary), more = pick(st.secondary);
+  return main.length ? {main, more} : {main: more, more: []};
+}
+const ranked = () => { const g = groups(); return g.main.concat(g.more); };
+function visibleChanges() {
+  const q = $('#search').value.trim().toLowerCase(), g = groups();
+  return (state.showMore || q ? g.main.concat(g.more) : g.main).filter(c => !q || (c.name + ' ' + c.file).toLowerCase().includes(q));
+}
+const CHANGE_WORDS = {modified: 'changed', added: 'new', deleted: 'removed'};
+const simple = name => name.split('.').pop();
+function pillLabel(c) {
+  const p = c.pair;
+  if (!p) return [c.name, c.change === 'deleted' ? 'deleted' : c.change === 'added' ? 'new' : c.candidates.length ? plural(c.candidates.length, 'place') : 'no users'];
+  if (p.role === 'old') return p.how === 'moved' ? [c.name, 'moved'] : [simple(c.name) + ' \u2192 ' + simple(p.other), p.how === 'renamed' ? 'renamed' : 'renamed + moved'];
+  return [c.name, 'new home'];
+}
+function renderList() {
+  const list = $('#list'), items = visibleChanges(), g = groups();
+  $('#nav').hidden = g.main.length + g.more.length < 2;
+  $('#search').hidden = g.main.length + g.more.length <= 8;
+  if (!items.length) { list.replaceChildren(h('div', {class: 'empty'}, DATA.changes.length ? 'No changed function matches this search.' : 'No changed functions were found.')); return; }
+  const pills = items.map(c => { const [label, note] = pillLabel(c);
+    return h('button', {class: 'item', role: 'option', 'data-id': c.id, 'aria-selected': String(state.selected === c.id), title: c.file, onclick: () => select(c.id)},
+      h('span', {class: 'name'}, label), h('span', {class: 'count'}, note)); });
+  if (g.more.length && !$('#search').value.trim()) pills.push(h('button', {class: 'item more-btn', onclick: () => { state.showMore = !state.showMore; renderList(); }},
+    state.showMore ? 'Hide the other ' + g.more.length : '+ ' + g.more.length + ' more (edited to match, or the new name)'));
+  list.replaceChildren(...pills);
+}
+function snippet(code, hot) {
+  if (!code || !code.lines.length) return h('p', {class: 'note'}, 'Code is not available for this location.');
+  const g = h('div', {class: 'snip mono'});
+  code.lines.forEach((text, i) => {
+    const n = code.first < 1 ? i + 1 : code.first + i, cls = n === hot ? 'hl' : '';
+    g.append(h('span', {class: 'ln ' + cls}, (n === hot ? '▶ ' : '') + n), h('span', {class: cls, style: 'white-space:pre'}, text || ' '));
+  });
+  return h('pre', null, g);
+}
+function diffBlock(diff) {
+  const pre = h('pre');
+  diff.split('\n').forEach(line => {
+    if (!line) return;
+    const kind = line.startsWith('+') && !line.startsWith('+++') ? 'add' : line.startsWith('-') && !line.startsWith('---') ? 'del' : '';
+    pre.append(h('span', {class: 'diffline ' + kind}, line));
+  });
+  return pre;
+}
+/* ---------------------------------------------------------------- the graph picture */
+const SVGNS = 'http://www.w3.org/2000/svg';
+const sizeFactor = () => ({normal: 1, large: 1.18, xlarge: 1.36}[document.documentElement.dataset.size] || 1);
+const NW = 236, NH = 60, GX = 96, GY = 16, HEAD = 34, COLCAP = 28;
+const RANK = {supported: 0, possible: 1, name_only: 2};
+function sv(tag, attrs, ...kids) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const [k, v] of Object.entries(attrs || {})) if (v != null && v !== false) e.setAttribute(k, v === true ? '' : v);
+  for (const kid of kids.flat(Infinity)) { if (kid == null || kid === false) continue; e.append(kid.nodeType ? kid : document.createTextNode(String(kid))); }
+  return e;
+}
+const trunc = (s, n) => s.length > n ? s.slice(0, n - 1) + '…' : s;
+const baseName = p => p.split('/').pop();
+const dirName = p => p.includes('/') ? p.slice(0, p.lastIndexOf('/')) : '.';
+
+function createGraph(opts) {
+  const G = {nodes: [], edges: [], root: null, selected: null, maxLayers: Infinity, tiers: {supported: true, possible: true, name_only: true},
+    hideTests: false, groupFiles: false, openFiles: new Set(), openColumns: new Set(), scale: 1, fit: true, fitAll: false, visible: new Map()};
+  const mount = opts.mount;
+  const toolbar = h('div', {class: 'toolbar'}), canvas = h('div', {class: 'canvas', tabindex: '-1'}), keyline = h('div', {class: 'keyline'});
+  const textBox = h('details', {class: 'textver card', style: 'margin:0;border-radius:0;border-width:1px 0 0'}, h('summary', null, 'Text version of this picture'), h('div', {class: 'tvbody'}));
+
+  const layerNames = ['Direct', '2 steps', '3 steps', 'All'];
+  const layerBtns = [1, 2, 3, Infinity].map((n, i) => h('button', {'aria-pressed': 'false', onclick: () => { G.maxLayers = n; syncToolbar(); draw(); }}, layerNames[i]));
+  const tierInputs = {};
+  const tierBox = t => h('label', null, tierInputs[t] = h('input', {type: 'checkbox', checked: true, onchange: e => { G.tiers[t] = e.target.checked; draw(); }}), tierChip(t));
+  const testBox = h('input', {type: 'checkbox', onchange: e => { G.hideTests = e.target.checked; draw(); }});
+  const testLabel = h('label', {class: 'tb'}, testBox, 'Hide test code');
+  const hiddenNote = h('span', {class: 'hidden-note'});
+  const groupBox = h('input', {type: 'checkbox', onchange: e => { G.groupFiles = e.target.checked; G.openFiles = new Set(); draw(); }});
+  const zoom = (f) => () => { G.fit = false; G.scale = Math.max(0.35, Math.min(2.2, G.scale * f)); applyScale(); };
+  toolbar.append(
+    h('span', {class: 'tb'}, h('span', {class: 'tb-label'}, 'Show'), h('span', {class: 'seg'}, layerBtns)),
+    testLabel, hiddenNote,
+    h('button', {class: 'btn push', title: 'Shrink the picture to see all of it', onclick: () => { G.fit = true; G.fitAll = true; applyScale(); }}, 'Fit to screen'));
+  const moreOpts = h('details', {class: 'more-opts'}, h('summary', null, 'More options'),
+    h('div', {class: 'optrow'}, h('span', {class: 'tb-label'}, 'Show lines that are'), ...['supported', 'possible', 'name_only'].map(tierBox),
+      h('label', {title: 'Turn the picture into a map of files. Click a file to open it into its functions.'}, groupBox, 'Group by file'),
+      h('span', {class: 'seg'}, h('button', {onclick: zoom(1 / 1.2), 'aria-label': 'Zoom out'}, '\u2212'), h('button', {onclick: zoom(1.2), 'aria-label': 'Zoom in'}, '+'))));
+  mount.replaceChildren(...(opts.compact ? [canvas, keyline] : [toolbar, moreOpts, canvas, keyline, textBox]));
+  keyline.append(h('span', null, svgKey('supported'), ' sure'), h('span', null, svgKey('possible'), ' maybe'), h('span', null, svgKey('name_only'), ' name only'),
+    h('span', null, '\u25A3 blue box = the function that changed'), h('span', null, '\u25A3 red box = edited too'), h('span', null, '\u25A3 dashed box = a test'));
+  if (opts.compact) keyline.replaceChildren(h('span', null, svgKey('supported'), ' sure'), h('span', null, svgKey('possible'), ' maybe'), h('span', null, '\u25A3 blue box = this one'), h('span', null, '\u25A3 dashed box = a test'));
+  function syncToolbar() { layerBtns.forEach((b, i) => b.setAttribute('aria-pressed', String([1, 2, 3, Infinity][i] === G.maxLayers))); }
+
+  function pipeline() {
+    const byKey = new Map(G.nodes.map(n => [n.key, n]));
+    let nodes = G.nodes.filter(n => n.key === G.root || (Math.abs(n.layer) <= G.maxLayers && !(G.hideTests && n.test)));
+    const keep = new Set(nodes.map(n => n.key));
+    let edges = G.edges.filter(e => keep.has(e.source) && keep.has(e.target) && G.tiers[e.tier]);
+    const adj = new Map(nodes.map(n => [n.key, []]));
+    edges.forEach(e => { adj.get(e.source).push(e.target); adj.get(e.target).push(e.source); });
+    const seen = new Set([G.root]); const queue = [G.root];
+    for (const k of queue) for (const o of (adj.get(k) || [])) if (!seen.has(o)) { seen.add(o); queue.push(o); }
+    nodes = nodes.filter(n => seen.has(n.key)); edges = edges.filter(e => seen.has(e.source) && seen.has(e.target));
+    if (G.groupFiles) {
+      const groupOf = n => (n.key === G.root || G.openFiles.has(n.file)) ? n.key : 'file:' + n.file;
+      const groups = new Map();
+      for (const n of nodes) {
+        const gk = groupOf(n);
+        if (gk === n.key) { groups.set(gk, n); continue; }
+        if (!groups.has(gk)) groups.set(gk, {key: gk, group: true, file: n.file, name: baseName(n.file), members: [], layer: n.layer, test: true, changed: false, tier: 'supported', role: 'group'});
+        const g = groups.get(gk);
+        g.members.push(n);
+        if (Math.abs(n.layer) < Math.abs(g.layer)) g.layer = n.layer;
+        g.test = g.test && n.test; g.changed = g.changed || !!n.changed;
+        if (RANK[n.tier || 'supported'] > RANK[g.tier]) g.tier = n.tier;
+      }
+      const agg = new Map();
+      for (const e of edges) {
+        const s = groupOf(byKey.get(e.source)), d = groupOf(byKey.get(e.target));
+        if (s === d) continue;
+        const id = s + '>' + d, cur = agg.get(id);
+        if (!cur) agg.set(id, {id, source: s, target: d, tier: e.tier, kind: e.kind, calls: 1});
+        else { cur.calls++; if (RANK[e.tier] < RANK[cur.tier]) cur.tier = e.tier; }
+      }
+      nodes = [...groups.values()]; edges = [...agg.values()];
+    }
+    const cols = new Map();
+    nodes.forEach(n => { if (!cols.has(n.layer)) cols.set(n.layer, []); cols.get(n.layer).push(n); });
+    const dropped = new Set();
+    for (const [layer, list] of cols) {
+      if (list.length > COLCAP && !G.openColumns.has(layer)) {
+        list.sort((a, b) => (RANK[a.tier || 'supported'] - RANK[b.tier || 'supported']) || (a.test - b.test) || a.file.localeCompare(b.file));
+        const rest = list.slice(COLCAP).filter(n => n.key !== G.root);
+        rest.forEach(n => dropped.add(n.key));
+        nodes.push({key: 'more:' + layer, more: true, layer, name: '+ ' + rest.length + ' more', file: '', count: rest.length, test: false});
+      }
+    }
+    if (dropped.size) { nodes = nodes.filter(n => !dropped.has(n.key)); edges = edges.filter(e => !dropped.has(e.source) && !dropped.has(e.target)); }
+    return {nodes, edges};
+  }
+
+  function layout(nodes, edges) {
+    const cols = new Map();
+    nodes.forEach(n => { if (!cols.has(n.layer)) cols.set(n.layer, []); cols.get(n.layer).push(n); });
+    const layers = [...cols.keys()].sort((a, b) => a - b);
+    for (const l of layers) cols.get(l).sort((a, b) => (a.more ? 1 : 0) - (b.more ? 1 : 0) || (RANK[a.tier || 'supported'] - RANK[b.tier || 'supported']) || (a.test - b.test) || a.file.localeCompare(b.file) || a.name.localeCompare(b.name));
+    const pos = new Map(), byKey = new Map(nodes.map(n => [n.key, n])), nb = new Map(nodes.map(n => [n.key, []]));
+    edges.forEach(e => { nb.get(e.source).push(e.target); nb.get(e.target).push(e.source); });
+    const setPos = () => layers.forEach(l => cols.get(l).forEach((n, i) => pos.set(n.key, i)));
+    setPos();
+    for (let it = 0; it < 4; it++) {
+      for (const l of (it % 2 ? layers.slice().reverse() : layers)) {
+        cols.get(l).forEach(n => { const ps = nb.get(n.key).map(k => byKey.get(k)).filter(m => m && m.layer !== l).map(m => pos.get(m.key)); n._b = ps.length ? ps.reduce((a, b) => a + b, 0) / ps.length : pos.get(n.key); });
+        cols.get(l).sort((a, b) => a._b - b._b); setPos();
+      }
+    }
+    const maxH = Math.max(...layers.map(l => cols.get(l).length)) * (NH + GY);
+    layers.forEach((l, i) => {
+      const list = cols.get(l), top = HEAD + 16 + (maxH - list.length * (NH + GY)) / 2;
+      list.forEach((n, j) => { n.x = 20 + i * (NW + GX); n.y = top + j * (NH + GY); });
+    });
+    return {layers, width: 40 + layers.length * (NW + GX) - GX, height: HEAD + 32 + maxH};
+  }
+
+  function edgePath(s, t) {
+    const right = t.x > s.x, same = t.x === s.x;
+    const x1 = same ? s.x + NW : right ? s.x + NW : s.x, y1 = s.y + NH / 2, x2 = same ? t.x + NW : right ? t.x : t.x + NW, y2 = t.y + NH / 2;
+    if (same) return `M${x1} ${y1} C${x1 + 70} ${y1}, ${x2 + 70} ${y2}, ${x2} ${y2}`;
+    const dx = Math.max(40, Math.abs(x2 - x1) / 2) * (right ? 1 : -1);
+    return `M${x1} ${y1} C${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`;
+  }
+
+  let svgEl = null, natural = {width: 10, height: 10};
+  function applyScale() {
+    if (!svgEl) return;
+    const f = sizeFactor();
+    if (G.fit) G.scale = Math.max((G.fitAll ? 0.35 : 0.62) * f, Math.min(1.25 * f, (canvas.clientWidth - 8) / natural.width));
+    svgEl.setAttribute('width', Math.round(natural.width * G.scale)); svgEl.setAttribute('height', Math.round(natural.height * G.scale));
+  }
+  function centerOnRoot() {
+    const r = G.visible.get(G.root);
+    if (!r || r.x == null) return;
+    canvas.scrollLeft = Math.max(0, (r.x + NW / 2) * G.scale - canvas.clientWidth / 2);
+    canvas.scrollTop = Math.max(0, (r.y + NH / 2) * G.scale - canvas.clientHeight / 2);
+  }
+
+  function draw() {
+    syncToolbar();
+    const {nodes, edges} = pipeline();
+    G.visible = new Map(nodes.map(n => [n.key, n]));
+    if (!nodes.length) { canvas.replaceChildren(h('div', {class: 'hint2'}, G.emptyText || opts.emptyText || 'Nothing to show.')); textBox.querySelector('.tvbody').replaceChildren(h('p', {class: 'note'}, 'Nothing to list.')); svgEl = null; return; }
+    const dims = layout(nodes, edges), byKey = G.visible;
+    natural = {width: dims.width, height: dims.height};
+    const markers = ['supported', 'possible', 'name_only'].map(t => sv('marker', {id: 'arr-' + t + '-' + opts.id, viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto-start-reverse'},
+      sv('path', {d: 'M0 0 L10 5 L0 10 z', style: 'fill:' + {supported: 'var(--sup)', possible: 'var(--pos)', name_only: 'var(--weak)'}[t]})));
+    const heads = dims.layers.map(l => { const col = nodes.filter(x => x.layer === l); return sv('text', {class: 'colhead', x: col[0].x + NW / 2, y: HEAD - 8, 'text-anchor': 'middle'}, opts.headers(l, col)); });
+    const edgeEls = new Map(), nodeEls = new Map();
+    const edgeG = sv('g'), nodeG = sv('g');
+    edges.forEach((e, i) => {
+      const s = byKey.get(e.source), t = byKey.get(e.target);
+      const p = sv('path', {class: 'edge ' + e.tier + (e.kind === 'wraps' ? ' wraps' : ''), d: edgePath(s, t), 'marker-end': 'url(#arr-' + e.tier + '-' + opts.id + ')'},
+        sv('title', null, s.name + ' → ' + t.name + ' (' + TIER[e.tier] + (e.kind === 'wraps' ? ', wrapped by the decorator' : '') + (e.calls > 1 ? ', ' + e.calls + ' links' : '') + ')'));
+      edgeEls.set(i, p); edgeG.append(p);
+    });
+    nodes.forEach(n => {
+      const cls = ['node', n.key === G.root ? 'root' : '', n.changed ? 'changed' : '', n.test ? 'test' : '', n.role === 'weak' ? 'weak' : '', n.group ? 'group' : '', n.more ? 'more' : '', G.selected === n.key ? 'selected' : ''].filter(Boolean).join(' ');
+      const sub = n.more ? 'click to show them' : n.group ? n.members.length + ' function' + (n.members.length === 1 ? '' : 's') + (dirName(n.file) === '.' ? '' : ' · ' + dirName(n.file)) :
+        n.role === 'wrapped' ? 'wrapped by the decorator' : baseName(n.file) + (n.line ? ':' + n.line : n.call_line ? ':' + n.call_line : '') + (n.changed ? '  \u00B7  also edited' : '');
+      const g = sv('g', {class: cls, transform: `translate(${n.x},${n.y})`, tabindex: '0', role: 'button', 'aria-label': (n.group ? 'File ' : 'Function ') + n.name + ', ' + sub},
+        sv('title', null, n.name + '\n' + (n.file || '') + (n.line ? ':' + n.line : '')),
+        n.group ? sv('rect', {class: 'back', x: 6, y: 6, width: NW, height: NH, rx: 9}) : null,
+        sv('rect', {class: 'body', width: NW, height: NH, rx: 9}),
+        n.tier && !n.more ? sv('rect', {class: 'bar', x: 0, y: 0, width: 8, height: NH, rx: 3, style: 'fill:' + {supported: 'var(--sup)', possible: 'var(--pos)', name_only: 'var(--weak)'}[n.tier]}) : null,
+        sv('text', {class: 'nm', x: 18, y: 26}, trunc(n.name, n.test ? 18 : 26)),
+        sv('text', {class: 'sub', x: 18, y: 46}, trunc(sub, 36)),
+        n.test && !n.more && !n.group ? sv('text', {class: 'sub', x: NW - 10, y: 26, 'text-anchor': 'end'}, 'test') : null,
+        null);
+      g.addEventListener('click', () => nodeClick(n));
+      g.addEventListener('dblclick', () => { if (n.group) { G.openFiles.add(n.file); draw(); } });
+      g.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); nodeClick(n); }
+        else if (e.key === 'Escape') { G.select(G.root); nodeEls.get(G.root)?.focus(); }
+        else if (e.key === 'Home') { e.preventDefault(); nodeEls.get(G.root)?.focus(); }
+        else if (e.key.startsWith('Arrow')) { e.preventDefault(); const next = neighbour(n, e.key); if (next) nodeEls.get(next.key)?.focus(); }
+      });
+      g.addEventListener('mouseenter', () => focusNode(n)); g.addEventListener('focus', () => focusNode(n));
+      g.addEventListener('mouseleave', clearFocus); g.addEventListener('blur', clearFocus);
+      nodeEls.set(n.key, g); nodeG.append(g);
+    });
+    svgEl = sv('svg', {viewBox: `0 0 ${dims.width} ${dims.height}`, role: 'group', 'aria-label': 'Call graph: ' + nodes.length + ' box' + (nodes.length === 1 ? '' : 'es') + ' in ' + dims.layers.length + ' column' + (dims.layers.length === 1 ? '' : 's') + '. Use Tab to enter, then the arrow keys to move between boxes, Enter to open one. A text version is below the picture.'}, sv('defs', null, markers), heads, edgeG, nodeG);
+    fillTextVersion(nodes, edges, dims);
+    canvas.replaceChildren(svgEl);
+    if (nodes.length === 1 && opts.emptyText) canvas.append(h('div', {class: 'hint2'}, opts.emptyText));
+    svgEl.classList.toggle('dense', edges.length > 40);
+    applyScale(); centerOnRoot();
+    hiddenNote.textContent = [G.hideTests ? G.nodes.filter(n => n.test && n.key !== G.root).length + ' test boxes hidden' : '', G.maxLayers < G.deepest ? 'showing ' + (G.maxLayers === 1 ? 'direct users only' : G.maxLayers + ' of ' + G.deepest + ' steps') + ' (choose All for more)' : ''].filter(Boolean).join(' · ');
+    // highlighting: the path from the hovered box to the changed function, plus its own links
+    const parents = new Map([[G.root, null]]); const adj = new Map(nodes.map(n => [n.key, []]));
+    edges.forEach((e, i) => { adj.get(e.source).push([e.target, i]); adj.get(e.target).push([e.source, i]); });
+    const q = [G.root];
+    for (const k of q) for (const [o, i] of adj.get(k)) if (!parents.has(o)) { parents.set(o, [k, i]); q.push(o); }
+    function focusNode(n) {
+      svgEl.classList.add('hasfocus');
+      nodeEls.forEach(el => el.classList.remove('hl')); edgeEls.forEach(el => el.classList.remove('hl'));
+      let k = n.key; nodeEls.get(k)?.classList.add('hl');
+      while (parents.get(k)) { const [p, i] = parents.get(k); edgeEls.get(i)?.classList.add('hl'); nodeEls.get(p)?.classList.add('hl'); k = p; }
+      (adj.get(n.key) || []).forEach(([o, i]) => { edgeEls.get(i)?.classList.add('hl'); nodeEls.get(o)?.classList.add('hl'); });
+    }
+    function clearFocus() { svgEl.classList.remove('hasfocus'); }
+  }
+  function neighbour(n, key) {
+    const dir = {ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1]}[key];
+    let best = null, bestScore = Infinity;
+    for (const m of G.visible.values()) {
+      if (m === n) continue;
+      const dx = m.x - n.x, dy = m.y - n.y;
+      if (dir[0] && dx * dir[0] <= 0) continue;
+      if (dir[1] && (dy * dir[1] <= 0 || dx !== 0)) continue;
+      const score = dir[0] ? Math.abs(dx) + 2 * Math.abs(dy) : Math.abs(dy);
+      if (score < bestScore) { best = m; bestScore = score; }
+    }
+    return best;
+  }
+  function fillTextVersion(nodes, edges, dims) {
+    const byKey = new Map(nodes.map(n => [n.key, n]));
+    const body = textBox.querySelector('.tvbody'), out = [];
+    out.push(h('p', {class: 'note'}, 'The same picture as a list. Each line says what the box is, how sure RepoTrace is, and what it calls.'));
+    for (const l of dims.layers) {
+      const col = nodes.filter(n => n.layer === l).sort((a, b) => a.y - b.y);
+      out.push(h('h4', null, opts.headers(l, col) + ' (' + col.length + ')'));
+      out.push(h('ul', null, col.map(n => {
+        const targets = edges.filter(e => e.source === n.key).map(e => byKey.get(e.target)).filter(Boolean).map(x => x.name);
+        const tiers = edges.filter(e => e.source === n.key).map(e => TIER[e.tier]);
+        return h('li', null, h('strong', null, n.name), n.group ? ' (' + n.members.length + ' functions)' : '', n.file && !n.group ? ', ' + where(n.file, n.line || n.call_line) : '', n.test ? ', test code' : '',
+          targets.length ? ', calls ' + targets.join(', ') + ' (' + [...new Set(tiers)].join(', ') + ')' : '');
+      })));
+    }
+    body.replaceChildren(...out);
+  }
+  function nodeClick(n) {
+    if (n.more) { G.openColumns.add(n.layer); draw(); return; }
+    G.select(n.key);
+  }
+  G.select = key => {
+    G.selected = key;
+    canvas.querySelectorAll('.node').forEach(el => el.classList.remove('selected'));
+    const n = G.visible.get(key);
+    const idx = n ? [...G.visible.keys()].indexOf(key) : -1;
+    if (idx >= 0) canvas.querySelectorAll('.node')[idx]?.classList.add('selected');
+    opts.onSelect(n || G.nodes.find(x => x.key === key) || null);
+  };
+  G.openFile = file => { G.openFiles.add(file); draw(); };
+  G.visibleNodes = () => [...G.visible.values()];
+  G.setEmpty = text => { G.emptyText = text; };
+  G.setGroup = v => { G.groupFiles = !!v; groupBox.checked = !!v; G.openFiles = new Set(); draw(); };
+  G.setTier = (tier, v) => { G.tiers[tier] = !!v; tierInputs[tier].checked = !!v; draw(); };
+  G.setLayers = n => { G.maxLayers = n; draw(); };
+  G.applySize = () => { if (G.fit) { applyScale(); } };
+  G.setData = (data, keep) => {
+    G.nodes = data.nodes; G.edges = data.edges.map((e, i) => ({id: e.id || 'e' + i, ...e})); G.root = data.root; if (data.nodes.length) G.emptyText = null;
+    if (!keep) {
+      G.selected = null; G.openFiles = new Set(); G.openColumns = new Set(); G.fit = true; G.fitAll = false;
+      const tests = data.nodes.filter(n => n.test && n.key !== data.root).length, others = data.nodes.length - 1 - tests;
+      G.hideTests = !opts.compact && tests >= 8 && others >= 2; testBox.checked = G.hideTests;
+      const deepest = Math.max(0, ...data.nodes.map(n => Math.abs(n.layer)));
+      G.maxLayers = deepest > 3 || (G.hideTests ? others : data.nodes.length) > 40 ? 2 : Infinity;
+    }
+    G.deepest = Math.max(0, ...data.nodes.map(n => Math.abs(n.layer)));
+    testLabel.hidden = !data.nodes.some(n => n.test && n.key !== data.root);
+    draw();
+  };
+  window.addEventListener('resize', () => { if (G.fit) applyScale(); });
+  syncToolbar();
+  return G;
+}
+
+/* ---------------------------------------------------------------- the changed function's picture */
+let changeGraph = null;
+const currentChange = () => DATA.changes.find(c => c.id === state.selected);
+const headerFor = (l, col) => l === 0 ? 'The function that changed' : (col || []).length && col.every(n => n.role === 'wrapped') ? 'Functions it wraps' : l === -1 ? 'Uses it directly' : l === -2 ? 'Uses those' : l < 0 ? 'Further away (' + (-l) + ' steps)' : l === 1 ? 'It uses' : 'Further down (' + l + ' steps)';
+function sideTitle(name, where_) { return [h('h2', null, name), h('div', {class: 'note mono'}, where_)]; }
+function backButton() { return h('button', {class: 'btn', onclick: () => changeGraph.select(changeGraph.root)}, '← Back to the changed function'); }
+
+function rootPanel(c) {
+  const first = {modified: 'This function was edited.', added: 'This function is new.', deleted: 'This function no longer exists in the new version.'}[c.change];
+  const p = c.pair, parts = [...sideTitle(c.name, where(c.file, c.line)), h('p', null, first)];
+  if (p) parts.push(h('p', null, p.role === 'old'
+    ? (p.how === 'moved' ? 'The same code now lives in ' + p.other_file : 'The same code is now called ' + p.other + ' (' + p.other_file + ')') + '.'
+    : (p.how === 'moved' ? 'The same code used to live in ' + p.other_file : 'The same code used to be called ' + p.other + ' (' + p.other_file + ')') + '.'));
+  const why = [];
+  if (c.reason === 'reads_changed_constant') why.push('Its own text did not change, but it uses ' + c.constants.join(', ') + ', and that value did.');
+  if (c.also_reads_constants) why.push('It also uses a value that changed: ' + c.also_reads_constants.join(', ') + '.');
+  if (c.before_file_did_not_parse) why.push('The file could not be read before this change, so this function may not really be new.');
+  if (c.includes_nested_change) why.push('A function defined inside it changed, which also changes this one.');
+  if (c.change === 'deleted') why.push(p ? 'The boxes on the left used the old one. Check that each now uses ' + p.other + '.' : 'The boxes on the left used it before. Check that each one still works without it.');
+  if (c.not_queried) why.push('Not analyzed: ' + c.not_queried + '.');
+  if (why.length) parts.push(h('div', {class: 'callout'}, why.map(w => h('div', null, w))));
+  parts.push(...signaturePanel(c));
+  if (c.diff) parts.push(h('details', null, h('summary', null, 'Show what changed in the code'), diffBlock(c.diff)));
+  else if (c.source.after || c.source.before) parts.push(h('details', null, h('summary', null, c.change === 'deleted' ? 'Show the removed code' : 'Show the new code'), h('pre', null, c.source.after || c.source.before)));
+  if (c.decorator_effect) { const e = c.decorator_effect; parts.push(h('div', {class: 'callout'}, h('strong', null, 'This is a decorator '), '(a wrapper written with @). It wraps ' + plural(e.wrapped.length, 'function') + (e.truncated ? ' (list cut)' : '') + ': ' + e.wrapped.slice(0, 6).join(', ') + '. Calls to those run the changed code first.')); }
+  parts.push(h('p', {class: 'note'}, c.candidates.length ? 'The boxes on the left use this function. Click one to see why it is there.'
+    : 'No users were found. That does not mean nobody uses it: some calls cannot be followed (see "What we could not see").'));
+  return parts;
+}
+function candidatePanel(c, n) {
+  const cand = c.candidates[n.cand];
+  if (!cand) return [...sideTitle(n.name, where(n.file, n.line)), backButton()];
+  const steps = -n.layer;
+  return [...sideTitle(cand.name, where(cand.file, cand.line)),
+    h('div', {class: 'row2'}, tierChip(cand.tier), chip(steps <= 1 ? 'uses it directly' : 'uses it through other code (' + steps + ' steps)', 'neutral'), cand.flags.map(f => chip(f, /not updated|still references|removed/.test(f) ? 'warn' : 'neutral'))),
+    h('p', {class: 'note'}, TIP[cand.tier]),
+    h('p', null, cand.why),
+    cand.because.length ? h('ul', null, cand.because.map(b => h('li', null, b))) : null,
+    cand.chain.length > 1 ? [h('div', {class: 'note'}, 'How it gets to the changed function:'), h('ol', {class: 'chain mono'}, cand.chain.map(x => h('li', null, x)))] : null,
+    h('div', {class: 'note'}, 'Where it happens (' + (cand.call_site.side === 'after' ? 'new' : 'old') + ' version): ' + where(cand.call_site.file, cand.call_site.line)),
+    snippet(cand.call_site.code, cand.call_site.line), backButton()];
+}
+function sitePanel(c, n) {
+  const m = c.name_matches, s = m && n.site != null ? m.sites[n.site] : null;
+  return [...sideTitle(n.name, where(n.file, n.call_line)), h('div', {class: 'row2'}, tierChip('name_only')),
+    h('p', null, 'The analysis could not tell what this call runs. It is drawn only because its name matches' + (m && m.meaning === 'still_referenced_in_head' ? ', and the function it names was removed. It may be a forgotten caller.' : '.')),
+    s ? [h('div', {class: 'note mono'}, s.expression), snippet(s.code, s.line)] : null, backButton()];
+}
+function groupPanel(n) {
+  const rows = n.members.slice().sort((a, b) => a.layer - b.layer || a.name.localeCompare(b.name));
+  return [...sideTitle(n.name, n.file), h('p', null, plural(rows.length, 'function') + ' in this file appear in the graph.'),
+    h('button', {class: 'btn', onclick: () => (n.__graph || changeGraph).openFile(n.file)}, 'Open this file into its functions'),
+    h('ul', null, rows.map(m => h('li', null, h('strong', null, m.name), ' ', h('span', {class: 'note'}, m.layer === 0 ? '(selected)' : m.layer < 0 ? (-m.layer) + ' step' + (m.layer === -1 ? '' : 's') + ' away' : m.layer + ' step' + (m.layer === 1 ? '' : 's') + ' down'))))];
+}
+function renderSide(n) {
+  const c = currentChange(), box = $('#sideChange');
+  if (!c) { box.replaceChildren(h('div', {class: 'empty'}, 'No changed functions to show.')); return; }
+  let parts;
+  if (!n || n.key === c.graph.root) parts = rootPanel(c);
+  else if (n.group) parts = groupPanel(n);
+  else if (n.role === 'caller') parts = candidatePanel(c, n);
+  else if (n.role === 'weak') parts = sitePanel(c, n);
+  else if (n.role === 'wrapped') parts = [...sideTitle(n.name, where(n.file, n.line)), h('p', null, 'This function is wrapped by the changed decorator. Every call to it runs the changed code first, so the places that call it are drawn to its left.'), backButton()];
+  else parts = [...sideTitle(n.name, where(n.file, n.line)), backButton()];
+  box.replaceChildren(...parts.flat(Infinity).filter(Boolean));
+}
+function signaturePanel(c) {
+  const r = c.signature_review;
+  if (!r) return [];
+  const details = h('details', null, h('summary', null, 'What this parameter check covers'),
+    h('p', {class: 'note'}, r.policy),
+    h('p', {class: 'note'}, 'Checked calls: ' + r.checked_calls + '. Skipped linked calls: ' +
+      Object.values(r.skipped_calls || {}).reduce((a, b) => a + b, 0) + '.'),
+    r.reason ? h('p', {class: 'note'}, r.reason) : null,
+    r.truncated ? h('p', {class: 'note'}, 'This check reached a limit; results are incomplete.') : null);
+  if (!r.finding_count) return [details];
+  const cards = r.findings.map(f => h('details', null,
+    h('summary', null, f.caller + ' — ' + where(f.file, f.span.line)),
+    h('p', null, f.reason), snippet(f.code, f.span.line), h('p', {class: 'note'}, f.action)));
+  return [h('div', {class: 'check look'}, h('strong', null, 'Calls to update (' + r.finding_count + ')'),
+    h('p', null, 'These calls fit the old parameters, but not the new ones. Review them first.'),
+    ...cards.slice(0, 3),
+    cards.length > 3 ? h('details', null, h('summary', null, 'Show ' + (cards.length - 3) + ' more calls'), ...cards.slice(3)) : null,
+    r.findings.length < r.finding_count ? h('p', {class: 'note'}, 'Not all findings are shown because the report limit was reached.') : null,
+    details)];
+}
+function renderChangeView() {
+  const c = currentChange();
+  if (!changeGraph) changeGraph = createGraph({id: 'c', mount: $('#gChange'), headers: headerFor, onSelect: renderSide,
+    emptyText: 'No callers were found for this function. That does not mean it is unused or safe: calls the analysis could not follow are not drawn.'});
+  if (!c) { changeGraph.setEmpty('No function changed, so there is nothing to draw.'); changeGraph.setData({nodes: [], edges: [], root: null}); renderSide(null); return; }
+  changeGraph.setData({nodes: c.graph.nodes.map(n => ({...n})), edges: c.graph.edges.map(e => ({...e})), root: c.graph.root});
+  changeGraph.select(c.graph.root);
+}
+function select(id) {
+  state.selected = id;
+  if (groups().more.some(c => c.id === id)) state.showMore = true;
+  history.replaceState(null, '', '#c' + id);
+  renderList(); renderChangeView();
+  const el = $('#list [aria-selected="true"]'); if (el) el.scrollIntoView({block: 'nearest'});
+}
+
+/* ---------------------------------------------------------------- the project: an outline on the left, details on the right */
+const SP = {data: null, byId: new Map(), out: new Map(), inn: new Map(), files: new Map(), folders: new Map(), owner: new Map(), index: [],
+  key: null, open: new Set(), showTests: false, seq: 0, picFunc: null, picClass: null, svgId: 0};
+const SB = {entW: 252, head: 38, row: 19, gapX: 110, gapY: 22, maxRows: 6};
+const baseOf = path => path.split('/').pop();
+const enc = encodeURIComponent;
+const X = {root: null, graph: null};
+
+function projectInit() {
+  const d = SP.data = DATA.structure;
+  SP.byId = new Map(d.entities.map(e => [e.id, e]));
+  SP.out = new Map(); SP.inn = new Map();
+  for (const e of d.edges) {
+    if (!SP.out.has(e.source)) SP.out.set(e.source, []); SP.out.get(e.source).push(e);
+    if (!SP.inn.has(e.target)) SP.inn.set(e.target, []); SP.inn.get(e.target).push(e);
+  }
+  SP.files = new Map(); SP.owner = new Map();
+  for (const f of d.files) SP.files.set(f.file, {file: f.file, folder: f.folder, test: f.test, classes: [], module: null});
+  for (const u of d.unreadable) SP.files.set(u.file, {file: u.file, folder: u.folder, test: u.test, classes: [], module: null, unreadable: u.message});
+  for (const e of d.entities) {
+    const f = SP.files.get(e.file);
+    if (!f) continue;
+    if (e.kind === 'class') f.classes.push(e); else f.module = e;
+    for (const m of e.methods) SP.owner.set(m.id, e);
+  }
+  SP.folders = new Map(d.folders.map(f => [f.id, {...f, files: []}]));
+  for (const f of SP.files.values()) if (SP.folders.has(f.folder)) SP.folders.get(f.folder).files.push(f);
+  for (const f of SP.folders.values()) f.files.sort((a, b) => a.file.localeCompare(b.file));
+  SP.index = [];
+  for (const f of SP.folders.values()) SP.index.push({key: 'dir:' + f.id, label: f.name, sub: 'folder', test: f.test});
+  for (const f of SP.files.values()) SP.index.push({key: 'file:' + f.file, label: baseOf(f.file), sub: f.file, test: f.test});
+  for (const e of d.entities) {
+    if (e.kind === 'class') SP.index.push({key: e.id, label: e.name, sub: 'class · ' + e.file, test: e.test});
+    for (const m of e.methods) SP.index.push({key: m.id, label: e.kind === 'class' ? e.name + '.' + m.name : m.name, sub: (e.kind === 'class' ? 'method' : 'function') + ' · ' + e.file, test: e.test});
+  }
+  SP.key = null; SP.open = new Set(); SP.showTests = false; SP.seq++;
+  $('#pTests').checked = false; $('#pSearch').value = ''; $('#pSugg').hidden = true;
+  if (!SP.picFunc) { SP.picFunc = h('div', {id: 'gFunc'}); SP.picClass = h('div', {id: 'gClass'}); }
+  X.graph = null; X.root = null;
+  renderOutline(); showStart();
+}
+
+/* ---- the outline */
+function outlineRows() {
+  const rows = [], fn = (m, level) => rows.push({key: m.id, level, label: m.name + '()', note: ''});
+  const folders = [...SP.folders.values()].filter(f => (SP.showTests || !f.test) && f.files.some(x => SP.showTests || !x.test)).sort((a, b) => a.id.localeCompare(b.id));
+  for (const f of folders) {
+    const files = f.files.filter(x => SP.showTests || !x.test), key = 'dir:' + f.id, open = SP.open.has(key);
+    rows.push({key, level: 1, label: f.name, note: plural(files.length, 'file'), expandable: files.length > 0, open});
+    if (!open) continue;
+    for (const file of files) {
+      const fk = 'file:' + file.file, fopen = SP.open.has(fk), items = file.classes.length + (file.module ? file.module.methods.length : 0);
+      rows.push({key: fk, level: 2, label: baseOf(file.file), note: file.unreadable ? 'could not be read' : '', expandable: items > 0, open: fopen});
+      if (!fopen) continue;
+      for (const c of file.classes) {
+        const open = SP.open.has(c.id);
+        rows.push({key: c.id, level: 3, label: c.name, note: c.method_count ? plural(c.method_count, 'method') : '', expandable: c.methods.length > 0, open});
+        if (open) { c.methods.forEach(m => fn(m, 4)); if (c.method_count > c.methods.length) rows.push({level: 4, label: '… ' + (c.method_count - c.methods.length) + ' more', dim: true}); }
+      }
+      if (file.module) file.module.methods.forEach(m => fn(m, 3));
+    }
+  }
+  return rows;
+}
+function renderOutline() {
+  const box = $('#outline'), had = box.contains(document.activeElement), o = DATA.overview;
+  const rows = outlineRows();
+  const ul = h('ul', {role: 'tree', class: 'otree', 'aria-label': 'Project outline', onkeydown: outlineKeys}, rows.map(r => {
+    const sel = r.key && r.key === SP.key;
+    const caret = r.expandable ? h('button', {class: 'ocaret', tabindex: '-1', 'aria-label': (r.open ? 'Collapse ' : 'Expand ') + r.label, onclick: () => { r.open ? SP.open.delete(r.key) : SP.open.add(r.key); renderOutline(); }}, r.open ? '▾' : '▸') : h('span', {class: 'ocaret'});
+    const label = r.key ? h('button', {class: 'olabel', 'data-key': r.key, 'data-level': r.level, onclick: () => selectItem(r.key)}, h('span', {class: 'nm'}, r.label), r.note ? h('span', {class: 'onote'}, r.note) : null)
+      : h('span', {class: 'olabel'}, h('span', {class: 'nm'}, r.label));
+    return h('li', {role: 'treeitem', 'aria-level': r.level, 'aria-expanded': r.expandable ? String(!!r.open) : null, 'aria-selected': r.key ? String(!!sel) : null},
+      h('div', {class: 'orow' + (sel ? ' sel' : '') + (r.dim ? ' dim' : ''), style: 'padding-left:' + ((r.level - 1) * 14 + 4) + 'px'}, caret, label));
+  }));
+  box.replaceChildren(h('div', {class: 'ohead'}, h('strong', null, 'Outline'), h('span', {class: 'hint'}, plural(o.files, 'file') + ' · ' + plural(o.functions, 'function'))), ul);
+  if (had) (box.querySelector('.olabel[data-key="' + (SP.key || '').replace(/"/g, '\\"') + '"]') || box.querySelector('.olabel[data-key]'))?.focus();
+}
+function outlineKeys(e) {
+  const buttons = [...e.currentTarget.querySelectorAll('.olabel[data-key]')], i = buttons.indexOf(document.activeElement);
+  if (i < 0) return;
+  const current = outlineRows().find(r => r.key === buttons[i].dataset.key);
+  if (e.key === 'ArrowDown') { e.preventDefault(); buttons[Math.min(buttons.length - 1, i + 1)].focus(); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); buttons[Math.max(0, i - 1)].focus(); }
+  else if (e.key === 'ArrowRight' && current && current.expandable && !current.open) { e.preventDefault(); SP.open.add(current.key); renderOutline(); }
+  else if (e.key === 'ArrowRight' && current && current.open) { e.preventDefault(); buttons[Math.min(buttons.length - 1, i + 1)].focus(); }
+  else if (e.key === 'ArrowLeft' && current && current.open) { e.preventDefault(); SP.open.delete(current.key); renderOutline(); }
+  else if (e.key === 'ArrowLeft' && current) { e.preventDefault(); const level = +buttons[i].dataset.level; for (let j = i - 1; j >= 0; j--) if (+buttons[j].dataset.level < level) { buttons[j].focus(); break; } }
+}
+
+/* ---- choosing something */
+function selectItem(key) {
+  if (key.startsWith('module:')) key = 'file:' + key.slice(7);
+  SP.key = key; SP.seq++;
+  if (key.startsWith('dir:')) SP.open.add(key);
+  else if (key.startsWith('file:')) { const f = SP.files.get(key.slice(5)); if (f) { SP.open.add('dir:' + f.folder); SP.open.add(key); if (f.test && !SP.showTests) testsOn(); } }
+  else { const e = SP.byId.get(key) || SP.owner.get(key); if (e) { SP.open.add('dir:' + e.folder); SP.open.add('file:' + e.file); if (e.kind === 'class') SP.open.add(e.id); if (e.test && !SP.showTests) testsOn(); } }
+  renderOutline();
+  const sel = $('#outline .olabel[data-key]') && [...$('#outline').querySelectorAll('.olabel[data-key]')].find(b => b.dataset.key === key);
+  if (sel) sel.scrollIntoView({block: 'nearest'});
+  renderDetails(key);
+}
+const testsOn = () => { SP.showTests = true; $('#pTests').checked = true; };
+function renderDetails(key) {
+  const box = $('#pdetail');
+  if (key.startsWith('dir:')) box.replaceChildren(...folderDetails(key.slice(4)));
+  else if (key.startsWith('file:')) box.replaceChildren(...fileDetails(key.slice(5)));
+  else if (SP.byId.has(key) && SP.byId.get(key).kind === 'class') { const e = SP.byId.get(key); box.replaceChildren(...classDetails(e)); drawClassPicture(e); }
+  else functionDetails(key);
+  if ($('#pdetail').getBoundingClientRect().top < 0) window.scrollTo({top: 0});
+}
+const goButton = (key, text, cls) => h('button', {class: cls || 'btn link', onclick: () => selectItem(key)}, text);
+function trail(key) {
+  const parts = [];
+  const add = (k, label) => { if (parts.length) parts.push(h('span', {'aria-hidden': 'true'}, '›')); parts.push(goButton(k, label)); };
+  if (key.startsWith('file:')) { const f = SP.files.get(key.slice(5)); if (f) add('dir:' + f.folder, f.folder === '.' ? '(top of the project)' : f.folder); }
+  else if (!key.startsWith('dir:')) {
+    const e = SP.byId.get(key) || SP.owner.get(key);
+    if (e) { add('dir:' + e.folder, e.folder === '.' ? '(top of the project)' : e.folder); add('file:' + e.file, baseOf(e.file)); if (e.kind === 'class' && e.id !== key) add(e.id, e.name); }
+  }
+  return parts.length ? [h('nav', {class: 'trail', 'aria-label': 'Where this is'}, parts)] : [];
+}
+
+/* ---- what to show before anything is chosen */
+function coverageBlock(c) {
+  const total = c.total || 1;
+  const seg = (cls, n, label) => n ? h('span', {class: cls, style: 'width:' + (100 * n / total) + '%', title: label + ': ' + n}) : null;
+  const row = (cls, n, text) => h('li', null, h('span', {class: 'dot ' + cls}), h('b', null, n.toLocaleString()), ' ' + text);
+  return [h('div', {class: 'covbar', role: 'img', 'aria-label': 'Where the ' + c.total + ' calls go: ' + c.sure + ' sure, ' + c.maybe + ' maybe, ' + c.outside + ' outside the project, ' + c.untraced + ' not traced'},
+      seg('c-sure', c.sure, 'sure'), seg('c-maybe', c.maybe, 'maybe'), seg('c-out', c.outside, 'outside the project'), seg('c-lost', c.untraced, 'not traced')),
+    c.traced_percent == null ? null : h('p', {class: 'note', style: 'margin:2px 0 6px'}, 'Of the calls that could go to your own code, ' + c.traced_percent + '% were traced. The lists and pictures only show those. The rest are holes in this map, not proof that nothing is there.'),
+    h('details', {class: 'listview', style: 'margin:2px 0'}, h('summary', null, 'See the breakdown'), h('ul', {class: 'covlist'},
+      row('c-sure', c.sure, 'calls go to your own code and are sure'),
+      row('c-maybe', c.maybe, 'calls go to your own code but depend on an assumption (marked maybe)'),
+      row('c-out', c.outside, 'calls go to Python itself or other people’s libraries (counted, not listed)'),
+      row('c-lost', c.untraced - (c.not_found || 0), 'calls could not be traced (decided while the program runs, or an object whose kind is unclear)'),
+      c.not_found ? row('c-lost', c.not_found, 'calls go to imports RepoTrace could not find: a library that is not installed here, or your own code in a folder it was not told about (check \u201CWhere your code lives\u201D)') : null))];
+}
+function showStart() {
+  const o = DATA.overview, box = $('#pdetail');
+  const group = (label, list, note) => list.length ? h('div', {class: 'startrow2'}, h('span', {class: 'lab', style: 'font-weight:650'}, label), ...list.map(n => h('button', {class: 'btn', title: n.file, onclick: () => selectItem(n.id)}, n.name)), h('span', {class: 'hint'}, note)) : null;
+  box.replaceChildren(...[h('h2', null, 'Where would you like to start?'),
+    h('p', {class: 'lead2'}, 'Open a folder in the outline, search above, or start with one of these.'),
+    group('Used the most', o.busiest.slice(0, 6), 'Many other functions use these.'),
+    group('Where things start', o.starters.slice(0, 6), 'Nothing calls these, but they call several others.'),
+    h('h3', null, 'How much of this map can you trust?'), ...coverageBlock(o.calls),
+    h('p', {class: 'note'}, 'Made at ' + DATA.made_at + ' from the files as they were then. If you edit files, press Back and open the project again.')].filter(Boolean));
+}
+
+/* ---- details for a folder, a file, a class, a function */
+function folderDetails(id) {
+  const f = SP.folders.get(id), files = f.files.filter(x => SP.showTests || !x.test), name = id => (SP.folders.get(id) || {name: id}).name;
+  const rel = (list, other) => list.length ? h('ul', {class: 'mlist'}, list.slice().sort((a, b) => (b.uses + b.inherits + b.holds) - (a.uses + a.inherits + a.holds)).slice(0, 8).map(e => h('li', null, goButton('dir:' + e[other], name(e[other])), h('span', {class: 'note'}, '  ' + plural(e.uses + e.inherits + e.holds, 'link'))))) : h('p', {class: 'note'}, 'None that RepoTrace could trace.');
+  const fe = SP.data.folder_edges;
+  return [h('h2', null, f.name), h('div', {class: 'row2'}, chip('folder', 'neutral')),
+    h('p', {class: 'lead2'}, plural(files.length, 'file') + ', ' + plural(f.classes, 'class', 'classes') + ', ' + plural(f.functions, 'plain function') + '.'),
+    h('h3', null, 'Files in it'), h('ul', {class: 'mlist'}, files.map(x => h('li', null, goButton('file:' + x.file, baseOf(x.file)), h('span', {class: 'note'}, '  ' + [x.classes.length ? plural(x.classes.length, 'class', 'classes') : '', x.module ? plural(x.module.method_count, 'function') : ''].filter(Boolean).join(', ')))) ),
+    h('div', {class: 'cols'}, h('div', null, h('h3', null, 'It uses these folders'), rel(fe.filter(e => e.source === id), 'target')), h('div', null, h('h3', null, 'These folders use it'), rel(fe.filter(e => e.target === id), 'source')))];
+}
+function fileDetails(path) {
+  const f = SP.files.get(path), fns = f.module ? f.module.methods : [];
+  return [...trail('file:' + path), h('h2', null, baseOf(path)), h('div', {class: 'row2'}, chip('file', 'neutral'), f.test ? chip('test code', 'neutral') : null), h('div', {class: 'note mono'}, path),
+    f.unreadable ? h('div', {class: 'callout'}, 'RepoTrace could not read this file, so nothing in it is part of the map. Reason: ' + f.unreadable) : null,
+    f.classes.length ? [h('h3', null, 'Classes in it'), h('ul', {class: 'mlist'}, f.classes.map(c => h('li', null, goButton(c.id, c.name), h('span', {class: 'note'}, '  ' + (c.doc || plural(c.method_count, 'method'))))))] : null,
+    fns.length ? [h('h3', null, 'Plain functions in it'), h('ul', {class: 'mlist'}, fns.map(m => h('li', null, goButton(m.id, m.name + '()'))))] : null,
+    !f.classes.length && !fns.length && !f.unreadable ? h('p', {class: 'note'}, 'No classes or functions are defined in this file.') : null].flat(Infinity).filter(Boolean);
+}
+function classDetails(e) {
+  const out = SP.out.get(e.id) || [], inn = SP.inn.get(e.id) || [];
+  const of = kind => out.filter(x => x.kind === kind), by = kind => inn.filter(x => x.kind === kind);
+  const items = (list, side) => list.map(x => { const t = SP.byId.get(x[side]); return h('li', null, goButton(t.kind === 'module' ? 'file:' + t.file : t.id, t.name), x.kind === 'uses' ? h('span', {class: 'note'}, '  ' + plural(x.sure + x.maybe, 'call')) : null, x.kind === 'uses' && !x.sure ? h('span', {class: 'tagm'}, 'maybe') : null); });
+  const block = (title, rows) => rows.length ? [h('h3', null, title), h('ul', {class: 'mlist'}, rows)] : [];
+  const external = e.bases.filter(w => !e.base_ids.some(id => SP.byId.get(id).name === w.split('.').pop()));
+  const kindOf = [...items(of('inherits'), 'target'), ...external.map(w => h('li', null, w, h('span', {class: 'note'}, '  (from outside the project)')))];
+  return [...trail(e.id), h('h2', null, e.name), h('div', {class: 'row2'}, chip('class', 'neutral'), e.test ? chip('test code', 'neutral') : null), h('div', {class: 'note mono'}, where(e.file, e.line)),
+    h('p', {class: 'lead2'}, e.doc || (e.methods.length || e.fields.length ? '' : 'An empty class: nothing is defined inside it.')),
+    ...block('Is a kind of', kindOf), ...block('These are kinds of it', items(by('inherits'), 'source')),
+    ...block('It creates and keeps', items(of('holds'), 'target')), ...block('Kept by', items(by('holds'), 'source')),
+    ...(e.fields.length ? [h('h3', null, 'What it keeps'), h('p', {class: 'mono'}, e.fields.join(', ') + (e.field_count > e.fields.length ? ' … and ' + (e.field_count - e.fields.length) + ' more' : ''))] : []),
+    ...(e.methods.length ? [h('h3', null, 'What it can do (click one)'), h('div', {class: 'mrow'}, e.methods.map(m => goButton(m.id, m.name + '()', 'btn mono')))] : []),
+    ...(e.methods.length < e.method_count ? [h('p', {class: 'note'}, '\u2026 and ' + (e.method_count - e.methods.length) + ' more (see the outline).')] : []),
+    h('div', {class: 'cols'}, h('div', null, ...block('It uses', items(of('uses').sort((a, b) => (b.sure + b.maybe) - (a.sure + a.maybe)).slice(0, 8), 'target'))), h('div', null, ...block('Used by', items(by('uses').sort((a, b) => (b.sure + b.maybe) - (a.sure + a.maybe)).slice(0, 8), 'source')))),
+    h('h3', null, 'Picture'), h('div', {class: 'pic'}, SP.picClass)].flat(Infinity).filter(x => x !== null && x !== undefined && x !== false);
+}
+async function functionDetails(id) {
+  const box = $('#pdetail'), seq = SP.seq;
+  box.replaceChildren(...trail(id), h('p', {class: 'note'}, 'Loading…'));
+  let d;
+  try { d = await api('/api/neighbors?job=' + enc(state.job) + '&id=' + enc(id) + '&direction=both&depth=1&limit=60&side=after'); }
+  catch (e) { if (seq === SP.seq) box.replaceChildren(h('div', {class: 'err'}, e.message)); return; }
+  if (seq !== SP.seq) return;
+  const root = d.nodes.find(n => n.id === id) || {name: id, file: '', line: 0, kind: 'FUNCTION'}, byId = new Map(d.nodes.map(n => [n.id, n]));
+  const toTier = new Map(), fromTier = new Map();            // what it uses / what uses it, each with the grade of that one link
+  for (const e of d.edges) { if (e.source === id) toTier.set(e.target, e.tier); if (e.target === id) fromTier.set(e.source, e.tier); }
+  d.nodes.forEach(n => { n.key = n.id; n.tier = toTier.get(n.id) || fromTier.get(n.id) || 'supported'; });
+  const order = list => list.slice().sort((a, b) => (a.test ? 1 : 0) - (b.test ? 1 : 0) || a.name.localeCompare(b.name));
+  const row = tiers => n => h('li', null, goButton(n.id, n.name + '()'), h('span', {class: 'note'}, '  ' + baseOf(n.file) + ':' + n.line), tiers.get(n.id) === 'possible' ? h('span', {class: 'tagm'}, 'maybe') : null, n.test ? h('span', {class: 'tagt'}, 'test') : null);
+  const list = (title, items, tiers) => h('div', null, h('h3', null, title + ' (' + items.length + ')'), items.length ? h('ul', {class: 'mlist'}, items.map(row(tiers))) : h('p', {class: 'note'}, 'Nothing that RepoTrace could trace.'));
+  const uses = order([...toTier.keys()].map(k => byId.get(k)).filter(Boolean)), usedBy = order([...fromTier.keys()].map(k => byId.get(k)).filter(Boolean));
+  const anyMaybe = [...toTier.values(), ...fromTier.values()].includes('possible');
+  X.root = id; xEnsure();
+  X.graph.setData({nodes: d.nodes.map(n => ({...n})), edges: d.edges.map(e => ({...e, id: e.source + '>' + e.target})), root: id});
+  X.graph.select(id);
+  const code = h('div', {class: 'note'}, 'Loading the code…');
+  box.replaceChildren(...[...trail(id), h('h2', null, root.name + '()'), h('div', {class: 'row2'}, chip(root.kind === 'METHOD' ? 'method' : 'function', 'neutral'), root.test ? chip('test code', 'neutral') : null), h('div', {class: 'note mono'}, where(root.file, root.line)),
+    root.unresolved_outgoing ? h('p', {class: 'note'}, plural(root.unresolved_outgoing, 'call') + ' inside it could not be traced, so “It uses” may be incomplete.') : null,
+    h('div', {class: 'cols'}, list('It uses', uses, toTier), list('Used by', usedBy, fromTier)),
+    anyMaybe ? h('p', {class: 'note'}, '“maybe” means the link depends on an assumption, such as what kind of object something is.') : null,
+    d.truncated ? h('p', {class: 'note'}, 'Only the first ' + d.nodes.length + ' are listed.') : null,
+    h('h3', null, 'Picture'), h('div', {class: 'pic'}, SP.picFunc),
+    h('details', {class: 'listview', style: 'margin-top:14px'}, h('summary', null, 'Show the code'), code)].flat(Infinity).filter(Boolean));
+  api('/api/function?job=' + enc(state.job) + '&id=' + enc(id) + '&side=after').then(r => { if (seq === SP.seq) code.replaceWith(h('div', null, r.stale ? h('p', {class: 'callout'}, 'This file has changed since the map was made (at ' + r.made_at + '). This is the code as it was then. Press Back and open the project again to refresh the map.') : null, snippet(r.code, null))); })
+    .catch(() => { if (seq === SP.seq) code.textContent = 'The code is not available.'; });
+}
+function xEnsure() {
+  if (!X.graph) X.graph = createGraph({id: 'x', mount: SP.picFunc, compact: true, headers: l => l === 0 ? 'This one' : l < 0 ? 'Uses it' : 'It uses', onSelect: n => { if (n && n.key !== X.root) selectItem(n.key); },
+    emptyText: 'RepoTrace found nothing that uses this or that it uses. That does not mean it is unused: some calls cannot be traced.'});
+}
+
+/* ---- the class picture: the class and the boxes it is directly connected to */
+function entitySize(e) {
+  const f = Math.min(e.fields.length, SB.maxRows), m = Math.min(e.methods.length, SB.maxRows);
+  const moreF = e.field_count > f, moreM = e.method_count > m, rows = f + (moreF ? 1 : 0) + m + (moreM ? 1 : 0);
+  return {w: SB.entW, h: SB.head + (rows ? rows * SB.row + ((f || moreF ? 1 : 0) + (m || moreM ? 1 : 0)) * 10 + 4 : 8)};
+}
+function focusGraph(id) {
+  const ok = e => SP.showTests || !e.test;
+  const rel = [...(SP.out.get(id) || []), ...(SP.inn.get(id) || [])].filter(r => ok(SP.byId.get(r.source)) && ok(SP.byId.get(r.target)));
+  const weight = new Map();
+  for (const r of rel) { const o = r.source === id ? r.target : r.source; weight.set(o, (weight.get(o) || 0) + r.sure + r.maybe + (r.kind === 'uses' ? 0 : 5)); }
+  const near = [...weight].sort((a, b) => b[1] - a[1]).slice(0, 12).map(x => x[0]), keep = new Set([id, ...near]);
+  const structural = new Set(rel.filter(r => r.kind !== 'uses').map(r => r.source + '>' + r.target));
+  const edges = rel.filter(r => keep.has(r.source) && keep.has(r.target) && !(r.kind === 'uses' && structural.has(r.source + '>' + r.target))).map(r => ({...r, count: r.sure + r.maybe}));
+  return {nodes: [...keep].map(k => { const e = SP.byId.get(k); return {key: k, id: k, name: e.name, e, ...entitySize(e)}; }), edges, more: weight.size - near.length};
+}
+function drawClassPicture(e) {
+  const g = focusGraph(e.id), mount = SP.picClass;
+  if (g.nodes.length < 2) { mount.replaceChildren(h('p', {class: 'note', style: 'padding:12px'}, 'RepoTrace found nothing else connected to this class. That does not mean it stands alone: some calls cannot be traced.')); return; }
+  drawEntities(g, mount, e.id);
+  if (g.more > 0) mount.append(h('p', {class: 'note', style: 'padding:6px 12px'}, g.more + ' more connected boxes are not drawn. Use the lists above.'));
+}
+function structLayout(nodes, edges) {
+  const out = new Map(nodes.map(n => [n.key, []])), kept = [], state = new Map();
+  for (const e of edges) if (e.source !== e.target) out.get(e.source).push(e.target);
+  const dfs = k => { state.set(k, 1); for (const t of out.get(k)) { if (state.get(t) === 1) continue; kept.push([k, t]); if (!state.get(t)) dfs(t); } state.set(k, 2); };
+  const indeg = new Map(nodes.map(n => [n.key, 0]));
+  for (const [, ts] of out) for (const t of ts) indeg.set(t, indeg.get(t) + 1);
+  nodes.slice().sort((a, b) => indeg.get(a.key) - indeg.get(b.key) || a.name.localeCompare(b.name)).forEach(n => { if (!state.get(n.key)) dfs(n.key); });
+  const layer = new Map(nodes.map(n => [n.key, 0]));
+  for (let pass = 0; pass < nodes.length; pass++) { let moved = false; for (const [s, t] of kept) if (layer.get(t) < layer.get(s) + 1) { layer.set(t, layer.get(s) + 1); moved = true; } if (!moved) break; }
+  const cols = new Map();
+  nodes.forEach(n => { n.layer = layer.get(n.key); if (!cols.has(n.layer)) cols.set(n.layer, []); cols.get(n.layer).push(n); });
+  const layers = [...cols.keys()].sort((a, b) => a - b);
+  layers.forEach(l => cols.get(l).sort((a, b) => a.name.localeCompare(b.name)));
+  const heights = layers.map(l => cols.get(l).reduce((s, n) => s + n.h + SB.gapY, -SB.gapY)), tallest = Math.max(...heights, 0);
+  const widths = layers.map(l => Math.max(...cols.get(l).map(n => n.w)));
+  let x = 20;
+  layers.forEach((l, li) => { let y = 20 + (tallest - heights[li]) / 2; cols.get(l).forEach(n => { n.x = x; n.y = y; y += n.h + SB.gapY; }); x += widths[li] + SB.gapX; });
+  return {width: x - SB.gapX + 20, height: tallest + 40};
+}
+function structPath(s, t) {
+  if (t.x > s.x) { const x1 = s.x + s.w, y1 = s.y + s.h / 2, x2 = t.x, y2 = t.y + t.h / 2, dx = Math.max(40, (x2 - x1) / 2); return `M${x1} ${y1} C${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`; }
+  if (t.x < s.x) { const x1 = s.x, y1 = s.y + s.h / 2, x2 = t.x + t.w, y2 = t.y + t.h / 2, dx = Math.max(40, (x1 - x2) / 2); return `M${x1} ${y1} C${x1 - dx} ${y1}, ${x2 + dx} ${y2}, ${x2} ${y2}`; }
+  const x1 = s.x + s.w, y1 = s.y + s.h / 2, x2 = t.x + t.w, y2 = t.y + t.h / 2;
+  return `M${x1} ${y1} C${x1 + 70} ${y1}, ${x2 + 70} ${y2}, ${x2} ${y2}`;
+}
+function drawEntities(g, mount, centerId) {
+  const id = ++SP.svgId, dims = structLayout(g.nodes, g.edges), byKey = new Map(g.nodes.map(n => [n.key, n]));
+  const marker = (name, d, fill, stroke) => sv('marker', {id: name + id, viewBox: '0 0 10 10', refX: name === 'dia' ? 1 : 9, refY: 5, markerWidth: 12, markerHeight: 12, markerUnits: 'userSpaceOnUse', orient: 'auto'}, sv('path', {d, style: 'fill:' + fill + ';stroke:' + stroke + ';stroke-width:1'}));
+  const defs = sv('defs', null, marker('tri', 'M0 0 L10 5 L0 10 z', 'var(--panel)', 'var(--ink)'), marker('dia', 'M0 5 L5 1 L10 5 L5 9 z', 'var(--accent)', 'var(--accent)'),
+    marker('arr', 'M0 0 L10 5 L0 10 z', 'var(--sup)', 'var(--sup)'), marker('arm', 'M0 0 L10 5 L0 10 z', 'var(--pos)', 'var(--pos)'));
+  const edgeG = sv('g'), nodeG = sv('g'), labels = sv('g'), edgeEls = [], nodeEls = new Map();
+  g.edges.forEach(e => {
+    const s = byKey.get(e.source), t = byKey.get(e.target), tier = e.kind === 'uses' ? (e.sure ? 'sure' : 'maybe') : '';
+    const attrs = {class: 'sedge ' + e.kind + ' ' + tier, d: structPath(s, t), style: 'stroke-width:' + (1.5 + Math.min(2, Math.log2(Math.max(1, e.count))) * 0.6).toFixed(1)};
+    if (e.kind === 'inherits') attrs['marker-end'] = `url(#tri${id})`;
+    else if (e.kind === 'holds') { attrs['marker-start'] = `url(#dia${id})`; attrs['marker-end'] = `url(#arr${id})`; }
+    else attrs['marker-end'] = `url(#${tier === 'sure' ? 'arr' : 'arm'}${id})`;
+    const p = sv('path', attrs, sv('title', null, s.name + ' ' + ({inherits: 'is a kind of', holds: 'creates and keeps a', uses: 'uses'})[e.kind] + ' ' + t.name + (e.kind === 'uses' ? ' (' + plural(e.count, 'call') + ')' : '')));
+    edgeEls.push(p); edgeG.append(p);
+    if (e.count > 1 && e.kind === 'uses') labels.append(sv('text', {class: 'slabel', x: t.x > s.x ? (s.x + s.w + t.x) / 2 : (s.x + t.x + t.w) / 2, y: (s.y + s.h / 2 + t.y + t.h / 2) / 2 - 4, 'text-anchor': 'middle'}, e.count));
+  });
+  g.nodes.forEach(n => {
+    const e = n.e, el = sv('g', {class: ['sbox', n.key === centerId ? 'selected' : '', e.test ? 'test' : ''].filter(Boolean).join(' '), transform: `translate(${n.x},${n.y})`, tabindex: '0', role: 'button', 'aria-label': 'Class ' + n.name + (n.key === centerId ? ', the one you are looking at' : '. Press Enter to go there')}, sv('title', null, e.file + ':' + e.line));
+    const f = e.fields.slice(0, SB.maxRows), m = e.methods.slice(0, SB.maxRows);
+    el.append(sv('rect', {class: 'card', width: n.w, height: n.h, rx: 10}), sv('rect', {class: 'head', x: 0, y: 0, width: n.w, height: SB.head, rx: 10}),
+      sv('text', {class: 'tag', x: 12, y: 15}, e.kind === 'module' ? 'file of functions' : 'class'), sv('text', {class: 'nm', x: 12, y: 31, style: 'font-weight:650'}, trunc(e.name, 28)));
+    let y = SB.head + 6;
+    const section = (items, more, total, fmt) => { items.forEach(it => { y += SB.row; el.append(sv('text', {class: 'mem', x: 14, y: y - 5}, trunc(fmt(it), 32))); }); if (more) { y += SB.row; el.append(sv('text', {class: 'mem dim', x: 14, y: y - 5}, '+ ' + (total - items.length) + ' more')); } };
+    if (f.length || e.field_count > f.length) { section(f, e.field_count > f.length, e.field_count, x => '• ' + x); y += 4; el.append(sv('line', {class: 'sep', x1: 0, x2: n.w, y1: y, y2: y})); y += 6; }
+    section(m, e.method_count > m.length, e.method_count, x => x.name + '()');
+    const go = () => { if (n.key !== centerId) selectItem(n.key.startsWith('module:') ? 'file:' + e.file : n.key); };
+    el.addEventListener('click', go);
+    el.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); go(); } });
+    const hl = on => { svg.classList.toggle('shasfocus', on); nodeEls.forEach(x => x.classList.remove('hl')); edgeEls.forEach(x => x.classList.remove('hl'));
+      if (!on) return; el.classList.add('hl'); g.edges.forEach((ed, i) => { if (ed.source === n.key || ed.target === n.key) { edgeEls[i].classList.add('hl'); nodeEls.get(ed.source)?.classList.add('hl'); nodeEls.get(ed.target)?.classList.add('hl'); } }); };
+    el.addEventListener('mouseenter', () => hl(true)); el.addEventListener('focus', () => hl(true)); el.addEventListener('mouseleave', () => hl(false)); el.addEventListener('blur', () => hl(false));
+    nodeEls.set(n.key, el); nodeG.append(el);
+  });
+  const svg = sv('svg', {viewBox: `0 0 ${dims.width} ${dims.height}`, role: 'group', 'aria-label': 'Picture of this class and the ' + (g.nodes.length - 1) + ' boxes directly connected to it. The lists above say the same in words.'}, defs, edgeG, labels, nodeG);
+  const canvas = h('div', {class: 'canvas', tabindex: '-1'}, svg);
+  const line = cls => sv('svg', {width: 34, height: 10, viewBox: '0 0 34 10'}, sv('path', {d: 'M1 5 H33', class: 'sedge ' + cls}));
+  mount.replaceChildren(canvas, h('div', {class: 'keyline'}, h('span', null, line('inherits'), ' ▷ is a kind of'), h('span', null, line('holds'), ' ◆ creates and keeps one'), h('span', null, line('uses sure'), ' uses (sure)'), h('span', null, line('uses maybe'), ' uses (maybe)'), h('span', null, '▣ blue box = this one')));
+  const scale = Math.max(0.78 * sizeFactor(), Math.min(1.1 * sizeFactor(), (Math.max(300, mount.clientWidth) - 8) / dims.width));
+  svg.setAttribute('width', Math.round(dims.width * scale)); svg.setAttribute('height', Math.round(dims.height * scale));
+}
+
+/* ---- searching */
+function projectSearch() {
+  const q = $('#pSearch').value.trim().toLowerCase(), box = $('#pSugg');
+  if (!q) { box.hidden = true; return []; }
+  const hits = SP.index.filter(x => SP.showTests || !x.test).map(x => {
+    const l = x.label.toLowerCase(), last = l.split('.').pop();
+    return {x, rank: l === q || last === q ? 0 : l.startsWith(q) || last.startsWith(q) ? 1 : l.includes(q) ? 2 : x.sub.toLowerCase().includes(q) ? 3 : 9};
+  }).filter(r => r.rank < 9).sort((a, b) => a.rank - b.rank || a.x.label.length - b.x.label.length || a.x.label.localeCompare(b.x.label)).slice(0, 14).map(r => r.x);
+  box.replaceChildren(...(hits.length ? hits.map(x => h('button', {onclick: () => { box.hidden = true; $('#pSearch').value = x.label; selectItem(x.key); }}, h('strong', null, x.label), ' ', h('span', {class: 'note'}, x.sub)))
+    : [h('div', {class: 'hint2', style: 'padding:12px'}, 'Nothing matches.')]));
+  box.hidden = false;
+  return hits;
+}
+
+/* ---- starting the map */
+async function exploreFolder(path, roots) {
+  setupError(''); state.mode = 'map';
+  try {
+    const {job} = await api('/api/map', {repo: path, source_roots: roots || []});
+    state.job = job; show('progress'); announce('Mapping the project. This usually takes a few seconds.'); poll(job);
+  } catch (e) { state.mode = null; setupError(e.message); }
+}
+function showMap() {
+  document.title = 'RepoTrace – map of ' + DATA.repository;
+  show('results');
+  $('#exampleCard').hidden = true; $('#limits').hidden = true; $('#viewChange').hidden = true; $('#viewProject').hidden = false;
+  const words = {partial: 'some files could not be read'}[DATA.status];
+  const meta = [h('span', null, 'The project as it is on disk right now. Nothing was run.')];
+  if (words) meta.push(chip(words, 'possible'));
+  meta.push(h('button', {class: 'btn link', id: 'limitsBtn', 'aria-expanded': 'false', onclick: toggleLimits}, 'What we could not see'));
+  $('#summary').replaceChildren(h('h1', null, 'Map of ' + DATA.repository), h('div', {class: 'meta'}, meta));
+  $('#ctx').textContent = DATA.repository + '  ·  project map';
+  announce('Map ready. ' + plural(DATA.overview.functions, 'function') + ' in ' + plural(DATA.overview.files, 'file') + '.');
+  projectInit();
+  $('#summary').focus({preventScroll: true});
+  window.scrollTo(0, 0);
+}
+
+function showResults() {
+  document.title = 'RepoTrace – ' + DATA.repository;
+  show('results');
+  $('#limits').hidden = true;
+  state.showMore = false;
+  renderExample();
+  renderSummary();
+  $('#ctx').textContent = refShort(DATA.base.ref) + ' \u2192 ' + refShort(DATA.head.ref) + '  \u00B7  ' + DATA.repository;
+  announce('Analysis complete. ' + (DATA.changes.length ? plural(DATA.changes.length, 'function') + ' changed.' : 'No function changed.'));
+  $('#viewProject').hidden = true; $('#viewChange').hidden = false;
+  const fromHash = /^#c(\d+)$/.exec(location.hash);
+  const first = DATA.changes.find(c => fromHash && c.id === Number(fromHash[1])) || ranked()[0];
+  state.selected = first ? first.id : null;
+  renderList(); renderChangeView();
+  if (LIVE && state.job) $('#saveBtn').href = '/api/export?id=' + encodeURIComponent(state.job) + '&token=' + encodeURIComponent(TOKEN);
+  $('#summary').focus({preventScroll: true});
+  window.scrollTo(0, 0);
+}
+
+/* ---------------------------------------------------------------- comfort: display settings, announcements */
+const PREFS_KEY = 'rt-prefs';
+const prefs = {size: 'normal', theme: 'auto', motion: false, toured: false};
+function loadPrefs() { try { Object.assign(prefs, JSON.parse(localStorage.getItem(PREFS_KEY) || '{}')); } catch (e) { /* storage may be blocked */ } }
+function savePrefs() { try { localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); } catch (e) { /* ignore */ } }
+function applyPrefs() {
+  const r = document.documentElement;
+  r.dataset.size = prefs.size; r.dataset.theme = prefs.theme; r.dataset.motion = prefs.motion ? 'reduce' : 'auto';
+  for (const [name, key] of [['ps', 'size'], ['pt', 'theme']]) document.querySelectorAll('input[name="' + name + '"]').forEach(i => { i.checked = i.value === prefs[key]; });
+  const m = $('#pm'); if (m) m.checked = prefs.motion;
+  if (changeGraph) changeGraph.applySize(); if (X.graph) X.graph.applySize();
+}
+function setPref(key, value) { prefs[key] = value; savePrefs(); applyPrefs(); announce('Display setting changed.'); }
+function announce(text) { const a = $('#announce'); if (!a) return; a.textContent = ''; setTimeout(() => { a.textContent = text; }, 30); }
+
+/* ---------------------------------------------------------------- examples: one click opens a before-and-after */
+async function loadGallery() {
+  const body = $('#galleryBody');
+  try {
+    const {examples} = await api('/api/examples');
+    body.replaceChildren(...examples.map((ex, i) => {
+      const buttons = h('div', {class: 'gal'}, [h('button', {class: 'gbtn', onclick: () => exploreExample(ex.id, ex.comparisons[0].id)}, h('span', {class: 'asp'}, 'The whole project'), h('span', {class: 'tt'}, 'Explore its map'))], ex.comparisons.map(c => h('button', {class: 'gbtn', onclick: () => runExample(ex.id, c.id)},
+        h('span', {class: 'asp'}, c.aspect), h('span', {class: 'tt'}, c.title))));
+      return i === 0 ? h('div', null, h('p', null, h('strong', null, ex.title), ' — ', ex.blurb), buttons)
+        : h('details', {class: 'proj'}, h('summary', null, ex.title), h('p', {class: 'hint'}, ex.blurb), buttons);
+    }));
+  } catch (e) { body.replaceChildren(h('p', {class: 'hint'}, 'Examples are not available right now. You can still use your own project below.')); }
+}
+async function exploreExample(exId, cmpId) {
+  setupError(''); announce('Opening the example map.');
+  try {
+    const d = await api('/api/example', {id: exId, comparison: cmpId});
+    await exploreFolder(d.repo, d.source_roots);
+  } catch (e) { setupError(e.message); }
+}
+async function runExample(exId, cmpId) {
+  setupError(''); announce('Opening the example.');
+  try {
+    const d = await api('/api/example', {id: exId, comparison: cmpId});
+    await openRepo(d.repo);
+    if (!state.info) return;
+    setSel('baseSel', d.base); setSel('headSel', d.head);
+    if (d.source_roots && d.source_roots.length) $('#roots').value = d.source_roots.join(', ');
+    state.example = {...d.example, done: new Set()};
+    await analyze(true);
+  } catch (e) { setupError(e.message); }
+}
+function renderExample() {
+  const box = $('#exampleCard'), ex = state.example;
+  if (!ex) { box.hidden = true; box.replaceChildren(); return; }
+  box.hidden = false;
+  box.replaceChildren(...[
+    h('div', {class: 'hint'}, 'About this example · ' + ex.project + ' · ' + ex.aspect),
+    h('h2', null, ex.title),
+    h('p', null, ex.shows),
+    ex.steps.length ? [h('h3', null, 'Try this'), h('ol', null, ex.steps.map((s, i) => {
+      const li = h('li', {class: ex.done.has(i) ? 'done' : ''}, s.text, ' ',
+        s.do !== 'read' ? h('button', {class: 'btn', onclick: () => { if (runTry(s)) { ex.done.add(i); li.classList.add('done'); } else announce('That part is not visible right now. Check the filters.'); }}, 'Show me') : null);
+      return li;
+    }))] : null,
+    h('button', {class: 'btn link', onclick: () => { state.example = null; renderExample(); }}, 'Hide this explanation')].flat(Infinity).filter(Boolean));
+}
+function runTry(s) {
+  const g = changeGraph;
+  const focusPicture = () => { const ws = $('#viewChange .work'); if (ws) ws.scrollIntoView({block: 'start', behavior: prefs.motion ? 'auto' : 'smooth'}); };
+  if (s.do === 'select') {
+    const c = DATA.changes.find(x => x.name === s.arg || x.name.split('.').pop() === s.arg);
+    if (!c) return false;
+    select(c.id); focusPicture(); announce('Opened ' + c.name); return true;
+  }
+  if (s.do === 'click') {
+    const n = g.visibleNodes().find(x => x.name === s.arg);
+    if (!n) return false;
+    g.select(n.key); focusPicture(); announce('Selected ' + n.name + '. Its explanation is in the panel on the right.'); return true;
+  }
+  if (s.do === 'toggle') { const more = $('#gChange .more-opts'); if (more) more.open = true; if (s.arg === 'group') g.setGroup(!g.groupFiles); else g.setTier(s.arg, !g.tiers[s.arg]); focusPicture(); return true; }
+  if (s.do === 'layers') { g.setLayers(s.arg); focusPicture(); return true; }
+  if (s.do === 'open') { if (s.arg === 'limits' && $('#limits').hidden) toggleLimits(); return true; }
+  return false;
+}
+
+/* ---------------------------------------------------------------- a guided tour */
+const TOUR = {
+  results: [
+    {sel: '#summary', title: 'The headline', text: 'What changed, and how many places could be affected. "Sure" places are confirmed by the code text; "maybe" places depend on an assumption.'},
+    {sel: '#nav', title: 'What changed', text: 'When more than one function changed, pick one here. The picture and the details follow it.'},
+    {sel: '#gChange .canvas', title: 'The picture', text: 'Each box is a function. The one with the blue border is the changed function. Boxes to its left use it: the nearest column uses it directly, the next column uses those, and so on. Solid lines are sure, dashed are maybe, dotted only share a name.'},
+    {sel: '#gChange .toolbar', title: 'How far to look', text: 'Choose direct users only, two steps, three, or all. You can hide test code. "More options" has the rest, such as grouping by file.'},
+    {sel: '#sideChange', title: 'Why is it there?', text: 'Click any box and this panel explains why it is listed, shows how it reaches the changed function, and shows the exact line of code.'},
+    {sel: '#limitsBtn', title: 'How far to trust it', text: 'RepoTrace says what it could not check. Read this before trusting a quiet result. A quiet result never means "safe".'},
+    {sel: '#moreBtn', title: 'More', text: 'The menu has this tour, the words used, display settings and a way to save the page as one file.'}],
+  setup: [
+    {sel: '#gallery', title: 'Start with an example', text: 'Each button opens a real before-and-after with a plain explanation of what it shows and things to try. This is the quickest way to learn.'},
+    {sel: '#c1', title: 'Or use your own project', text: 'Choose the top folder of any project that uses Git. Browse opens a folder picker on a Mac.'},
+    {sel: '#c2', title: 'Pick two versions', text: 'By default RepoTrace compares the last commit. Use "Choose different versions" if you want something else.'},
+    {sel: '#goBtn', title: 'Analyze', text: 'This reads the two versions from Git history. It never runs your code and never changes your files.'},
+    {sel: '#moreBtn', title: 'More', text: 'The menu has this tour, the words used and display settings.'}]
+};
+const tour = {steps: [], i: 0, active: false};
+function startTour() {
+  const list = $('#results').hidden ? TOUR.setup : TOUR.results;
+  tour.steps = list.filter(s => (!s.when || s.when()) && $(s.sel) && $(s.sel).getClientRects().length);
+  if (!tour.steps.length) return;
+  tour.i = 0; tour.active = true;
+  showTourStep();
+}
+function showTourStep() {
+  document.querySelectorAll('.tour-hl').forEach(e => e.classList.remove('tour-hl'));
+  const s = tour.steps[tour.i], target = $(s.sel);
+  target.classList.add('tour-hl'); target.scrollIntoView({block: 'center', behavior: prefs.motion ? 'auto' : 'smooth'});
+  $('#tourCount').textContent = 'Step ' + (tour.i + 1) + ' of ' + tour.steps.length;
+  $('#tourTitle').textContent = s.title; $('#tourText').textContent = s.text;
+  $('#tourBack').disabled = tour.i === 0;
+  $('#tourNext').textContent = tour.i === tour.steps.length - 1 ? 'Done' : 'Next';
+  $('#tour').hidden = false; $('#tourNext').focus({preventScroll: true});
+  setTimeout(() => { const r = target.getBoundingClientRect(); $('#tour').classList.toggle('top', r.top + r.height / 2 > window.innerHeight * 0.55); }, prefs.motion ? 0 : 450);
+  announce('Tour step ' + (tour.i + 1) + ' of ' + tour.steps.length + '. ' + s.title + '. ' + s.text);
+}
+function endTour() {
+  tour.active = false; $('#tour').hidden = true;
+  document.querySelectorAll('.tour-hl').forEach(e => e.classList.remove('tour-hl'));
+  prefs.toured = true; savePrefs();
+}
+
+/* ---------------------------------------------------------------- start */
+function init() {
+  loadPrefs(); applyPrefs();
+  $('#dispBtn').onclick = () => { const open = $('#display').hidden; $('#display').hidden = !open; $('#dispBtn').setAttribute('aria-expanded', String(open)); if (open) $('#display input:checked').focus(); };
+  document.querySelectorAll('input[name="ps"]').forEach(i => i.addEventListener('change', () => setPref('size', i.value)));
+  document.querySelectorAll('input[name="pt"]').forEach(i => i.addEventListener('change', () => setPref('theme', i.value)));
+  $('#pm').addEventListener('change', e => setPref('motion', e.target.checked));
+  const menu = $('#more'), moreBtn = $('#moreBtn');
+  const setMenu = open => { menu.hidden = !open; moreBtn.setAttribute('aria-expanded', String(open)); };
+  moreBtn.onclick = e => { e.stopPropagation(); setMenu(menu.hidden); if (!menu.hidden) { const first = menu.querySelector('.mi:not([hidden])'); if (first) first.focus(); } };
+  menu.addEventListener('click', () => setMenu(false));
+  document.addEventListener('click', e => { if (!e.target.closest('#more, #moreBtn')) setMenu(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !menu.hidden) { setMenu(false); moreBtn.focus(); } });
+  $('#tourBtn').onclick = startTour;
+  $('#tourNext').onclick = () => { if (tour.i >= tour.steps.length - 1) endTour(); else { tour.i++; showTourStep(); } };
+  $('#tourBack').onclick = () => { if (tour.i > 0) { tour.i--; showTourStep(); } };
+  $('#tourClose').onclick = endTour;
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && tour.active) endTour(); });
+  $('#helpBtn').onclick = () => { const open = $('#help').hidden; $('#help').hidden = !open; $('#helpBtn').setAttribute('aria-expanded', String(open)); };
+  $('#pSearch').addEventListener('input', projectSearch);
+  $('#pSearch').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { const first = $('#pSugg button'); if (first) { e.preventDefault(); first.click(); } }
+    else if (e.key === 'ArrowDown') { const first = $('#pSugg button'); if (first) { e.preventDefault(); first.focus(); } }
+    else if (e.key === 'Escape') $('#pSugg').hidden = true;
+  });
+  $('#pSugg').addEventListener('keydown', e => {
+    const items = [...document.querySelectorAll('#pSugg button')], i = items.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown' && i >= 0) { e.preventDefault(); items[Math.min(items.length - 1, i + 1)].focus(); }
+    else if (e.key === 'ArrowUp' && i >= 0) { e.preventDefault(); (i === 0 ? $('#pSearch') : items[i - 1]).focus(); }
+    else if (e.key === 'Escape') { $('#pSugg').hidden = true; $('#pSearch').focus(); }
+  });
+  document.addEventListener('click', e => { if (!e.target.closest('.pfind')) $('#pSugg').hidden = true; });
+  $('#pTests').addEventListener('change', () => {
+    SP.showTests = $('#pTests').checked;
+    const hidden = k => k && (k.startsWith('dir:') ? (SP.folders.get(k.slice(4)) || {}).test : k.startsWith('file:') ? (SP.files.get(k.slice(5)) || {}).test : ((SP.byId.get(k) || SP.owner.get(k) || {}).test));
+    if (!SP.showTests && hidden(SP.key)) { SP.key = null; SP.seq++; showStart(); }
+    renderOutline(); projectSearch();
+  });
+  $('#pChange').onclick = () => { const path = DATA.repo; state.job = null; state.mode = null; show('setup'); $('#repoPath').value = path; openRepo(path); };
+  $('#search').addEventListener('input', renderList);
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && !$('#results').hidden && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) { e.preventDefault(); ($('#viewProject').hidden ? $('#search') : $('#pSearch')).focus(); }
+  });
+  $('#list').addEventListener('keydown', e => {
+    if (!['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+    const items = [...document.querySelectorAll('#list .item')], i = items.indexOf(document.activeElement);
+    if (i < 0) return;
+    e.preventDefault();
+    items[Math.max(0, Math.min(items.length - 1, i + (e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : -1)))].focus();
+  });
+  if (!LIVE) { if (DATA) showResults(); return; }
+  $('#liveArea').hidden = false;
+  $('#againBtn').onclick = () => { state.job = null; state.mode = null; show('setup'); };
+  $('#openBtn').onclick = () => openRepo($('#repoPath').value.trim());
+  $('#repoPath').addEventListener('keydown', e => { if (e.key === 'Enter') openRepo($('#repoPath').value.trim()); });
+  for (const id of ['baseSel', 'headSel']) $('#' + id).addEventListener('change', () => { syncOther(); updateGo(); });
+  for (const id of ['baseOther', 'headOther']) $('#' + id).addEventListener('input', updateGo);
+  $('#goBtn').onclick = () => analyze();
+  $('#exploreNowBtn').onclick = () => {
+    const path = $('#repoPath').value.trim();
+    if (!path) { $('#repoMsg').replaceChildren(h('div', {class: 'err'}, 'Type or choose a project folder first.')); return; }
+    $('#repoMsg').replaceChildren();
+    exploreFolder(path, state.info && state.info.repo === path ? $('#roots').value.split(',').map(x => x.trim()).filter(Boolean) : []);
+  };
+  $('#browseBtn').onclick = async () => { try { const d = await api('/api/browse', {}); if (d.path) { $('#repoPath').value = d.path; $('#repoMsg').replaceChildren(); } } catch (e) { setupError(e.message); } };
+  loadGallery();
+  refreshRecent().then(s => {
+    if (!s) return;
+    $('#browseBtn').hidden = !s.can_browse;
+    if (s.initial_repo) $('#repoPath').value = s.initial_repo;
+  });
+  show('setup');
+}
+init();
+</script>
+</body>
+</html>
