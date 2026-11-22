@@ -66,7 +66,7 @@ await step('choose the two versions and press Analyse; progress is shown; the gu
   await click('#go-form button[type=submit]');
   await waitFor(`!!window.PROTO || !!document.querySelector('#picker-error:not([hidden])')`, 'analysis');
   need(await read(`!!window.PROTO`), 'analysis failed: ' + await text('#content'));
-  await waitFor(`/Start|Find your way/.test(document.querySelector('#location').innerText + document.body.innerText)`, 'start screen');
+  await waitFor(`/Check a change|Start|Find your way/.test(document.querySelector('#location').innerText + document.body.innerText)`, 'start screen');
   projectName = await read(`window.PROTO.project.name`);
   await shot('start');
 });
