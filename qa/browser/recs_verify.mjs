@@ -6,7 +6,8 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 
 const [URL_, PROJECT, BASE, HEAD] = process.argv.slice(2);
-const OUT = join('qa', 'ui_audit', 'verify');
+const expectOverflow = process.env.REPOTRACE_EXPECT_TEST_OVERFLOW === '1';
+const OUT = process.env.REPOTRACE_BROWSER_OUT || join('qa', 'ui_audit', 'verify');
 mkdirSync(OUT, {recursive: true});
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const PORT = 9600 + Math.floor(Math.random() * 80);
@@ -29,7 +30,12 @@ ws.addEventListener('message', ev => {
   if (m.method === 'Runtime.exceptionThrown') errors.push((m.params.exceptionDetails.exception?.description || m.params.exceptionDetails.text || '').split('\n')[0]);
   if (m.method === 'Network.responseReceived' && m.params.response.status >= 400) errors.push(`HTTP ${m.params.response.status} ${m.params.response.url}`);
 });
-const send = (method, params = {}) => new Promise(r => { const i = ++id; pending.set(i, r); ws.send(JSON.stringify({id: i, method, params})); });
+const send = (method, params = {}) => new Promise((resolve, reject) => {
+  const i = ++id;
+  const timeout = setTimeout(() => { pending.delete(i); reject(new Error('No browser response to ' + method)); }, 10000);
+  pending.set(i, result => { clearTimeout(timeout); resolve(result); });
+  ws.send(JSON.stringify({id: i, method, params}));
+});
 const read = async expr => {
   const r = await send('Runtime.evaluate', {expression: expr, returnByValue: true, awaitPromise: true});
   if (r.result.exceptionDetails) throw new Error(r.result.exceptionDetails.exception?.description || 'evaluate failed');
@@ -95,6 +101,29 @@ try {
   if (summary.has3) fail('a level 3 forecast was emitted');
   if (summary.generic) fail('generic advice was emitted');
   if (summary.score) fail('a numeric model score was emitted');
+  await click('[data-action="review-tab"][data-tab="tests"]');
+  await waitFor(`!!document.querySelector('.test-item')`, 'runnable test card', 10000);
+  await click('.test-item .reason > summary');
+  const testEvidence = await read(`(()=>{const item=document.querySelector('.test-item');
+    return item.innerText.includes('not executed') && !!item.querySelector('.reason[open] .test-chain');
+  })()`);
+  if (!testEvidence) fail('test recommendation did not show execution status and expandable path');
+  const hasNext = await read(`!!document.querySelector('[data-action="test-page"]:not([disabled])[data-index="1"]')`);
+  if (expectOverflow && !hasNext) fail('expected a second page of runnable tests');
+  if (hasNext) {
+    await click('[data-action="test-page"][data-index="1"]');
+    const overflow = await read(`document.querySelector('.test-item [data-action="copy-test"]').dataset.index === '20'`);
+    if (!overflow) fail('next page did not show the first overflow test');
+  }
+  await click('[data-action="review-tab"][data-tab="changes"]');
+  const perChange = await read(`!!document.querySelector('.change-item details .test-item')`);
+  if (!perChange) fail('changed code did not expose per-change recommendations');
+  report.checks.testRecommendations = {testEvidence, hasNext, perChange};
+  if (expectOverflow) {
+    const pageErrors = errors.filter(e => !/favicon/i.test(e));
+    if (pageErrors.length) fail('console or request errors: ' + pageErrors.join(' | '));
+    finish();
+  }
   await click('[data-action="review-tab"][data-tab="recommendations"]');
   await waitFor(`!!document.querySelector('.rec-card')`, 'recommendation card', 10000);
   const beforeId = await read(`document.querySelector('.rec-card').dataset.recId`);
@@ -217,8 +246,11 @@ try {
 } catch (e) {
   fail(e.message || String(e));
 }
-report.ok = report.errors.length === 0;
-writeFileSync(join(OUT, 'report.json'), JSON.stringify(report, null, 1));
-console.log(JSON.stringify({ok: report.ok, errors: report.errors, recommendations: report.recommendations, dismiss: report.dismiss, export: report.export, runAgain: report.runAgain, measure: report.measure, themeFailures: report.themeFailures, console: report.console}, null, 1));
-cleanup();
-process.exit(report.ok ? 0 : 1);
+function finish() {
+  report.ok = report.errors.length === 0;
+  writeFileSync(join(OUT, 'report.json'), JSON.stringify(report, null, 1));
+  console.log(JSON.stringify({ok: report.ok, errors: report.errors, checks: report.checks, recommendations: report.recommendations, dismiss: report.dismiss, export: report.export, runAgain: report.runAgain, measure: report.measure, themeFailures: report.themeFailures, console: report.console}, null, 1));
+  cleanup();
+  process.exit(report.ok ? 0 : 1);
+}
+finish();

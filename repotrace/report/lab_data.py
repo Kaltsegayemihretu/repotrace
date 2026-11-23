@@ -299,7 +299,7 @@ def _sources(report):
 
 
 def _lines(text):
-    return text.split('\n')
+    return text.replace('\r\n', '\n').split('\n')
 
 
 def signature(text, line):
@@ -456,6 +456,7 @@ def build_review(report, view, reports, repo=None, name='project'):
     plan = report.get('test_plan') or build_test_plan(report['changes'])
     by_test = {(t['file'], t['name']): t for t in tests}
     tests = [by_test[(t['file'], t['name'])] for t in plan['tests']]
+    overflow_tests = [by_test[(t['file'], t['name'])] for t in plan.get('all_tests', [])[len(tests):]]
 
     unreadable = [f['file'] for r in reports.values() for f in r['files'] if f['status'] != 'ok']
     in_tests = sum(n.get('unres') or 0 for n in nodes if n['k'] == 'fn' and n['test'] and not n.get('gone'))
@@ -477,7 +478,9 @@ def build_review(report, view, reports, repo=None, name='project'):
               'base': version_name('base'), 'head': version_name('head'),
               'base_commit': report['base']['commit'], 'head_commit': report['head']['commit'], 'story': view.get('story'), 'changed': changed,
               'concerns': concerns[:14], 'candidates': candidates[:10], 'affected': affected, 'tests': tests, 'removed_tests': removed_tests, 'history': hints,
-              'test_plan': {k: v for k, v in plan.items() if k != 'tests'},
+              'overflow_tests': overflow_tests, 'unverified_tests': plan.get('unverified_tests', []),
+              'test_plan': {k: v for k, v in plan.items()
+                            if k not in ('tests', 'all_tests', 'removed_tests', 'unverified_tests')},
               'history_window': window, 'gaps': [g for g in gaps if g]}
     review['unresolved'] = _unresolved_calls(nodes, changed)
     review['recommendations'] = build_recommendations(review)
@@ -502,19 +505,21 @@ def _unresolved_calls(nodes, changed):
 
 def _merge_tests(report, nodes, after_by_id, node_of_change, by_file_name, after_src):
     """One entry per test, with one reason per changed function it connects to. Nothing is discarded."""
-    merged, removed, removed_seen = {}, [], set()
+    merged, removed = {}, {}
     for idx, change in enumerate(report['changes']):
         selection = change.get('test_selection') or {}
         for t in selection.get('tests', []):
             key = (t['file'], t['name'])
-            entry = merged.setdefault(key, {'name': t['name'], 'file': t['file'], 'line': t['line'], 'run': t['run'], 'reasons': [],
+            entry = merged.setdefault(key, {'name': t['name'], 'file': t['file'], 'line': t['line'], 'run': t['run'], 'reasons': [], 'execution_status': t.get('execution_status', 'not executed'),
                                             'node': after_by_id.get((t.get('ids') or {}).get('after'), by_file_name.get(key))})
             entry['reasons'].append({'change': idx, 'target': node_of_change[idx], 'for': change['qualified_name'], 'chain': t['chain'], 'via': t.get('via'),
+                                     'evidence': t.get('evidence', {}),
                                      'tier': 0 if t['tier'] == 'supported' else 1, 'seen_in': t['seen_in'], 'distance': t['distance']})
         for t in selection.get('removed_tests', []):
-            if (t['file'], t['name']) not in removed_seen:
-                removed_seen.add((t['file'], t['name']))
-                removed.append({'name': t['name'], 'file': t['file'], 'chain': t['chain'], 'for': change['qualified_name']})
+            key = (t['file'], t['name'])
+            entry = removed.setdefault(key, {'name': t['name'], 'file': t['file'], 'chain': t['chain'],
+                                             'for': change['qualified_name'], 'reasons': []})
+            entry['reasons'].append({'for': change['qualified_name'], 'evidence': t.get('evidence', {})})
     out = []
     for entry in merged.values():
         entry['reasons'].sort(key=lambda r: (r['tier'], r['distance'], r['for']))
@@ -529,12 +534,18 @@ def _merge_tests(report, nodes, after_by_id, node_of_change, by_file_name, after
             start, nxt = (nodes[hook]['line'] if hook is not None else None), (chain[2] if len(chain) > 2 else '')
         elif via.get('kind') == 'fixture':
             start = None
-        line = _call_line(after_src.get(entry['file'], ''), start, nxt) if start and nxt else None
+        head = best['evidence'].get('after', {})
+        first = (head.get('calls') or [{}])[0].get('evidence', {})
+        line = None
+        if first.get('file') == entry['file']:
+            line = first['span']['line']
+        elif not best['evidence'] and start and nxt and 'after' in best['seen_in']:
+            line = _call_line(after_src.get(entry['file'], ''), start, nxt)
         entry['call_line'] = line
         entry['snippet'] = snippet(after_src.get(entry['file'], ''), line) if line else None
         out.append(entry)
     out.sort(key=lambda e: (e['tier'], e['dist'], e['file'], e['name']))
-    return out, removed
+    return out, list(removed.values())
 
 
 # ------------------------------------------------------------------ the whole payload

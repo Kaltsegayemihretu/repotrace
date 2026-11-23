@@ -9,7 +9,7 @@ from repotrace.changes.git_snapshot import GitError
 from repotrace.changes.test_selection import DEFAULT_TEST_LIMIT
 
 
-def summarize(report, show_noisy=False):
+def summarize(report, show_noisy=False, all_tests=False):
     s = report['summary']
     lines = [f"{report['base']['ref']} ({report['base']['commit'][:10]}) -> "
              f"{report['head']['ref']} ({report['head']['commit'][:10]}): status {report['status']}",
@@ -65,9 +65,15 @@ def summarize(report, show_noisy=False):
         lines.append(f"\nTests to run first: {plan['selected']} of {plan['total_candidates']} connected tests "
                      f"({plan['omitted']} outside the shortlist).")
         lines.append('  ' + plan['ranking'])
-        for test in plan['tests']:
+        for test in plan.get('all_tests', plan['tests']) if all_tests else plan['tests']:
             lines.append('  ' + test['run'])
         lines.append('  ' + plan['warning'])
+        for key, title in (('removed_tests', 'Absent from head'), ('unverified_tests', 'Unverified head identity')):
+            for test in plan.get(key, []):
+                lines.append(f"  {title}: {test['file']}::{test['name']}")
+        for advice in plan.get('broader_testing', []):
+            prefix = (advice['file'] + ': ') if 'file' in advice else ''
+            lines.append('  Broader testing: ' + prefix + advice['reason'])
     for gap in report['gaps']:
         lines.append(f"\nGap [{gap['type']}] {gap['file']}: {gap['message']}")
     return '\n'.join(lines)
@@ -87,6 +93,7 @@ def main(argv=None):
     parser.add_argument('--max-depth', type=int, default=20)
     parser.add_argument('--max-tests', type=int, default=DEFAULT_TEST_LIMIT,
                         help='Maximum tests in the comparison-wide run-first list (default: 20)')
+    parser.add_argument('--all-tests', action='store_true', help='Show every runnable recommendation in the terminal')
     parser.add_argument('--max-name-matches', type=int, default=20,
                         help='Name-only match sites kept per changed function (0 = none)')
     parser.add_argument('--output', type=Path, help='Save the JSON report (.json)')
@@ -112,7 +119,7 @@ def main(argv=None):
         if args.json and not args.output:
             print(json.dumps(report, indent=2))
         else:
-            print(summarize(report, args.show_noisy_matches))
+            print(summarize(report, args.show_noisy_matches, args.all_tests))
         return 0 if report['status'] == 'ok' else 1
     except (GitError, OSError, ValueError, RecursionError) as exc:
         parser.exit(2, f'Cannot build change-impact report: {exc}\n')

@@ -327,7 +327,7 @@ class ProjectIndex:
 
 
 def resolve_project_calls(report):
-    from repotrace.mapping.method_resolver import MethodCandidates
+    from repotrace.mapping.method_resolver import MethodCandidates, Unsupported
     from repotrace.mapping.argument_flow import enrich_parameter_hints
     from repotrace.mapping.fixture_flow import add_fixture_hints
     from repotrace.mapping.resolution_summary import classify_project_calls
@@ -408,3 +408,13 @@ def resolve_project_calls(report):
     report['project_index'] = index.public_data()
     report['project_index']['argument_flow'] = argument_flow
     report['project_index']['fixture_flow'] = fixture_flow
+    unittest_ancestry = {}
+    for class_id in model.classes:
+        try:
+            ancestry = model.mro(class_id)
+        except Unsupported:
+            continue
+        if any(base.startswith('unittest.') for member in ancestry
+               for base in model.classes[member].get('stdlib_bases', ())):
+            unittest_ancestry[class_id] = list(ancestry)
+    report['project_index']['unittest_ancestry'] = unittest_ancestry

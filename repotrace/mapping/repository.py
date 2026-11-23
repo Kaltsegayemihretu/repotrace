@@ -20,14 +20,8 @@ DEFAULT_EXCLUDED_DIRS = frozenset({
 })
 
 
-def pytest_source_roots(root):
-    """Where pytest itself puts project code on the import path, read from the project's pytest configuration.
-
-    Returns (roots, config file) when the configuration declares `pythonpath`, else (None, None). The roots are the
-    declared `pythonpath` folders plus the `testpaths` folders that are not packages (pytest's default import mode
-    puts such a folder on the path, which is how tests import their conftest). Without a declared pythonpath, nothing
-    is guessed. Files are read as text only.
-    """
+def pytest_configuration(root):
+    """Read supported root-level pytest configuration without loading project code."""
     root = Path(root)
     found = None
     for name, section in (('pytest.ini', 'pytest'), ('pyproject.toml', None), ('tox.ini', 'pytest'), ('setup.cfg', 'tool:pytest')):
@@ -43,12 +37,12 @@ def pytest_source_roots(root):
             if not table:
                 continue
             values = {}
-            for key in ('pythonpath', 'testpaths'):
+            for key in ('pythonpath', 'testpaths', 'python_files', 'python_classes', 'python_functions', 'addopts', 'norecursedirs'):
                 m = re.search(rf'^{key}\s*=\s*(\[[^\]]*\]|"[^"]*"|\'[^\']*\')', table.group(1), re.M)
                 if m:
                     values[key] = ' '.join(re.findall(r'["\']([^"\']+)["\']', m.group(1)))
         else:
-            parser = configparser.ConfigParser()
+            parser = configparser.ConfigParser(interpolation=None)
             try:
                 parser.read_string(text)
             except configparser.Error:
@@ -58,9 +52,15 @@ def pytest_source_roots(root):
             values = dict(parser[section])
         found = (name, values)
         break                                                 # pytest uses the first configuration file it finds
-    if found is None or not found[1].get('pythonpath', '').split():
+    return found or (None, {})
+
+
+def pytest_source_roots(root):
+    """Use configured pytest import paths when available."""
+    root = Path(root)
+    name, values = pytest_configuration(root)
+    if not values.get('pythonpath', '').split():
         return None, None
-    name, values = found
     roots = []
     for entry in values['pythonpath'].split() + [t for t in values.get('testpaths', '').split()
                                                  if (root / t).is_dir() and not (root / t / '__init__.py').exists()]:

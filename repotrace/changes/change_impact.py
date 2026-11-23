@@ -3,21 +3,23 @@
 repo + BASE + HEAD -> pin commits -> read both snapshots from Git objects -> analyze both
 with identical settings -> detect changed functions -> query the matching graph(s).
 """
+import hashlib
 import platform
+from time import perf_counter
 import tempfile
 from pathlib import Path
 
 from repotrace.changes.change_detector import detect_changes
 from repotrace.changes.decorator_impact import (_tolerant_index, callers_of_decorated, decorated_by, decorator_bases,
                               decorators_of_change)
-from repotrace.changes.git_snapshot import (GitError, check_repository, materialize_commit, resolve_commit,
+from repotrace.changes.git_snapshot import (CONFIG_FILES, GitError, check_repository, materialize_commit, resolve_commit,
                           worktree_is_dirty)
 from repotrace.graph.graph_index import GraphIndex
 from repotrace.graph.impact import analyze_impact
 from repotrace.changes.name_matches import find_name_matches
-from repotrace.mapping.repository import analyze_repository
+from repotrace.mapping.repository import analyze_repository, pytest_configuration
 from repotrace.changes.signature_review import review_signatures
-from repotrace.changes.test_selection import DEFAULT_TEST_LIMIT, build_test_plan, select_tests
+from repotrace.changes.test_selection import DEFAULT_TEST_LIMIT, TestSymbols, build_test_plan, match_tests, select_tests
 
 SCHEMA_VERSION = '0.2'
 
@@ -33,6 +35,11 @@ def _snapshot_report(repo, commit, label, workdir, settings):
     folder = Path(workdir) / label
     snapshot = materialize_commit(repo, commit, folder)
     report = analyze_repository(folder, **settings)
+    name, config = pytest_configuration(folder)
+    report['test_configuration'] = config
+    snapshot['test_configuration'] = name
+    snapshot['configuration_hashes'] = {name: hashlib.sha256((folder / name).read_bytes()).hexdigest()
+                                        for name in CONFIG_FILES if (folder / name).is_file()}
     return report, snapshot
 
 
@@ -210,7 +217,8 @@ def analyze_change_impact(repo, base, head, *, source_roots=None, exclude_dirs=(
                 'commit': commit, 'status': analyzed['status'],
                 'python_files_written': snapshot['python_files_written'],
                 'skipped_from_git': snapshot['skipped'], 'summary': analyzed['summary'],
-                'diagnostics': analyzed['diagnostics']}
+                'diagnostics': analyzed['diagnostics'], 'test_configuration': snapshot['test_configuration'],
+                'configuration_hashes': snapshot['configuration_hashes']}
     if any(r['status'] == 'error' for r in reports.values()):
         report['status'] = 'error'
         report['warnings'].append('A snapshot could not be analyzed; no change-impact is available.')
@@ -239,8 +247,16 @@ def analyze_change_impact(repo, base, head, *, source_roots=None, exclude_dirs=(
             f'{len(definitions)} changed functions found; only the first {max_changes} were queried.')
     changed_after = {(c['file'], c['qualified_name']) for c in definitions
                      if c['change'] != 'deleted'}
-    after_symbols = {s['id']: s for f in reports['after']['files'] if f['status'] == 'ok' for s in f['symbols']}
-    before_symbols = {s['id']: s for f in reports['before']['files'] if f['status'] == 'ok' for s in f['symbols']}
+    selection_started = perf_counter()
+    symbols_by_side = {side: TestSymbols(source) for side, source in reports.items()}
+    before_symbols, after_symbols = symbols_by_side['before'], symbols_by_side['after']
+    correspondence = match_tests(before_symbols, after_symbols)
+    unavailable = {f['file'] for f in reports['after']['files'] if f['status'] != 'ok'}
+    unavailable.update(row['path'] for row in report['snapshots']['after']['skipped_from_git'])
+    alternative_indexes = {
+        side: GraphIndex(reports[side], include_possible=not include_possible)
+        for side, index in indexes.items() if index.coverage['possible_calls']}
+    selection_seconds = perf_counter() - selection_started
     decorator_names, decorated, refused_callers = decorator_bases(reports['after']), None, {}
     callers_by_name = None
     for position, change in enumerate(definitions[:max_changes], 1):
@@ -259,7 +275,22 @@ def analyze_change_impact(repo, base, head, *, source_roots=None, exclude_dirs=(
             entry['signature_review'] = review
         entry['impact'] = results
         entry['review_candidates'] = _candidates(change, results, indexes['after'], changed_after)
-        entry['test_selection'] = select_tests(change, results, {'before': before_symbols, 'after': after_symbols})
+        selection_started = perf_counter()
+        alternatives = {}
+        for side, index in alternative_indexes.items():
+            if side in results:
+                alternative = analyze_impact(index, change[side]['id'], max_depth=max_depth,
+                                             max_nodes=max_nodes, max_edges=max_edges)
+                alternatives[side] = _compact(alternative)
+                limited = limited or alternative['status'] == 'limited'
+                if alternative['status'] == 'limited':
+                    warnings.add('A test recommendation traversal reached a limit.')
+        entry['test_selection'] = select_tests(change, results, symbols_by_side, correspondence, unavailable, alternatives)
+        entry['test_selection']['traversal'] = {
+            side: {'supported': (alternatives.get(side, result) if include_possible else result)['traversal'],
+                   'including_possible': (result if include_possible else alternatives.get(side, result))['traversal']}
+            for side, result in results.items()}
+        selection_seconds += perf_counter() - selection_started
         if change['change'] == 'deleted':
             if callers_by_name is None:
                 callers_by_name = _confident_callers_by_name(reports['after'], after_symbols)
@@ -298,11 +329,54 @@ def analyze_change_impact(repo, base, head, *, source_roots=None, exclude_dirs=(
                 candidate['still_references_removed_name'] = (
                     (candidate['file'], candidate['qualified_name']) in referenced)
         report['changes'].append(entry)
+    selection_started = perf_counter()
     for change in definitions[max_changes:]:
-        report['changes'].append({**change, 'impact': {}, 'review_candidates': [],
-                                  'not_queried': 'max_changes budget reached'})
+        # Directly changed tests and hooks can still be selected without a graph query.
+        targets = {side: {'target': change[side]} for side in symbols_by_side if side in change}
+        report['changes'].append({
+            **change, 'impact': {}, 'review_candidates': [],
+            'test_selection': select_tests(change, targets, symbols_by_side, correspondence, unavailable),
+            'not_queried': 'max_changes budget reached'})
+    selection_seconds += perf_counter() - selection_started
     report['warnings'] += sorted(warnings)
-    report['test_plan'] = build_test_plan(report['changes'], max_tests)
+    selection_started = perf_counter()
+    plan = report['test_plan'] = build_test_plan(report['changes'], max_tests)
+    for category in ('removed_tests', 'unverified_tests'):
+        entries = {}
+        for idx, change in enumerate(report['changes']):
+            for test in change.get('test_selection', {}).get(category, []):
+                key = (test['file'], test['name'])
+                item = entries.setdefault(key, {**test, 'reasons': []})
+                item['reasons'].append({'change_index': idx, 'evidence': test['evidence']})
+        plan[category] = list(entries.values())
+    advice = plan['broader_testing'] = []
+    configs = {side: snap['configuration_hashes'] for side, snap in report['snapshots'].items()}
+    for path in sorted(CONFIG_FILES):
+        if configs['before'].get(path) != configs['after'].get(path):
+            advice.append({'file': path, 'scope': '.', 'reason': 'Configuration changed. Run the project test suite using the head configuration.'})
+    for file in report['files']:
+        if Path(file['file']).name == 'conftest.py' and file['change'] != 'cosmetic':
+            advice.append({'file': file['file'], 'scope': str(Path(file['file']).parent.as_posix()),
+                           'reason': 'Shared test setup changed. Run the affected directory suite.'})
+    for gap in report['gaps']:
+        advice.append({'file': gap['file'], 'scope': '.', 'reason': gap['message'] + ' Run the project test suite.'})
+    if limited or any(cov['unresolved_calls'] or cov['candidate_limited_calls'] for cov in report['coverage'].values()):
+        advice.append({'scope': '.', 'reason': 'Unresolved or bounded graph traversal can omit relevant tests. Run the project test suite.'})
+    for side, symbols in symbols_by_side.items():
+        for key in ('addopts', 'norecursedirs'):
+            if symbols.config.get(key):
+                advice.append({'scope': '.', 'reason': f'Pytest {key} in {side} may alter collection. Verify test targets in the project environment.'})
+    if any(snap['skipped_from_git'] for snap in report['snapshots'].values()):
+        advice.append({'scope': '.', 'reason': 'Some snapshot paths could not be read. Run the project test suite.'})
+    if plan['unverified_tests']:
+        advice.append({'scope': '.', 'reason': 'Some prior tests could not be matched to a runnable head test. Confirm collection and run the project test suite.'})
+    for change in report['changes']:
+        selection = change.get('test_selection')
+        if selection is not None and not selection['tests']:
+            selection['broader_testing'] = 'No linked runnable tests found for this change. Run the relevant component tests or the project suite.'
+    if not plan['all_tests']:
+        advice.append({'scope': '.', 'reason': 'No linked tests found. Run the usual project test suite.'})
+    plan['selection_seconds'] = round(selection_seconds + perf_counter() - selection_started, 6)
     counts = {kind: sum(c['change'] == kind for c in definitions)
               for kind in ('modified', 'added', 'deleted')}
     failed = any(g['type'] == 'analysis_failed' for g in report['gaps'])

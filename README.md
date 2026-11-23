@@ -37,6 +37,7 @@ python3 -m repotrace help                                      # all commands
 ```
 
 Change reviews rank at most 20 tests to run first across the whole comparison (adjust with `--max-tests` in the CLI).
+The Lab pages through the full ranking. Use `--all-tests` to print it in the terminal. See the [selection rules and verification results](docs/TEST_RECOMMENDATIONS.md).
 The guided screen and terminal show how many connected tests are outside that list. All per-change test evidence
 remains in the JSON report; `test_plan` contains the ranked list. This is a starting point, not permission to skip
 the rest of the suite. Ranking favors stronger evidence, lost paths, explicit use over shared setup/autouse,

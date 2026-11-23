@@ -67,6 +67,9 @@ class TestReasonTests(LabDataCase):
         self.assertEqual(len(review['tests']), 20)
         self.assertEqual(review['test_plan']['total_candidates'], 30)
         self.assertEqual(review['test_plan']['omitted'], 10)
+        self.assertEqual(len(review['overflow_tests']), 10)
+        names = {test['name'] for test in review['tests'] + review['overflow_tests']}
+        self.assertEqual(names, {f'test_{i:02}' for i in range(30)})
 
     def test_a_test_connected_to_two_changes_appears_once_with_both_reasons(self):
         base = self.commit({'app.py': 'def f(x):\n    return x\n\n\ndef g(x):\n    return x\n',
