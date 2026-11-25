@@ -1,0 +1,59 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - master
+      - "*.x"
+    paths-ignore:
+      - 'docs/**'
+      - 'flaskbb/themes/**'
+      - '**.md'
+      - '**.rst'
+      - '**/AUTHORS'
+      - '**/LICENSE'
+  pull_request:
+    branches:
+      - master
+      - "*.x"
+    paths-ignore:
+      - 'docs/**'
+      - 'flaskbb/themes/**'
+      - '**.md'
+      - '**.rst'
+      - '**/AUTHORS'
+      - '**/LICENSE'
+
+env:
+  FORCE_COLOR: '1'
+
+jobs:
+  tests:
+    name: ${{ matrix.name || matrix.python }}
+    runs-on: ${{ matrix.os || 'ubuntu-latest' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {python: '3.15', tox: 'py3.15'}
+          - {python: '3.14', tox: 'py3.14'}
+          - {python: '3.13', tox: 'py3.13'}
+          - {python: '3.12', tox: 'py3.12'}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          enable-cache: true
+          cache-suffix: ${{ matrix.name || matrix.python }}
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: ${{ matrix.python }}
+          allow-prereleases: true
+      - run: uv sync --group dev
+      - run: uv run tox run -e ${{ matrix.tox || format('py{0}', matrix.python) }}
+      - uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
+        if: ${{ !matrix.name }}
+        with:
+          files: ./coverage.xml
+          flags: py${{ matrix.python }}
+          token: ${{ secrets.CODECOV_TOKEN }}

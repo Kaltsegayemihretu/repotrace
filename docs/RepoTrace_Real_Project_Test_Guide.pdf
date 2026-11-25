@@ -1,0 +1,1440 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<<
+/Type /Pages
+/Count 3
+/Kids [ 4 0 R 11 0 R 14 0 R ]
+>>
+endobj
+2 0 obj
+<<
+/Producer (PyPDF2)
+/Title (RepoTrace\040\055\040Test\040Recommendation\040Guide\040for\040Uploaded\040Projects)
+/Author (RepoTrace)
+>>
+endobj
+3 0 obj
+<<
+/Type /Catalog
+/Pages 1 0 R
+>>
+endobj
+4 0 obj
+<<
+/Contents 5 0 R
+/MediaBox [ 0 0 612 792 ]
+/Resources <<
+/Font <<
+/F1 6 0 R
+/F2 7 0 R
+/F3 8 0 R
+/F4 9 0 R
+/F5 10 0 R
+/F15d35bc4b-84b3-4c01-96a0-73dcd610e994 <<
+/BaseFont /Helvetica
+/Encoding /WinAnsiEncoding
+/Name /F1
+/Subtype /Type1
+/Type /Font
+>>
+/F223d1bd84-5bff-4016-bbe0-1d13dc7ae149 <<
+/BaseFont /Helvetica-Bold
+/Encoding /WinAnsiEncoding
+/Name /F2
+/Subtype /Type1
+/Type /Font
+>>
+>>
+/ProcSet [ /ImageC /ImageI /PDF /Text /ImageB ]
+>>
+/Rotate 0
+/Trans <<
+>>
+/Type /Page
+/Annots [ ]
+/Parent 1 0 R
+>>
+endobj
+5 0 obj
+<<
+/Length 5382
+>>
+stream
+q
+1 0 0 1 0 0 cm
+BT
+/F1 12 Tf
+14.4 TL
+ET
+0.031373 0.494118 0.470588 RG
+2 w
+n
+56 748 m
+556 748 l
+S
+0.847059 0.894118 0.909804 RG
+0.6 w
+n
+56 42 m
+556 42 l
+S
+BT
+/F1 9 Tf
+10.8 TL
+ET
+0.262745 0.341176 0.423529 rg
+BT
+1 0 0 1 56 27 Tm
+(RepoTrace\040\040\057\040\040Real\055project\040test\040recommendation\040guide) Tj
+T*
+ET
+BT
+1 0 0 1 550.996 27 Tm
+(1) Tj
+T*
+ET
+q
+1 0 0 1 56 713 cm
+q
+0.031373 0.494118 0.470588 rg
+BT
+1 0 0 1 0 3 Tm
+/F2 10 Tf
+13 TL
+(REPOTRACE\040\057\040QUICK\040START) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 671 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 3 Tm
+/F2 31 Tf
+34 TL
+(Find\040tests\040worth\040running) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 643 cm
+q
+BT
+1 0 0 1 0 4.2 Tm
+15 TL
+/F1 10.8 Tf
+0.07451 0.14902 0.227451 rg
+(A\040Windows\040walkthrough\040using\040the\040six\040Git\040repositories\040in\040your\040uploaded\040) Tj
+/F2 10.8 Tf
+(real\055projects\057repos) Tj
+/F1 10.8 Tf
+(\040folder\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 611 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 3 Tm
+/F2 16 Tf
+19 TL
+(1\056\040Start\040RepoTrace\040Lab) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 575 cm
+q
+BT
+1 0 0 1 0 19.2 Tm
+15 TL
+/F1 10.8 Tf
+0.07451 0.14902 0.227451 rg
+(Open\040PowerShell\040in\040the\040RepoTrace\040folder\054\040where\040you\040see\040) Tj
+/F2 10.8 Tf
+(repotrace) Tj
+/F1 10.8 Tf
+(\054\040) Tj
+/F2 10.8 Tf
+(docs) Tj
+/F1 10.8 Tf
+(\054\040and\040) Tj
+/F2 10.8 Tf
+(real\055projects) Tj
+/F1 10.8 Tf
+(\056\040Run\040the) Tj
+T*
+(commands\040below\056\040Paste\040the\040resulting\040project\040path\040into\040the\040Lab\040and\040click\040) Tj
+/F2 10.8 Tf
+(Open) Tj
+/F1 10.8 Tf
+(\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 554 cm
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 8 4.2 Tm
+/F3 8.8 Tf
+13 TL
+(python\040\055m\040repotrace\040\055\055lab) Tj
+T*
+ET
+Q
+q
+1 0 0 1 56 512 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 19.2 Tm
+/F1 10.8 Tf
+15 TL
+(Keep\040the\040Lab\040running\056\040In\040a\040second\040PowerShell\040window\040in\040the\040same\040folder\054\040get\040the\040absolute\040path\040of\040the) Tj
+T*
+(first\040example\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 491 cm
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 8 4.2 Tm
+/F3 8.8 Tf
+13 TL
+(\050Resolve\055Path\040\047\056\057real\055projects\057repos\057more\055itertools\047\051\056Path) Tj
+T*
+ET
+Q
+q
+1 0 0 1 56 459 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 3 Tm
+/F2 16 Tf
+19 TL
+(2\056\040Compare\040the\040two\040commits) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 423 cm
+q
+BT
+1 0 0 1 0 19.2 Tm
+15 TL
+/F1 10.8 Tf
+0.07451 0.14902 0.227451 rg
+(In\040the\040version\040picker\054\040set\040) Tj
+/F2 10.8 Tf
+(Base) Tj
+/F1 10.8 Tf
+(\040to\040) Tj
+/F2 10.8 Tf
+(0fcdde9c) Tj
+/F1 10.8 Tf
+(\040and\040) Tj
+/F2 10.8 Tf
+(Head) Tj
+/F1 10.8 Tf
+(\040to\040) Tj
+/F2 10.8 Tf
+(c0ede7fc) Tj
+/F1 10.8 Tf
+(\056\040Choose\040the\040entries\040by\040their\040short) Tj
+T*
+(hashes\040and\040start\040the\040comparison\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 391 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 3 Tm
+/F2 16 Tf
+19 TL
+(3\056\040Open\040the\040test\040recommendations) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 340 cm
+q
+BT
+1 0 0 1 0 34.2 Tm
+15 TL
+/F1 10.8 Tf
+0.07451 0.14902 0.227451 rg
+(Select\040) Tj
+/F2 10.8 Tf
+(Related\040tests) Tj
+/F1 10.8 Tf
+(\040in\040the\040review\056\040You\040should\040see\040six\040recommendations\040for\040this\040example\056\040Expand\040a) Tj
+T*
+(reason\040to\040see\040the\040Base\040or\040Head\040evidence\040and\040its\040source\040location\056\040Under\040) Tj
+/F2 10.8 Tf
+(Changed\040code) Tj
+/F1 10.8 Tf
+(\054\040expand) Tj
+T*
+/F2 10.8 Tf
+(all\137unique) Tj
+/F1 10.8 Tf
+(\040and\040then\040) Tj
+/F2 10.8 Tf
+(Recommended\040tests) Tj
+/F1 10.8 Tf
+(\040to\040see\040the\040tests\040tied\040to\040that\040function\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 308 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 3 Tm
+/F2 16 Tf
+19 TL
+(What\040the\040evidence\040means) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 257 cm
+q
+BT
+1 0 0 1 0 34.2 Tm
+15 TL
+/F2 10.8 Tf
+0.07451 0.14902 0.227451 rg
+(Supported) Tj
+/F1 10.8 Tf
+(\040indicates\040a\040recorded\040relationship\040or\040an\040edited\040test\056\040) Tj
+/F2 10.8 Tf
+(Possible) Tj
+/F1 10.8 Tf
+(\040indicates\040an\040uncertain\040static) Tj
+T*
+(relationship\056\040) Tj
+/F2 10.8 Tf
+(Not\040executed) Tj
+/F1 10.8 Tf
+(\040means\040the\040comparison\040has\040yet\040to\040run\040that\040test\056\040A\040recorded\040relationship\040can) Tj
+T*
+(guide\040test\040selection\040even\040when\040runtime\040coverage\040is\040unknown\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 223 cm
+q
+0.262745 0.341176 0.423529 rg
+BT
+1 0 0 1 0 16.6 Tm
+/F1 9.4 Tf
+13 TL
+(Open\040one\040child\040repository\040at\040a\040time\056\040Use\040Related\040tests\040for\040test\040commands\056\040The\040Recommendations\040tab\040contains\040broader) Tj
+T*
+(review\040suggestions\056) Tj
+T*
+ET
+Q
+Q
+Q
+q
+0 0 612 792 re
+W
+n
+1 0 0 1 0 0 cm
+BT
+/F15d35bc4b-84b3-4c01-96a0-73dcd610e994 12 Tf
+14.4 TL
+ET
+0.929412 0.960784 0.964706 rg
+n
+62 77 m
+550 77 l
+553.3168 77 556 79.6832 556 83 c
+556 109 l
+556 112.3168 553.3168 115 550 115 c
+62 115 l
+58.6832 115 56 112.3168 56 109 c
+56 83 l
+56 79.6832 58.6832 77 62 77 c
+h
+f*
+0.07451 0.14902 0.227451 rg
+BT
+/F223d1bd84-5bff-4016-bbe0-1d13dc7ae149 9.5 Tf
+11.4 TL
+ET
+BT
+1 0 0 1 67 99 Tm
+(Match\040the\040start\040of\040the\040commit\040ID) Tj
+T*
+ET
+BT
+/F15d35bc4b-84b3-4c01-96a0-73dcd610e994 9.2 Tf
+11.04 TL
+ET
+BT
+1 0 0 1 67 85 Tm
+(The\040picker\040may\040show\040seven\040characters\056\040For\040the\040first\040example\054\040look\040for\0400fcdde9\040and\040c0ede7f\056) Tj
+T*
+ET
+Q
+
+endstream
+endobj
+6 0 obj
+<<
+/BaseFont /Helvetica
+/Encoding /WinAnsiEncoding
+/Name /F1
+/Subtype /Type1
+/Type /Font
+>>
+endobj
+7 0 obj
+<<
+/BaseFont /Helvetica-Bold
+/Encoding /WinAnsiEncoding
+/Name /F2
+/Subtype /Type1
+/Type /Font
+>>
+endobj
+8 0 obj
+<<
+/BaseFont /Courier
+/Encoding /WinAnsiEncoding
+/Name /F3
+/Subtype /Type1
+/Type /Font
+>>
+endobj
+9 0 obj
+<<
+/BaseFont /ZapfDingbats
+/Name /F4
+/Subtype /Type1
+/Type /Font
+>>
+endobj
+10 0 obj
+<<
+/BaseFont /Helvetica-Oblique
+/Encoding /WinAnsiEncoding
+/Name /F5
+/Subtype /Type1
+/Type /Font
+>>
+endobj
+11 0 obj
+<<
+/Contents 12 0 R
+/MediaBox [ 0 0 612 792 ]
+/Resources <<
+/Font 13 0 R
+/ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>>
+/Rotate 0
+/Trans <<
+>>
+/Type /Page
+/Parent 1 0 R
+>>
+endobj
+12 0 obj
+<<
+/Length 7109
+>>
+stream
+1 0 0 1 0 0 cm
+BT
+/F1 12 Tf
+14.4 TL
+ET
+0.031373 0.494118 0.470588 RG
+2 w
+n
+56 748 m
+556 748 l
+S
+0.847059 0.894118 0.909804 RG
+0.6 w
+n
+56 42 m
+556 42 l
+S
+BT
+/F1 9 Tf
+10.8 TL
+ET
+0.262745 0.341176 0.423529 rg
+BT
+1 0 0 1 56 27 Tm
+(RepoTrace\040\040\057\040\040Real\055project\040test\040recommendation\040guide) Tj
+T*
+ET
+BT
+1 0 0 1 550.996 27 Tm
+(2) Tj
+T*
+ET
+q
+1 0 0 1 56 713 cm
+q
+0.031373 0.494118 0.470588 rg
+BT
+1 0 0 1 0 3 Tm
+/F2 10 Tf
+13 TL
+(REPOTRACE\040\057\040REPRODUCIBLE\040INPUTS) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 671 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 3 Tm
+/F2 31 Tf
+34 TL
+(Six\040real\040comparisons) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 628 cm
+q
+BT
+1 0 0 1 0 19.2 Tm
+15 TL
+/F1 10.8 Tf
+0.07451 0.14902 0.227451 rg
+(Each\040folder\040below\040is\040under\040) Tj
+/F2 10.8 Tf
+(real\055projects\057repos) Tj
+/F1 10.8 Tf
+(\056\040Counts\040are\040distinct\040runnable\040test\040definitions\040from\040the\040full) Tj
+T*
+(ranking\056\040Several\040parameter\040cases\040can\040share\040one\040definition\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 340 cm
+q
+0.07451 0.14902 0.227451 rg
+n
+0 280 500 -40 re
+f*
+0.929412 0.960784 0.964706 rg
+n
+0 240 500 -40 re
+f*
+1 1 1 rg
+n
+0 200 500 -40 re
+f*
+0.929412 0.960784 0.964706 rg
+n
+0 160 500 -40 re
+f*
+1 1 1 rg
+n
+0 120 500 -40 re
+f*
+0.929412 0.960784 0.964706 rg
+n
+0 80 500 -40 re
+f*
+1 1 1 rg
+n
+0 40 500 -40 re
+f*
+0 0 0 rg
+BT
+/F1 10 Tf
+12 TL
+ET
+q
+1 0 0 1 6 260 cm
+q
+1 1 1 rg
+BT
+1 0 0 1 0 3 Tm
+/F2 9 Tf
+12 TL
+(Repository) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 95 260 cm
+q
+1 1 1 rg
+BT
+1 0 0 1 0 3 Tm
+/F2 9 Tf
+12 TL
+(Base\040\057\040Head) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 210 248 cm
+q
+1 1 1 rg
+BT
+1 0 0 1 0 15 Tm
+/F2 9 Tf
+12 TL
+(Test) Tj
+T*
+(count) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 265 260 cm
+q
+1 1 1 rg
+BT
+1 0 0 1 0 3 Tm
+/F2 9 Tf
+12 TL
+(What\040the\040report\040found) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 6 220 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 2.8 Tm
+/F1 9.2 Tf
+12 TL
+(more\055itertools) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 95 220 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 2.8 Tm
+/F1 9.2 Tf
+12 TL
+(0fcdde9c\040\057\040c0ede7fc) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 210 220 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 2.8 Tm
+/F1 9.2 Tf
+12 TL
+(6) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 265 208 cm
+q
+BT
+1 0 0 1 0 14.8 Tm
+12 TL
+/F1 9.2 Tf
+0.07451 0.14902 0.227451 rg
+(One\040edited\040regression\040and\040five\040existing\040tests\040call) Tj
+T*
+/F5 9.2 Tf
+(all\137unique) Tj
+/F1 9.2 Tf
+(\040through\040the\040package\040export\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 6 180 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 2.8 Tm
+/F1 9.2 Tf
+12 TL
+(python\055dotenv) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 95 180 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 2.8 Tm
+/F1 9.2 Tf
+12 TL
+(0b288059\040\057\040bad5771c) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 210 180 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 2.8 Tm
+/F1 9.2 Tf
+12 TL
+(47) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 265 168 cm
+q
+BT
+1 0 0 1 0 14.8 Tm
+12 TL
+/F5 9.2 Tf
+0.07451 0.14902 0.227451 rg
+(test\137parse\137stream) Tj
+/F1 9.2 Tf
+(\040and\040indirect\040callers\040of\040) Tj
+/F5 9.2 Tf
+(parse\137binding) Tj
+/F1 9.2 Tf
+(\056) Tj
+T*
+(Use\040Next\040to\040see\040the\040full\040ranking\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 6 140 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 2.8 Tm
+/F1 9.2 Tf
+12 TL
+(markdown) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 95 140 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 2.8 Tm
+/F1 9.2 Tf
+12 TL
+(4177c1b8\040\057\0402c96e36b) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 210 140 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 2.8 Tm
+/F1 9.2 Tf
+12 TL
+(2) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 265 128 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 14.8 Tm
+/F1 9.2 Tf
+12 TL
+(Two\040edited\040TOC\040label\040regression\040tests\056\040The\040extension) Tj
+T*
+(registry\040dispatch\040remains\040a\040coverage\040gap\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 6 100 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 2.8 Tm
+/F1 9.2 Tf
+12 TL
+(tinydb) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 95 100 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 2.8 Tm
+/F1 9.2 Tf
+12 TL
+(9c861c41\040\057\0406d7c4fc3) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 210 100 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 2.8 Tm
+/F1 9.2 Tf
+12 TL
+(2) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 265 88 cm
+q
+BT
+1 0 0 1 0 14.8 Tm
+12 TL
+/F5 9.2 Tf
+0.07451 0.14902 0.227451 rg
+(test\137all) Tj
+/F1 9.2 Tf
+(\040and\040) Tj
+/F5 9.2 Tf
+(test\137any) Tj
+/F1 9.2 Tf
+(\040changed\056\040The\040callback\040path\040to) Tj
+T*
+/F5 9.2 Tf
+(is\137sequence) Tj
+/F1 9.2 Tf
+(\040remains\040unresolved\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 6 60 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 2.8 Tm
+/F1 9.2 Tf
+12 TL
+(cachetools) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 95 60 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 2.8 Tm
+/F1 9.2 Tf
+12 TL
+(163d67d7\040\057\0405cf074fc) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 210 60 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 2.8 Tm
+/F1 9.2 Tf
+12 TL
+(1) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 265 48 cm
+q
+BT
+1 0 0 1 0 14.8 Tm
+12 TL
+/F5 9.2 Tf
+0.07451 0.14902 0.227451 rg
+(ClassMethodTest\056test\137outer\137decorator) Tj
+/F1 9.2 Tf
+(\040was\040added\056\040Use) Tj
+T*
+(the\040project\040tox\040runner\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 6 20 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 2.8 Tm
+/F1 9.2 Tf
+12 TL
+(flaskbb) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 95 20 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 2.8 Tm
+/F1 9.2 Tf
+12 TL
+(6e1483a8\040\057\0401028f176) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 210 20 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 2.8 Tm
+/F1 9.2 Tf
+12 TL
+(4) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 265 8 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 14.8 Tm
+/F1 9.2 Tf
+12 TL
+(Four\040edited\040registration\040tests\056\040The\040report\040was\040partial\040on) Tj
+T*
+(Python\0403\05611\056\040Use\040Python\0403\05612\040or\040later\056) Tj
+T*
+ET
+Q
+Q
+q
+Q
+Q
+Q
+q
+1 0 0 1 56 308 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 3 Tm
+/F2 16 Tf
+19 TL
+(Run\040the\040same\040comparison\040from\040PowerShell) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 276 cm
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 8 17.2 Tm
+/F3 8.8 Tf
+13 TL
+(python\040\055m\040repotrace\040change\040\056\057real\055projects\057repos\057more\055itertools\040\140) Tj
+T*
+(\040\040\055\055base\0400fcdde9c\040\055\055head\040c0ede7fc\040\055\055all\055tests) Tj
+T*
+ET
+Q
+q
+1 0 0 1 56 225 cm
+q
+BT
+1 0 0 1 0 29.6 Tm
+13 TL
+/F1 9.4 Tf
+0.262745 0.341176 0.423529 rg
+(Substitute\040the\040folder\040and\040hashes\040from\040the\040table\056\040Use\040) Tj
+/F2 9.4 Tf
+(\055\055source\055root\040src) Tj
+/F1 9.4 Tf
+(\040for\040cachetools\040and\040python\055dotenv\056\040Add\040) Tj
+/F2 9.4 Tf
+(\055\055output) Tj
+T*
+-0.116785 Tw
+(recommendations\056json) Tj
+/F1 9.4 Tf
+(\040for\040the\040complete\040structured\040report\056\040A\040partial\040comparison\040can\040still\040produce\040recommendations\040and) Tj
+T*
+0 Tw
+(gap\040details\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 193 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 3 Tm
+/F2 16 Tf
+19 TL
+(Broader\040testing\040advice) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 142 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 34.2 Tm
+/F1 10.8 Tf
+15 TL
+(Open\040the\040advice\040beside\040the\040test\040list\040when\040the\040analysis\040reports\040missing\040links\054\040parsing\040errors\054\040or\040shared) Tj
+T*
+(changes\056\040An\040empty\040list\040means\040RepoTrace\040found\040no\040linked\040tests\056\040Continue\040with\040the\040relevant\040component) Tj
+T*
+(or\040project\040suite\056) Tj
+T*
+ET
+Q
+Q
+
+endstream
+endobj
+13 0 obj
+<<
+/F1 6 0 R
+/F2 7 0 R
+/F3 8 0 R
+/F4 9 0 R
+/F5 10 0 R
+>>
+endobj
+14 0 obj
+<<
+/Contents 15 0 R
+/MediaBox [ 0 0 612 792 ]
+/Resources <<
+/Font 13 0 R
+/ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>>
+/Rotate 0
+/Trans <<
+>>
+/Type /Page
+/Parent 1 0 R
+>>
+endobj
+15 0 obj
+<<
+/Length 5068
+>>
+stream
+1 0 0 1 0 0 cm
+BT
+/F1 12 Tf
+14.4 TL
+ET
+0.031373 0.494118 0.470588 RG
+2 w
+n
+56 748 m
+556 748 l
+S
+0.847059 0.894118 0.909804 RG
+0.6 w
+n
+56 42 m
+556 42 l
+S
+BT
+/F1 9 Tf
+10.8 TL
+ET
+0.262745 0.341176 0.423529 rg
+BT
+1 0 0 1 56 27 Tm
+(RepoTrace\040\040\057\040\040Real\055project\040test\040recommendation\040guide) Tj
+T*
+ET
+BT
+1 0 0 1 550.996 27 Tm
+(3) Tj
+T*
+ET
+q
+1 0 0 1 56 713 cm
+q
+0.031373 0.494118 0.470588 rg
+BT
+1 0 0 1 0 3 Tm
+/F2 10 Tf
+13 TL
+(REPOTRACE\040\057\040VALIDATION) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 671 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 3 Tm
+/F2 31 Tf
+34 TL
+(Run\040the\040recommended\040tests) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 628 cm
+q
+BT
+1 0 0 1 0 19.2 Tm
+15 TL
+/F1 10.8 Tf
+0.07451 0.14902 0.227451 rg
+(Run\040copied\040commands\040from\040the\040project\040folder\040at\040the\040selected\040Head\040commit\056\040On\040Windows\054\040use\040) Tj
+/F2 10.8 Tf
+(python) Tj
+/F1 10.8 Tf
+(\040in) Tj
+T*
+(place\040of\040) Tj
+/F2 10.8 Tf
+(python3) Tj
+/F1 10.8 Tf
+(\040if\040needed\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 596 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 3 Tm
+/F2 16 Tf
+19 TL
+(Example\040with\040a\040separate\040head\040checkout) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 560 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 19.2 Tm
+/F1 10.8 Tf
+15 TL
+(From\040the\040RepoTrace\040folder\054\040create\040a\040detached\040Git\040worktree\040for\040more\055itertools\040and\040run\040the\040recommended) Tj
+T*
+(test\040class\056\040Your\040existing\040checkout\040stays\040in\040place\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 461 cm
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 8 82.2 Tm
+/F3 8.8 Tf
+13 TL
+(\044repo\040\075\040\050Resolve\055Path\040\047\056\057real\055projects\057repos\057more\055itertools\047\051\056Path) Tj
+T*
+(\044check\040\075\040Join\055Path\040\044env\072TEMP\040\050\047mi\055\047\040\053\040\050Get\055Random\051\051) Tj
+T*
+(git\040\055C\040\044repo\040worktree\040add\040\055\055detach\040\044check\040c0ede7fc) Tj
+T*
+(Push\055Location\040\044check) Tj
+T*
+(python\040\055m\040unittest\040tests\056test\137more\056AllUniqueTests) Tj
+T*
+(Pop\055Location) Tj
+T*
+(git\040\055C\040\044repo\040worktree\040remove\040\044check) Tj
+T*
+ET
+Q
+q
+1 0 0 1 56 429 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 3 Tm
+/F2 16 Tf
+19 TL
+(Verified\040commands\040and\040results) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 408 cm
+q
+BT
+1 0 0 1 0 4.2 Tm
+15 TL
+/F2 10.8 Tf
+0.07451 0.14902 0.227451 rg
+(more\055itertools) Tj
+/F1 10.8 Tf
+(\040\040\040All\040six\040methods\040in\040) Tj
+/F5 10.8 Tf
+(AllUniqueTests) Tj
+/F1 10.8 Tf
+(\040passed\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 370 cm
+q
+BT
+1 0 0 1 0 19.2 Tm
+15 TL
+/F2 10.8 Tf
+0.07451 0.14902 0.227451 rg
+(markdown) Tj
+/F1 10.8 Tf
+(\040\040\040) Tj
+/F3 10.8 Tf
+(python\040\055m\040pytest\040tests\057test\137syntax\057extensions\057test\137toc\056py\040\055k) Tj
+T*
+(BareDataTocLabelAttribute) Tj
+/F1 10.8 Tf
+(\040selected\040two\040passing\040tests\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 332 cm
+q
+BT
+1 0 0 1 0 19.2 Tm
+15 TL
+/F2 10.8 Tf
+0.07451 0.14902 0.227451 rg
+(python\055dotenv) Tj
+/F1 10.8 Tf
+(\040\040\040) Tj
+/F3 10.8 Tf
+(python\040\055m\040pytest\040tests\057test\137parser\056py\072\072test\137parse\137stream) Tj
+/F1 10.8 Tf
+(\040selected) Tj
+T*
+(58\040passing\040parameter\040cases\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 294 cm
+q
+BT
+1 0 0 1 0 19.2 Tm
+15 TL
+/F2 10.8 Tf
+0.07451 0.14902 0.227451 rg
+(tinydb) Tj
+/F1 10.8 Tf
+(\040\040\040The\040) Tj
+/F3 10.8 Tf
+(tests\057test\137queries\056py\072\072test\137any) Tj
+/F1 10.8 Tf
+(\040and\040) Tj
+/F3 10.8 Tf
+(tests\057test\137queries\056py\072\072test\137all) Tj
+/F1 10.8 Tf
+T*
+(Pytest\040targets\040both\040passed\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 241 cm
+q
+BT
+1 0 0 1 0 34.2 Tm
+15 TL
+/F2 10.8 Tf
+0.07451 0.14902 0.227451 rg
+(cachetools) Tj
+/F1 10.8 Tf
+(\040\040\040The\040project\040documents\040) Tj
+/F3 10.8 Tf
+(tox\040\055e\040py\040\055\055) Tj
+T*
+-0.142933 Tw
+(tests\057test\137cachedmethod\056py\072\072ClassMethodTest\072\072test\137outer\137decorator) Tj
+/F1 10.8 Tf
+(\056\040This\040target\040was) Tj
+T*
+0 Tw
+(reviewed\040statically\040because\040tox\040was\040unavailable\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 203 cm
+q
+BT
+1 0 0 1 0 19.2 Tm
+15 TL
+/F2 10.8 Tf
+0.07451 0.14902 0.227451 rg
+(flaskbb) Tj
+/F1 10.8 Tf
+(\040\040\040The\040four\040targets\040were\040reviewed\040statically\056\040Run\040them\040in\040the\040project\040environment\040with\040Python) Tj
+T*
+(3\05612\040or\040later\056) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 171 cm
+q
+0.07451 0.14902 0.227451 rg
+BT
+1 0 0 1 0 3 Tm
+/F2 16 Tf
+19 TL
+(What\040changed\040in\040RepoTrace) Tj
+T*
+ET
+Q
+Q
+q
+1 0 0 1 56 126 cm
+q
+BT
+1 0 0 1 0 29.6 Tm
+13 TL
+/F1 9.4 Tf
+0.262745 0.341176 0.423529 rg
+(RepoTrace\040can\040follow\040a\040simple\040package\040re\055export\040when\040exactly\040one\040local\040module\040lists\040a\040name\040in\040a\040literal\040) Tj
+/F3 9.4 Tf
+(\137\137all\137\137) Tj
+/F1 9.4 Tf
+(\056\040This) Tj
+T*
+(took\040more\055itertools\040from\040one\040to\040six\040recommendations\056\040TinyDB\040kept\040both\040recommendations\040and\040stopped\040reporting) Tj
+T*
+(ambiguity\040for\040two\040unchanged\054\040repeated\040nested\040definitions\056) Tj
+T*
+ET
+Q
+Q
+
+endstream
+endobj
+xref
+0 16
+0000000000 65535 f 
+0000000015 00000 n 
+0000000088 00000 n 
+0000000241 00000 n 
+0000000290 00000 n 
+0000000811 00000 n 
+0000006245 00000 n 
+0000006352 00000 n 
+0000006464 00000 n 
+0000006569 00000 n 
+0000006652 00000 n 
+0000006768 00000 n 
+0000006960 00000 n 
+0000014122 00000 n 
+0000014195 00000 n 
+0000014387 00000 n 
+trailer
+<<
+/Size 16
+/Root 3 0 R
+/Info 2 0 R
+>>
+startxref
+19508
+%%EOF

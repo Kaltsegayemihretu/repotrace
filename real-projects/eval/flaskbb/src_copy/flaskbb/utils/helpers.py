@@ -1,0 +1,851 @@
+"""
+flaskbb.utils.helpers
+~~~~~~~~~~~~~~~~~~~~~
+
+A few helpers that are used by flaskbb
+
+:copyright: (c) 2014 by the FlaskBB Team.
+:license: BSD, see LICENSE for more details.
+"""
+
+import ast
+import itertools
+import logging
+import operator
+import os
+import re
+import time
+from collections.abc import Callable, Iterable, Sequence
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+from functools import wraps
+from typing import Any, cast, Literal, overload, TYPE_CHECKING, TypeVar
+from urllib.parse import urlsplit
+from wsgiref.types import StartResponse, WSGIEnvironment
+
+import unidecode
+from babel.core import get_locale_identifier
+from babel.dates import format_date as babel_format_date
+from babel.dates import format_datetime as babel_format_datetime
+from babel.dates import format_time as babel_format_time
+from babel.dates import format_timedelta as babel_format_timedelta
+from flask import (
+    abort,
+    Blueprint,
+    flash,
+    Flask,
+    redirect,
+    request,
+    session,
+    url_for,
+)
+from flask.typing import RouteCallable
+from flask_babelplus import lazy_gettext as _
+from flask_limiter import Limiter
+from flask_themes2 import get_themes_list, render_theme_template
+from markupsafe import Markup
+from pytz import UTC
+from redis import Redis, RedisError
+from sqlalchemy import Row, select
+from werkzeug.local import LocalProxy
+from werkzeug.utils import import_string, ImportStringError
+
+from flaskbb.core.exceptions import ConfigNotFoundError
+from flaskbb.extensions import babel, db
+from flaskbb.utils.proxies import current_app, current_user
+
+if TYPE_CHECKING:
+    from flaskbb.forum.models import Category, Forum, ForumsRead, Topic, TopicsRead
+    from flaskbb.user.models import User
+
+from flaskbb.settings import flaskbb_config
+from flaskbb.utils.http import get_first_safe_redirect_url
+
+logger = logging.getLogger(__name__)
+
+
+T = TypeVar("T")
+
+_punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
+
+
+def escape_like(term: str) -> str:
+    """Escape LIKE metacharacters in a user-supplied search term so
+    literal `%`/`_` in the input aren't interpreted as SQL wildcards.
+    """
+    return term.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+
+def slugify(text: str, delim: str = "-"):
+    """Generates an slightly worse ASCII-only slug.
+     Taken from the Flask Snippets page.
+
+    :param text: The text which should be slugified
+    :param delim: Default "-". The delimeter for whitespace
+    """
+    text = unidecode.unidecode(text)
+    result: list[str] = []
+    for word in _punct_re.split(text.lower()):
+        if word:
+            result.append(word)
+    return str(delim.join(result))
+
+
+def redirect_url(endpoint: str | None, use_referrer: bool = True):
+    """
+    Generates a redirect url via the ``next`` query-string parameter, the page an htmx
+    request was sent from, the HTTP referrer or from the ``endpoint`` if none of them is
+    present or safe to redirect to.
+
+    :param endpoint: The trusted fallback URL to redirect to (e.g. built
+        with ``url_for``). If not provided 'forum.index' will be used.
+    """
+    allowed_hosts = current_app.config["ALLOWED_HOSTS"]
+    targets = [request.args.get("next")]
+    if use_referrer:
+        targets += [_htmx_current_page(), request.referrer]
+    return get_first_safe_redirect_url(
+        *targets,
+        allowed_hosts=allowed_hosts,
+        fallback=endpoint or url_for("forum.index"),
+    )
+
+
+def redirect_or_next(endpoint: str, use_referrer: bool = True):
+    """
+    Redirects the user back to the page they were viewing (via the ``next``
+    query-string parameter, then the HTTP referrer if enabled) or to
+    ``endpoint`` if neither is present or safe to redirect to.
+
+    :param endpoint: The trusted fallback URL to redirect to (e.g. built
+        with ``url_for``). This is used as-is if nothing else qualifies, so
+        never pass unsanitized user input here -- only server-controlled
+        values.
+    """
+    return redirect(redirect_url(endpoint, use_referrer))
+
+
+def render_template(template: str, **context: Any):  # pragma: no cover
+    """A helper function that uses the `render_theme_template` function
+    without needing to edit all the views
+    """
+    if current_user.is_authenticated and current_user.theme:
+        theme = current_user.theme
+    else:
+        theme = session.get("theme", flaskbb_config["DEFAULT_THEME"])
+    return render_theme_template(theme, template, **context)
+
+
+def is_htmx_request() -> bool:
+    """Whether the current request came from htmx."""
+    return request.headers.get("HX-Request") == "true"
+
+
+def _htmx_current_page() -> str | None:
+    """The page an htmx request was sent from, relative so that it is safe to
+    redirect to without ALLOWED_HOSTS, unlike the absolute referrer.
+    """
+    if not is_htmx_request():
+        return None
+
+    current = urlsplit(request.headers.get("HX-Current-URL", ""))
+    if current.query:
+        return f"{current.path}?{current.query}"
+    return current.path
+
+
+def redirect_or_reload(location: str):
+    """Redirects to ``location``. htmx swaps parts of the page a request was
+    sent from, so an htmx request headed anywhere else gets a full page load.
+    """
+    current = urlsplit(request.headers.get("HX-Current-URL", ""))
+    target = urlsplit(location)
+    if is_htmx_request() and (target.path, target.query) != (current.path, current.query):
+        response = current_app.response_class(status=204)
+        response.headers["HX-Redirect"] = location
+        return response
+    return redirect(location)
+
+
+@dataclass(frozen=True)
+class ForumRow:
+    forum: "Forum"
+    forumsread: "ForumsRead | None"
+
+    def __iter__(self):
+        return iter((self.forum, self.forumsread))
+
+
+@dataclass(frozen=True)
+class CategoryForums:
+    category: "Category | None"
+    forums: list[ForumRow]
+
+    def __iter__(self):
+        return iter((self.category, self.forums))
+
+
+def _group_forums_by_category(
+    query_result: Iterable[Row[*tuple[Any, ...]]],
+    user: "User",
+) -> Iterable[CategoryForums]:
+    it = itertools.groupby(query_result, operator.itemgetter(0))
+
+    if user.is_authenticated:
+        for category, rows in it:
+            forum_rows: list[ForumRow] = []
+            for row in rows:
+                forum_rows.append(ForumRow(row[1], row[2]))
+            yield CategoryForums(category, forum_rows)
+    else:
+        for category, rows in it:
+            forum_rows = []
+            for row in rows:
+                forum_rows.append(ForumRow(row[1], None))
+            yield CategoryForums(category, forum_rows)
+
+
+def get_categories_and_forums(
+    query_result: Iterable[Row[*tuple[Any, ...]]],
+    user: "User",
+) -> list[CategoryForums]:
+    """Returns a list with categories. Every category has a list for all
+     their associated forums.
+
+     The structure looks like this::
+         [(<Category 1>,
+           [(<Forum 1>, None),
+            (<Forum 2>, <flaskbb.forum.models.ForumsRead at 0x38fdb50>)]),
+          (<Category 2>,
+           [(<Forum 3>, None),
+           (<Forum 4>, None)])]
+
+     and to unpack the values you can do this::
+         In [110]: for category, forums in x:
+            .....:     print category
+            .....:     for forum, forumsread in forums:
+            .....:         print "\t", forum, forumsread
+
+    This will print something like this:
+         <Category 1>
+             <Forum 1> None
+             <Forum 2> <flaskbb.forum.models.ForumsRead object at 0x38fdb50>
+         <Category 2>
+             <Forum 3> None
+             <Forum 4> None
+
+     :param query_result: A tuple (KeyedTuple) with all categories and forums
+
+     :param user: The user object is needed because a signed out user does not
+                  have the ForumsRead relation joined.
+    """
+    return list(_group_forums_by_category(query_result, user))
+
+
+def get_forums(
+    query_result: Iterable[Row[*tuple[Any, ...]]],
+    user: "User",
+) -> CategoryForums:
+    """Returns a tuple which contains the category and the forums as list.
+    This is the counterpart for get_categories_and_forums and especially
+    usefull when you just need the forums for one category.
+
+    For example::
+        (<Category 2>,
+          [(<Forum 3>, None),
+          (<Forum 4>, None)])
+
+    :param query_result: A tuple (KeyedTuple) with all categories and forums
+
+    :param user: The user object is needed because a signed out user does not
+                 have the ForumsRead relation joined.
+    """
+    result = CategoryForums(None, [])
+    for group in _group_forums_by_category(query_result, user):
+        result = group
+    return result
+
+
+def forum_is_unread(forum: "Forum | None", forumsread: "ForumsRead | None", user: "User"):
+    """Checks if a forum is unread
+
+    :param forum: The forum that should be checked if it is unread
+
+    :param forumsread: The forumsread object for the forum
+
+    :param user: The user who should be checked if he has read the forum
+    """
+    # If the user is not signed in, every forum is marked as read
+    if not user.is_authenticated or not forum:
+        return False
+
+    read_cutoff = time_utcnow() - timedelta(days=flaskbb_config["TRACKER_LENGTH"])
+
+    # disable tracker if TRACKER_LENGTH is set to 0
+    if flaskbb_config["TRACKER_LENGTH"] == 0:
+        return False
+
+    # If there are no topics in the forum, mark it as read
+    if forum.topic_count == 0:
+        return False
+
+    # check if the last post is newer than the tracker length
+    if (
+        forum.last_post_id is None
+        or forum.last_post_created is None
+        or forum.last_post_created < read_cutoff
+    ):
+        return False
+
+    # If the user hasn't visited a topic in the forum - therefore,
+    # forumsread is None and we need to check if it is still unread
+    if forumsread is None:
+        return forum.last_post_created > read_cutoff
+
+    # else just check if the user has read the last post
+    return forum.last_post_created > forumsread.last_read
+
+
+def topic_is_unread(
+    topic: "Topic",
+    topicsread: "TopicsRead | None",
+    user: "User",
+    forumsread: "ForumsRead | None" = None,
+):
+    """Checks if a topic is unread.
+
+    :param topic: The topic that should be checked if it is unread
+
+    :param topicsread: The topicsread object for the topic
+
+    :param user: The user who should be checked if he has read the last post
+                 in the topic
+
+    :param forumsread: The forumsread object in which the topic is. If you
+                       also want to check if the user has marked the forum as
+                       read, than you will also need to pass an forumsread
+                       object.
+    """
+    if not user.is_authenticated:
+        return False
+
+    read_cutoff = time_utcnow() - timedelta(days=flaskbb_config["TRACKER_LENGTH"])
+
+    # disable tracker if read_cutoff is set to 0
+    if flaskbb_config["TRACKER_LENGTH"] == 0:
+        return False
+
+    # check read_cutoff
+    if topic.last_updated < read_cutoff:
+        return False
+
+    # topicsread is none if the user has marked the forum as read
+    # or if he hasn't visited the topic yet
+    if topicsread is None:
+        # user has cleared the forum - check if there is a new post
+        if forumsread and forumsread.cleared is not None:
+            return forumsread.cleared < topic.last_updated
+
+        # user hasn't read the topic yet, or there is a new post since the user
+        # has marked the forum as read
+        return True
+
+    # check if there is a new post since the user's last topic visit
+    return topicsread.last_read < topic.last_updated
+
+
+def crop_title(title: str, length: int | None = None, suffix: str = "..."):
+    """Crops the title to a specified length
+
+    :param title: The title that should be cropped
+
+    :param suffix: The suffix which should be appended at the
+                   end of the title.
+    """
+    length = flaskbb_config["TITLE_LENGTH"] if length is None else length
+
+    if not length or len(title) <= length:
+        return title
+
+    return title[:length].rsplit(" ", 1)[0] + suffix
+
+
+ONLINE_USERS_KEY = "flaskbb:online-users"
+ONLINE_GUESTS_KEY = "flaskbb:online-guests"
+
+
+def _online_window():
+    return (flaskbb_config["ONLINE_LAST_MINUTES"] or 15) * 60
+
+
+def mark_online(member: int | str, guest: bool = False):
+    """Marks a user or a guest as online. Requires ``REDIS_ENABLED``.
+
+    :param member: The id of the user or the address of the guest.
+    :param guest: If set to True, ``member`` is added to the online guests
+                  instead of the online users.
+    """
+    key = ONLINE_GUESTS_KEY if guest else ONLINE_USERS_KEY
+    redis_client: Redis = current_app.extensions["redis"]
+    now = time.time()
+    window = _online_window()
+    try:
+        with redis_client.pipeline() as pipe:  # pyright: ignore[reportUnknownMemberType]
+            pipe.zadd(key, {str(member): now})
+            pipe.zremrangebyscore(key, "-inf", now - window)
+            pipe.expire(key, window)
+            pipe.execute()
+    except RedisError:
+        logger.warning("Could not mark %s as online", member, exc_info=True)
+
+
+def get_online_users() -> Sequence["User"]:
+    """Returns the users that were online within ONLINE_LAST_MINUTES."""
+    from flaskbb.user.models import User
+
+    stmt = select(User).order_by(User.username)
+    if current_app.config["REDIS_ENABLED"]:
+        redis_client: Redis = current_app.extensions["redis"]
+        try:
+            user_ids = cast(
+                list[bytes],
+                redis_client.zrangebyscore(  # pyright: ignore[reportUnknownMemberType]
+                    ONLINE_USERS_KEY, time.time() - _online_window(), "+inf"
+                ),
+            )
+            return db.session.scalars(
+                stmt.where(User.id.in_([int(user_id) for user_id in user_ids]))
+            ).all()
+        except RedisError:
+            logger.warning("Could not get the online users", exc_info=True)
+    return db.session.scalars(stmt.where(User.lastseen >= time_diff())).all()
+
+
+def count_online_users() -> tuple[int, int | None]:
+    """Returns the number of users and guests that were online within
+    ONLINE_LAST_MINUTES. The guests are ``None`` without ``REDIS_ENABLED``
+    as they can only be tracked with redis.
+    """
+    from flaskbb.user.models import User
+
+    if current_app.config["REDIS_ENABLED"]:
+        redis_client: Redis = current_app.extensions["redis"]
+        since = time.time() - _online_window()
+        try:
+            with redis_client.pipeline(transaction=False) as pipe:  # pyright: ignore[reportUnknownMemberType]
+                pipe.zcount(ONLINE_USERS_KEY, since, "+inf")
+                pipe.zcount(ONLINE_GUESTS_KEY, since, "+inf")
+                online_users, online_guests = pipe.execute()
+            return online_users, online_guests
+        except RedisError:
+            logger.warning("Could not count the online users", exc_info=True)
+    return User.count(User.lastseen >= time_diff()), None
+
+
+def is_online(user: "User"):
+    """A simple check to see if the user was online within a specified
+    time range
+
+    :param user: The user who needs to be checked
+    """
+    if not user.lastseen:
+        return False
+    return user.lastseen >= time_diff()
+
+
+def time_utcnow():
+    """Returns a timezone aware utc timestamp."""
+    return datetime.now(UTC)
+
+
+def time_diff():
+    """Calculates the time difference between now and the ONLINE_LAST_MINUTES
+    variable from the configuration.
+    """
+    now = time_utcnow()
+    diff = now - timedelta(minutes=flaskbb_config["ONLINE_LAST_MINUTES"] or 15)
+    return diff
+
+
+def _get_user_locale():
+    locale = flaskbb_config.get("DEFAULT_LANGUAGE", "en")
+    if current_user.is_authenticated and current_user.language is not None:
+        locale = current_user.language
+    return locale
+
+
+# http://babel.pocoo.org/en/latest/api/dates.html#babel.dates.format_time
+def _format_html_time_tag(
+    datetime: datetime,
+    what_to_display: Literal["date-only", "time-only", "date-and-time"],
+):
+    if what_to_display == "date-only":
+        content = babel_format_date(datetime, locale=_get_user_locale())
+    elif what_to_display == "time-only":
+        content = babel_format_time(datetime, format="short", locale=_get_user_locale())
+    elif what_to_display == "date-and-time":
+        content = babel_format_datetime(datetime, tzinfo=UTC, locale=_get_user_locale())
+        # While this could be done with a format string, that would
+        # hinder internationalization and honestly why bother.
+        content += " UTC"
+    else:
+        raise ValueError("what_to_display argument invalid")  # pyright: ignore[reportUnreachable]
+
+    isoformat = datetime.isoformat()
+
+    return Markup(
+        f"""<time datetime="{isoformat}" data-what_to_display="{what_to_display}">
+            {content}
+        </time>"""
+    )
+
+
+def format_datetime(datetime: datetime):
+    """Format the datetime for usage in templates.
+
+    :param value: The datetime object that should be formatted
+    :rtype: Markup
+    """
+    return _format_html_time_tag(datetime, "date-and-time")
+
+
+def format_date(datetime: datetime):
+    """Format the datetime for usage in templates, keeping only the date.
+
+    :param value: The datetime object that should be formatted
+    :rtype: Markup
+    """
+    return _format_html_time_tag(datetime, "date-only")
+
+
+def format_time(datetime: datetime):
+    """Format the datetime for usage in templates, keeping only the time.
+
+    :param value: The datetime object that should be formatted
+    :rtype: Markup
+    """
+    return _format_html_time_tag(datetime, "time-only")
+
+
+def format_timedelta(delta: timedelta, **kwargs: Any):
+    """Wrapper around babel's format_timedelta to make it user language
+    aware.
+    """
+    return babel_format_timedelta(delta, locale=_get_user_locale(), **kwargs)
+
+
+def time_since(time: datetime | None):  # pragma: no cover
+    """Returns a string representing time since e.g.
+    3 days ago, 5 hours ago.
+
+    :param time: A datetime object
+    """
+    if not time:
+        return ""
+    delta = time - time_utcnow()
+    return format_timedelta(delta, add_direction=True)
+
+
+def format_quote(username: str, content: str, post_url: str | None = None):
+    """Returns a formatted quote depending on the markup language.
+
+    :param username: The username of a user.
+    :param content: The content of the quote
+    :param post_url: The URL of the quoted post, linked from the quote header.
+    """
+    profile_url = url_for("user.profile", username=username)
+    attribution = f"**[{username}]({profile_url}) wrote:**"
+    if post_url is not None:
+        attribution += f" [{_('view post')}]({post_url})"
+    content = "\n> ".join(content.strip().split("\n"))
+    quote = f"> {attribution}\n>\n> {content}\n\n"
+
+    return quote
+
+
+def get_alembic_locations(plugin_dirs: list[str]) -> list[tuple[str, ...]]:
+    """Returns a tuple with (branchname, plugin_dir) combinations.
+    The branchname is the name of plugin directory which should also be
+    the unique identifier of the plugin.
+    """
+    branches_dirs = [tuple([os.path.basename(os.path.dirname(p)), p]) for p in plugin_dirs]
+
+    return branches_dirs
+
+
+def get_available_themes() -> list[tuple[str, str]]:
+    """Returns a list that contains all available themes. The items in the
+    list are tuples where the first item of the tuple is the identifier and
+    the second one the name of the theme.
+    For example::
+
+        [('aurora_mod', 'Aurora Mod')]
+    """
+    return [(theme.identifier, theme.name) for theme in get_themes_list()]
+
+
+def get_available_languages() -> list[tuple[str, str]]:
+    """Returns a list that contains all available languages. The items in the
+    list are tuples where the first item of the tuple is the locale
+    identifier (i.e. de_AT) and the second one the display name of the locale.
+    For example::
+
+        [('de_AT', 'Deutsch (Österreich)')]
+    """
+    return [
+        (get_locale_identifier((trans.language, trans.territory)), trans.display_name)
+        for trans in babel.list_translations()
+    ]
+
+
+def app_config_from_env(app: Flask, prefix: str = "FLASKBB_"):
+    """Retrieves the configuration variables from the environment.
+    Set your environment variables like this::
+
+        export FLASKBB_SECRET_KEY="your-secret-key"
+
+    and based on the prefix, it will set the actual config variable
+    on the ``app.config`` object.
+
+    :param app: The application object.
+    :param prefix: The prefix of the environment variables.
+    """
+    for key, value in os.environ.items():
+        if key.startswith(prefix):
+            key = key[len(prefix) :]
+            try:
+                value = ast.literal_eval(value)
+            except (ValueError, SyntaxError):
+                pass
+            app.config[key] = value
+    return app
+
+
+def get_flaskbb_config(app: Flask, config_file: str | object):
+    """Returns ``None`` or the config which is either the path to a config file
+    or an object. They can be used by ``app.config.from_pyfile`` or
+    by ``app.config.from_object``.
+
+    :param app: The app instance.
+    :param config_file: A string which is either a module that can be
+                        imported, a path to a config file or an object.
+                        If it is ``None``, the ``FLASKBB_SETTINGS`` environment
+                        variable is used instead. If that isn't set either, it
+                        will search for a 'flaskbb.cfg' file in the instance
+                        directory and in the project's root directory and
+                        return ``None`` if there is none.
+    :raises ConfigNotFoundError: If the given config or ``FLASKBB_SETTINGS``
+                                 is neither an existing file nor an
+                                 importable object.
+    """
+    if config_file is not None:
+        # config is an object
+        if not isinstance(config_file, str):
+            return config_file
+
+        # config is a file
+        # -> check if it exists in the instance folder
+        if os.path.exists(os.path.join(app.instance_path, config_file)):
+            return os.path.join(app.instance_path, config_file)
+
+        # -> check if its an absolute path
+        if os.path.exists(os.path.abspath(config_file)):
+            return os.path.join(os.path.abspath(config_file))
+
+        # config is an importable string
+        # import_string raises ValueError for relative paths like '../x.cfg'
+        try:
+            return import_string(config_file)
+        except (ImportStringError, ValueError) as e:
+            raise ConfigNotFoundError(
+                f"Config {config_file!r} is neither an existing file nor an importable object."
+            ) from e
+    elif os.environ.get("FLASKBB_SETTINGS", None):
+        config_file = os.environ.get("FLASKBB_SETTINGS", "")
+
+        if os.path.exists(os.path.abspath(config_file)):
+            return os.path.join(os.path.abspath(config_file))
+
+        # config is an importable string
+        try:
+            return import_string(config_file)
+        except (ImportStringError, ValueError) as e:
+            raise ConfigNotFoundError(
+                f"Config {config_file!r} from FLASKBB_SETTINGS is neither an "
+                "existing file nor an importable object."
+            ) from e
+    else:
+        # this would be so much nicer and cleaner if we wouldn't
+        # support the root/project dir.
+        # this walks back to flaskbb/ from flaskbb/flaskbb/cli/main.py
+        project_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        project_config = os.path.join(project_dir, "flaskbb.cfg")
+
+        # instance config doesn't exist
+        instance_config = os.path.join(app.instance_path, "flaskbb.cfg")
+        if os.path.exists(instance_config):
+            return instance_config
+
+        # config in root directory doesn't exist
+        if os.path.exists(project_config):
+            return project_config
+
+
+class ReverseProxyPathFix:
+    """Wrap the application in this middleware and configure the
+    front-end server to add these headers, to let you quietly bind
+    this to a URL other than / and to an HTTP scheme that is
+    different than what is used locally.
+    http://flask.pocoo.org/snippets/35/
+
+    In wsgi.py::
+
+        from flaskbb.utils.helpers import ReverseProxyPathFix
+        flaskbb = create_app(config="flaskbb.cfg")
+        flaskbb.wsgi_app = ReverseProxyPathFix(flaskbb.wsgi_app)
+
+    and in nginx::
+
+        location /forums {
+            proxy_pass http://127.0.0.1:8000;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Scheme $scheme;
+            proxy_set_header X-Script-Name /forums;  # this part here
+        }
+
+    :param app: the WSGI application
+    :param force_https: Force HTTPS on all routes. Defaults to ``False``.
+    """
+
+    def __init__(self, app: Flask, force_https: bool = False):
+        self.app = app
+        self.force_https = force_https
+
+    def __call__(self, environ: WSGIEnvironment, start_response: StartResponse):
+        script_name = environ.get("HTTP_X_SCRIPT_NAME", "")
+        if script_name:
+            environ["SCRIPT_NAME"] = script_name
+            path_info = environ.get("PATH_INFO", "")
+            if path_info and path_info.startswith(script_name):
+                environ["PATH_INFO"] = path_info[len(script_name) :]
+        server = environ.get(
+            "HTTP_X_FORWARDED_SERVER_CUSTOM",
+            environ.get("HTTP_X_FORWARDED_SERVER", ""),
+        )
+        if server:
+            environ["HTTP_HOST"] = server
+
+        scheme = environ.get("HTTP_X_SCHEME", "")
+
+        if scheme:
+            environ["wsgi.url_scheme"] = scheme
+
+        if self.force_https:
+            environ["wsgi.url_scheme"] = "https"
+
+        return self.app(environ, start_response)
+
+
+@overload
+def real[T](obj: LocalProxy[T]) -> "User": ...
+
+
+@overload
+def real[T](obj: T) -> T: ...
+
+
+def real(obj: Any) -> Any:
+    """Unwraps a werkzeug.local.LocalProxy object if given one,
+    else returns the object.
+    """
+    if isinstance(obj, LocalProxy):
+        return obj._get_current_object()  # pyright: ignore[reportPrivateUsage]
+    return obj
+
+
+def anonymous_required(f: Any):
+    @wraps(f)
+    def wrapper(*a: Any, **k: Any):
+        if current_user is not None and current_user.is_authenticated:  # pyright: ignore[reportUnnecessaryComparison]
+            return redirect_or_next(url_for("forum.index"))
+        return f(*a, **k)
+
+    return wrapper
+
+
+def enforce_recaptcha(limiter: Limiter):
+    # ``remaining`` is already decremented for the current request, so the
+    # difference is the number of requests made within the current window.
+    current_limit = limiter.current_limit
+    login_recaptcha = False
+    if current_limit is not None:
+        stats_diff = flaskbb_config["AUTH_REQUESTS"] - current_limit.remaining
+        login_recaptcha = stats_diff >= flaskbb_config["LOGIN_RECAPTCHA"]
+    return login_recaptcha
+
+
+def registration_enabled(f: Any):
+    @wraps(f)
+    def wrapper(*a: Any, **k: Any):
+        if not flaskbb_config["REGISTRATION_ENABLED"]:
+            flash(_("The registration has been disabled."), "info")
+            return redirect_or_next(url_for("forum.index"))
+        return f(*a, **k)
+
+    return wrapper
+
+
+def memberlist_enabled(f: Any):
+    @wraps(f)
+    def wrapper(*a: Any, **k: Any):
+        if not flaskbb_config["MEMBERLIST_ENABLED"]:
+            abort(404)
+        return f(*a, **k)
+
+    return wrapper
+
+
+def requires_unactivated(f: Any):
+    @wraps(f)
+    def wrapper(*a: Any, **k: Any):
+        if current_user.is_active or not flaskbb_config["ACTIVATE_ACCOUNT"]:
+            flash(_("This account is already activated."), "info")
+            return redirect(url_for("forum.index"))
+        return f(*a, **k)
+
+    return wrapper
+
+
+def register_view(
+    bp_or_app: Blueprint | Flask,
+    routes: list[str],
+    view_func: RouteCallable,
+    **kwargs: Any,
+):
+    for route in routes:
+        bp_or_app.add_url_rule(route, view_func=view_func, **kwargs)
+
+
+class FlashAndRedirect:
+    def __init__(self, message: str, level: str, endpoint: str | Callable[..., str]):
+        # need to reassign to avoid capturing the reassigned endpoint
+        # in the generated closure, otherwise bad things happen at resolution
+        if not callable(endpoint):
+            # discard args and kwargs and just go to the endpoint
+            # this probably isn't *100%* correct behavior in case we need
+            # to add query params on...
+            def create_endpoint(*a: Any, **k: Any) -> str:
+                return url_for(endpoint)
+
+            endpoint_ = create_endpoint
+        else:
+            endpoint_ = endpoint
+
+        self._message = message
+        self._level = level
+        self._endpoint = endpoint_
+
+    def __call__(self, *a: Any, **k: Any):
+        flash(self._message, self._level)
+        return redirect(self._endpoint(*a, **k))

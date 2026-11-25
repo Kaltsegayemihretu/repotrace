@@ -30,6 +30,7 @@ class ProjectIndex:
         self.namespaces = set()
         self.names = defaultdict(set)
         self.units = {}
+        self.literal_all = {}
         for report in files:
             path = PurePosixPath(report['file'])
             for root in roots:
@@ -154,6 +155,52 @@ class ProjectIndex:
                 'symbol': unit['symbols'][(node.lineno, node.col_offset)],
                 'import_chain': [], 'binding_path': []}
 
+    def _star_export(self, module_name, name, unit, trail):
+        """Follow simple package facades whose local star imports have explicit export lists."""
+        root = unit['index'].root
+        failure = Unresolved('WILDCARD_NAMESPACE', 'A wildcard import makes exports uncertain.')
+        if PurePosixPath(unit['report']['file']).name != '__init__.py' or name in root.bindings:
+            raise failure
+        matches = []
+        for node in root.node.body:
+            if isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str):
+                continue
+            if (isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name)
+                    and isinstance(node.value, ast.Constant)):
+                continue
+            if not (isinstance(node, ast.ImportFrom) and node.level == 1 and node.module
+                    and len(node.names) == 1 and node.names[0].name == '*'):
+                raise failure
+            child = self.absolute_from(unit, node)
+            try:
+                target = self.module(child)
+            except Unresolved:
+                raise failure from None
+            if target.get('namespace') or target['package']:
+                raise failure
+            file = target['file']
+            if file not in self.literal_all:
+                target_root = self.units[file]['index'].root.node
+                references = [child for child in ast.walk(target_root) if isinstance(child, ast.Name) and child.id == '__all__']
+                lists = [line.value for line in target_root.body if isinstance(line, ast.Assign)
+                         and len(line.targets) == 1 and line.targets[0] in references
+                         and isinstance(line.value, (ast.List, ast.Tuple))]
+                self.literal_all[file] = (frozenset(item.value for item in lists[0].elts)
+                                          if len(references) == len(lists) == 1 and all(
+                                              isinstance(item, ast.Constant) and isinstance(item.value, str)
+                                              for item in lists[0].elts) else None)
+            names = self.literal_all[file]
+            if names is None:
+                raise failure
+            if name in names:
+                matches.append((child, node))
+        if len(matches) != 1:
+            raise failure
+        child, node = matches[0]
+        ref = self.export(child, name, _trail=trail)
+        return self._merge_reference(ref, imports=[self._import_evidence(unit, node, name)],
+                                     bindings=[(module_name, name)])
+
     def export(self, module_name, name, allow_submodule=False, _trail=()):
         key = (module_name, name)
         if key in _trail:
@@ -166,7 +213,7 @@ class ProjectIndex:
             unit = self.units[module['file']]
             root = unit['index'].root
             if root.wildcard:
-                raise Unresolved('WILDCARD_NAMESPACE', 'A wildcard import makes exports uncertain.')
+                return self._star_export(module_name, name, unit, trail)
             bindings = root.bindings.get(name, [])
             if bindings:
                 if len(bindings) != 1:

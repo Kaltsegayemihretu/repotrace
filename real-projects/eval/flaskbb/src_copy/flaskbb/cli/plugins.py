@@ -1,0 +1,413 @@
+"""
+flaskbb.cli.plugins
+~~~~~~~~~~~~~~~~~~~
+
+This module contains all plugin commands.
+
+:copyright: (c) 2016 by the FlaskBB Team.
+:license: BSD, see LICENSE for more details.
+"""
+
+import os
+
+import click
+from alembic.util.exc import CommandError
+from flask.cli import with_appcontext
+from sqlalchemy.exc import SQLAlchemyError
+
+from flaskbb.cli.main import flaskbb
+from flaskbb.cli.utils import FlaskBBCLIError, get_cookiecutter, validate_plugin
+from flaskbb.extensions import alembic, pluggy
+from flaskbb.plugins.models import PluginRegistry
+from flaskbb.plugins.utils import (
+    apply_plugin_migrations,
+    plugin_has_applied_migrations,
+    plugin_has_migrations,
+    plugin_tables_in_use,
+    remove_zombie_plugins_from_db,
+    revert_plugin_migrations,
+)
+
+
+@flaskbb.group()
+def plugins():
+    """Plugins command sub group. If you want to do some i18n stuff checkout
+    the corresponding command sub group."""
+    pass
+
+
+def _select_plugins(plugin_name: str | None, all_plugins: bool) -> list[PluginRegistry]:
+    """Returns the plugins a command should act on - either the single
+    named one or, with ``--all``, every plugin known to FlaskBB.
+    """
+    if all_plugins == bool(plugin_name):
+        raise FlaskBBCLIError("Either provide a PLUGIN_NAME or use '--all'.", fg="red")
+
+    if not plugin_name:
+        return PluginRegistry.get_all()
+
+    validate_plugin(plugin_name)
+    plugin = PluginRegistry.get(PluginRegistry.name == plugin_name)
+    if plugin is None:
+        raise click.Abort()
+    return [plugin]
+
+
+def _select_scope(settings_only: bool, migrations_only: bool) -> tuple[bool, bool]:
+    """Returns whether the settings and the migrations should be touched.
+    Without either switch both of them are.
+    """
+    if settings_only and migrations_only:
+        raise FlaskBBCLIError(
+            "'--settings-only' and '--migrations-only' are mutually exclusive.",
+            fg="red",
+        )
+
+    return not migrations_only, not settings_only
+
+
+def _apply_migrations(plugin_name: str):
+    if not plugin_has_migrations(plugin_name):
+        return
+
+    try:
+        alembic.upgrade(target=f"{plugin_name}@head")
+        click.secho(f"[+] Applied the migrations of '{plugin_name}'.", fg="green")
+    except CommandError as exc:
+        click.secho(f"[!] Couldn't apply the migrations of '{plugin_name}': {exc}", fg="red")
+
+
+def _revert_migrations(plugin_name: str):
+    try:
+        if revert_plugin_migrations(plugin_name):
+            click.secho(f"[+] Reverted the migrations of '{plugin_name}'.", fg="green")
+    except CommandError as exc:
+        click.secho(f"[!] Couldn't revert the migrations of '{plugin_name}': {exc}", fg="red")
+
+
+@plugins.command("list")
+@with_appcontext
+def list_plugins():
+    """Lists all installed plugins."""
+    enabled_plugins = pluggy.list_plugin_distinfo()
+    all_plugins = PluginRegistry.get_all()
+    if len(enabled_plugins) > 0:
+        click.secho("[+] Enabled Plugins:", fg="blue", bold=True)
+        for plugin in enabled_plugins:
+            if not plugin:
+                click.secho(f"Plugin not found {plugin}")
+                continue
+            p_mod = plugin[0]
+            p_dist = plugin[1]
+            plugin_reg = next((p for p in all_plugins if p.name == pluggy.get_name(p_mod)), None)
+
+            settings_update_str = "up-to-date"
+            if plugin_reg:
+                settings_diff = plugin_reg.get_setting_diff()
+
+                if settings_diff is not None and settings_diff.has_changes:
+                    settings_update_str = f"{settings_diff.log_output}"
+
+            click.secho(
+                f"\t- {pluggy.get_name(p_mod)}\t\t({p_dist.project_name}) "
+                f"\tversion {p_dist.version}\t settings: {settings_update_str}",
+                bold=True,
+            )
+
+    disabled_plugins = pluggy.get_disabled_plugins()
+    if len(disabled_plugins) > 0:
+        click.secho("[+] Disabled Plugins:", fg="yellow", bold=True)
+        for name in disabled_plugins:
+            p_dist = pluggy.get_metadata(name)
+            if p_dist is None:
+                click.secho(f"Plugin not found {name}")
+                continue
+            click.secho(
+                f"\t- {name.title()}\t({p_dist.package_name}), version {p_dist.version}",
+                bold=True,
+            )
+
+
+@plugins.command("enable")
+@click.argument("plugin_name")
+@with_appcontext
+def enable_plugin(plugin_name: str):
+    """Enables a plugin."""
+    validate_plugin(plugin_name)
+    plugin = PluginRegistry.get(PluginRegistry.name == plugin_name)
+    if plugin is None:
+        raise click.Abort()
+
+    if plugin.enabled:
+        click.secho(f"Plugin '{plugin.name}' is already enabled.")
+        return
+
+    # a plugin whose tables are missing can break every page once it is loaded
+    try:
+        if apply_plugin_migrations(plugin.name):
+            click.secho(f"[+] Applied the migrations of '{plugin.name}'.", fg="green")
+    except (CommandError, SQLAlchemyError) as exc:
+        raise FlaskBBCLIError(
+            f"Couldn't apply the migrations of '{plugin.name}', it stays disabled: {exc}",
+            fg="red",
+        ) from exc
+
+    plugin.enabled = True
+    plugin.save()
+    click.secho(f"[+] Plugin '{plugin.name}' enabled.", fg="green")
+
+
+@plugins.command("disable")
+@click.argument("plugin_name")
+@with_appcontext
+def disable_plugin(plugin_name: str):
+    """Disables a plugin."""
+    validate_plugin(plugin_name)
+    plugin = PluginRegistry.get(PluginRegistry.name == plugin_name)
+    if plugin is None:
+        raise click.Abort()
+
+    if not plugin.enabled:
+        click.secho(f"Plugin '{plugin.name}' is already disabled.")
+        return
+
+    plugin.enabled = False
+    plugin.save()
+    click.secho(f"[+] Plugin '{plugin.name}' disabled.", fg="green")
+
+
+@plugins.command("install")
+@click.argument("plugin_name", required=False)
+@click.option(
+    "--all",
+    "-a",
+    "all_plugins",
+    default=False,
+    is_flag=True,
+    help="Installs all plugins.",
+)
+@click.option(
+    "--settings-only",
+    "-s",
+    default=False,
+    is_flag=True,
+    help="Only installs the settings.",
+)
+@click.option(
+    "--migrations-only",
+    "-m",
+    default=False,
+    is_flag=True,
+    help="Only applies the migrations.",
+)
+@click.option("--force", "-f", default=False, is_flag=True, help="Overwrites existing settings")
+def install(
+    plugin_name: str | None,
+    all_plugins: bool,
+    settings_only: bool,
+    migrations_only: bool,
+    force: bool,
+):
+    """Installs a plugin's settings and applies its migrations."""
+    do_settings, do_migrations = _select_scope(settings_only, migrations_only)
+
+    for plugin in _select_plugins(plugin_name, all_plugins):
+        if not plugin.enabled:
+            click.secho(
+                f"[+] Can't install disabled plugin. Enable '{plugin.name}' Plugin first.",
+                fg="red",
+            )
+            continue
+
+        # held back at startup because of its pending migrations
+        held_back = pluggy.get_plugin(plugin.name) is None
+
+        if do_settings and not held_back:
+            if plugin.is_installable:
+                plugin.add_settings(force)
+                click.secho(f"[+] Plugin '{plugin.name}' has been installed.", fg="green")
+            else:
+                click.secho(f"[+] Nothing to install for '{plugin.name}'.", fg="green")
+
+        if do_migrations:
+            _apply_migrations(plugin.name)
+
+        if do_settings and held_back:
+            click.secho(
+                f"[!] '{plugin.name}' wasn't loaded because of its pending migrations. "
+                "Run the install again to install its settings.",
+                fg="yellow",
+            )
+
+
+@plugins.command("uninstall")
+@click.argument("plugin_name", required=False)
+@click.option(
+    "--all",
+    "-a",
+    "all_plugins",
+    default=False,
+    is_flag=True,
+    help="Uninstalls all plugins.",
+)
+@click.option(
+    "--settings-only",
+    "-s",
+    default=False,
+    is_flag=True,
+    help="Only removes the settings.",
+)
+@click.option(
+    "--migrations-only",
+    "-m",
+    default=False,
+    is_flag=True,
+    help="Only reverts the migrations.",
+)
+@click.option("--force", "-f", default=False, is_flag=True, help="Doesn't ask for confirmation.")
+def uninstall(
+    plugin_name: str | None,
+    all_plugins: bool,
+    settings_only: bool,
+    migrations_only: bool,
+    force: bool,
+):
+    """Uninstalls a plugin's settings and reverts its migrations."""
+    do_settings, do_migrations = _select_scope(settings_only, migrations_only)
+    selected = _select_plugins(plugin_name, all_plugins)
+
+    if do_migrations:
+        in_use = [p for p in selected if plugin_tables_in_use(p.name)]
+        for plugin in in_use:
+            click.secho(
+                f"[!] Can't uninstall '{plugin.name}', its tables are still in use. "
+                "Disable it and restart FlaskBB first.",
+                fg="red",
+            )
+        selected = [p for p in selected if p not in in_use]
+
+    with_migrations = [p.name for p in selected if plugin_has_applied_migrations(p.name)]
+    if do_migrations and with_migrations and not force:
+        click.confirm(
+            click.style(
+                "Reverting the migrations of {} will drop their data. Continue?".format(
+                    ", ".join(with_migrations)
+                ),
+                fg="magenta",
+            ),
+            abort=True,
+        )
+
+    for plugin in selected:
+        if do_migrations:
+            _revert_migrations(plugin.name)
+
+        if do_settings:
+            plugin.remove_permissions()
+            if plugin.has_stored_settings:
+                plugin.remove_settings()
+                click.secho(f"[+] Plugin '{plugin.name}' has been uninstalled.", fg="green")
+            else:
+                click.secho(f"[+] Nothing to uninstall for '{plugin.name}'.", fg="green")
+
+
+@plugins.command("upgrade")
+@click.argument("plugin_name", required=False)
+@click.option(
+    "--all",
+    "-a",
+    "all_plugins",
+    default=False,
+    is_flag=True,
+    help="Upgrades all plugins.",
+)
+@click.option(
+    "--settings-only",
+    "-s",
+    default=False,
+    is_flag=True,
+    help="Only upgrades the settings.",
+)
+@click.option(
+    "--migrations-only",
+    "-m",
+    default=False,
+    is_flag=True,
+    help="Only applies the migrations.",
+)
+def upgrade(
+    plugin_name: str | None,
+    all_plugins: bool,
+    settings_only: bool,
+    migrations_only: bool,
+):
+    """Upgrades a plugin's settings and applies its newest migrations."""
+    do_settings, do_migrations = _select_scope(settings_only, migrations_only)
+
+    for plugin in _select_plugins(plugin_name, all_plugins):
+        if do_settings:
+            if plugin.is_installed and plugin.needs_setting_upgrade():
+                plugin.upgrade_settings()
+                click.secho(f"[+] Plugin '{plugin.name}' has been upgraded.", fg="green")
+            else:
+                click.secho(
+                    f"[+] Plugin '{plugin.name}' has no upgradable settings.",
+                    fg="green",
+                )
+
+        if do_migrations:
+            _apply_migrations(plugin.name)
+
+
+@plugins.command("cleanup")
+@with_appcontext
+def cleanup():
+    """Removes zombie plugins from FlaskBB.
+
+    A zombie plugin is a plugin
+    which exists in the database but isn't installed in the env anymore.
+    """
+    deleted_plugins = remove_zombie_plugins_from_db()
+    if len(deleted_plugins) > 0:
+        click.secho("[+] Removed following zombie plugins from FlaskBB: ", fg="green", nl=False)
+        click.secho("{}".format(", ".join(deleted_plugins)))
+    else:
+        click.secho("[+] No zombie plugins found.", fg="green")
+
+
+@plugins.command("new")
+@click.option(
+    "--template",
+    "-t",
+    type=click.STRING,
+    default="https://github.com/sh4nks/cookiecutter-flaskbb-plugin",
+    help="Path to a cookiecutter template or to a valid git repo.",
+)
+@click.option(
+    "--out-dir",
+    "-o",
+    type=click.Path(),
+    default=None,
+    help="The location for the new FlaskBB plugin.",
+)
+@click.option(
+    "--force",
+    "-f",
+    is_flag=True,
+    default=False,
+    help="Overwrite the contents of output directory if it exists",
+)
+def new_plugin(template: str, out_dir: str | None, force: bool):
+    """Creates a new plugin based on the cookiecutter plugin
+    template. Defaults to this template:
+    https://github.com/sh4nks/cookiecutter-flaskbb-plugin.
+    It will either accept a valid path on the filesystem
+    or a URL to a Git repository which contains the cookiecutter template.
+    """
+    cookiecutter = get_cookiecutter()
+
+    if out_dir is None:
+        out_dir = click.prompt("Saving plugin in", default=os.path.abspath("."))
+
+    r = cookiecutter(template, output_dir=out_dir, overwrite_if_exists=force)
+    click.secho(f"[+] Created new plugin in {r}", fg="green", bold=True)

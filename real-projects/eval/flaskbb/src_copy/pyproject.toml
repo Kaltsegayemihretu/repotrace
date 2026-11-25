@@ -1,0 +1,398 @@
+[project]
+name = "FlaskBB"
+dynamic = ["version"]
+dependencies = [
+  "alembic>=1.20.1",
+  "attrs>=26.1.0",
+  "Babel>=2.18.0",
+  "blinker>=1.9.0",
+  "celery>=5.7.0",
+  "click>=8.5.1",
+  "click-log>=0.4.0",
+  "click-plugins>=1.1.1.2",
+  "click-repl>=0.4.1",
+  "email-validator>=2.3.0",
+  "Flask>=3.1.3",
+  "Flask-Alembic>=3.3.0",
+  "Flask-Allows2>=1.3.0",
+  "Flask-BabelPlus>=2.5.0",
+  "Flask-Caching>=2.5.1",
+  "Flask-DebugToolbar>=0.16.0",
+  "flask-debugtoolbar-warnings>=0.1.0",
+  "Flask-Limiter>=4.1.1",
+  "Flask-Login>=0.6.3",
+  "Flask-Mail>=0.10.0",
+  "Flask-SQLAlchemy>=3.1.1",
+  "Flask-Themes2>=2.0.0",
+  "Flask-WTF>=1.3.0",
+  "flaskbb-plugin-conversations>=3.0.8",
+  "flaskbb-plugin-portal>=3.0.6",
+  "Jinja2>=3.1.6",
+  "MarkupSafe>=3.0.4",
+  "mistune>=3.4.0",
+  "Pillow>=13.0.0",
+  "pluggy>=1.7.0",
+  "Pygments>=2.21.0",
+  "PyJWT>=2.15.1",
+  "pytz>=2026.6",
+  "redis>=8.1.0",
+  "requests>=2.34.2",
+  "SQLAlchemy>=2.1.8",
+  "typing-extensions>=4.16",
+  "Unidecode>=1.4.0",
+  "Werkzeug>=3.1.9",
+  "WTForms>=3.3.2",
+  "WTForms-SQLAlchemy>=0.4.2",
+]
+requires-python = ">=3.12"
+authors = [
+  {name = "Peter Justin", email = "peter.justin@outlook.com"},
+]
+maintainers = [
+  {name = "Peter Justin", email = "peter.justin@outlook.com"}
+]
+description = "A classic Forum Software in Python using Flask."
+readme = "README.md"
+license = "BSD-3-Clause"
+license-files = ["LICEN[CS]E"]
+keywords = ["flask", "forum", "social", "community"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Framework :: Flask",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+
+[project.optional-dependencies]
+gunicorn = [
+  "gunicorn>=26.2.0",
+]
+postgres = [
+  "psycopg[binary]>=3.3.8",
+]
+mysql = [
+  "pymysql>=1.2.3",
+]
+plugins = [
+  "flaskbb-plugin-inviteonly>=1.0.3",
+  "flaskbb-plugin-like>=1.0.3",
+  "flaskbb-plugin-ranks>=1.0.4",
+  "flaskbb-plugin-stopforumspam>=1.0.3",
+  "flaskbb-plugin-test-mail>=0.3.3",
+  "flaskbb-plugin-vote>=1.2.3",
+]
+
+[project.urls]
+Homepage = "https://github.com/flaskbb/flaskbb"
+Documentation = "https://flaskbb.readthedocs.io/en/latest/"
+Repository = "https://github.com/flaskbb/flaskbb"
+Issues = "https://github.com/flaskbb/flaskbb/issues"
+Changelog = "https://github.com/flaskbb/flaskbb/blob/master/CHANGES.md"
+
+[project.scripts]
+flaskbb = "flaskbb.cli.main:flaskbb"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "flaskbb/_version.py"
+
+[tool.hatch.build]
+# Themes ship compiled only:
+# aurora builds into flaskbb/static and
+# aurora_dark into its own static dir.
+exclude = [
+  "flaskbb/themes/*/src",
+  "flaskbb/themes/*/node_modules",
+  "flaskbb/themes/*/.sass-cache",
+  "flaskbb/themes/*/package.json",
+  "flaskbb/themes/*/package-lock.json",
+  "flaskbb/themes/*/vite.config.mjs",
+  "flaskbb/themes/*/tsconfig.json",
+  "flaskbb/themes/*/Makefile",
+  "flaskbb/themes/*/test",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["flaskbb"]
+artifacts = ["flaskbb/translations/*/LC_MESSAGES/messages.mo"]
+
+[tool.hatch.build.targets.wheel.hooks.custom]
+dependencies = ["Babel>=2.18.0"]
+
+[dependency-groups]
+dev = [
+    "cookiecutter",
+    "ipython>=9.18.1",
+    "ruff",
+    "tox>=4.67.13",
+    "tox-uv",
+    {include-group = "pre-commit"},
+    {include-group = "docs"},
+    {include-group = "tests"},
+    {include-group = "typing"},
+]
+pre-commit = [
+    "pre-commit",
+    "pre-commit-uv",
+]
+docs = [
+    "alabaster",
+    "myst-parser",
+    "sphinx",
+    "sphinx-intl>=2.4.0",
+    "sphinx-issues",
+    "sphinx-tabs",
+    "sphinxcontrib-log-cabinet"
+]
+tests = [
+    "cov-core",
+    "coverage",
+    "freezegun",
+    "pytest",
+    "pytest-cov",
+    "pytest-mock",
+    "pytest-xdist",
+    "pytest-xprocess",
+    "responses"
+]
+typing = [
+    "basedpyright",
+    "mypy",
+    "types-gunicorn",
+    "types-Pygments",
+    "types-pytz",
+    "types-WTForms",
+]
+gha-update = [
+    "gha-update ; python_full_version >= '3.12'",
+]
+
+
+[tool.uv]
+package = true
+default-groups = ["dev"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.basedpyright]
+include = ["flaskbb"]
+exclude = ["**/node_modules", "**/resources", "**/__pycache__", "**/docs", "flaskbb/migrations"]
+typeCheckingMode = "standard"
+pythonVersion = "3.12"
+defineConstant = { DEBUG = true }
+reportIgnoreCommentWithoutRule = false
+reportMissingImports = "error"
+reportMissingTypeStubs = false
+reportUnusedCallResult = false
+reportUnannotatedClassAttribute = false
+reportUnusedParameter = false
+reportImplicitStringConcatenation = false
+reportAny = false
+reportExplicitAny = false
+reportMissingSuperCall = false
+
+[tool.pytest]
+minversion = "9.0"
+filterwarnings = [
+    "ignore::jwt.warnings.InsecureKeyLengthWarning"
+]
+addopts = [
+    "-vvl",
+    "--strict-markers",
+    "--capture", "fd",
+    "--tb", "short",
+    "--pythonwarnings", "error::flaskbb.deprecation.FlaskBBDeprecation",
+    "--numprocesses", "auto",
+    "--dist", "load"
+]
+testpaths = [
+    "tests",
+]
+
+[tool.djlint]
+profile = "jinja"
+indent = 4
+max_line_length = 120
+max_blank_lines = 1
+extend_exclude = "node_modules,static,docs"
+format_attribute_template_tags = false
+format_js = false
+format_css = false
+# Images use responsive CSS; templates use mixed quotes and unnamed endblocks.
+ignore = "H006,T002,T003"
+
+# Many mail clients drop <style> blocks, so emails need inline styles.
+[tool.djlint.per-file-ignores]
+"templates/email/" = "H021"
+
+[tool.ruff]
+src = ["flaskbb", "tests"]
+fix = true
+show-fixes = true
+line-length = 100
+output-format = "full"
+
+[tool.ruff.lint]
+select = [
+    "B",  # flake8-bugbear
+    "E",  # pycodestyle error
+    "F",  # pyflakes
+    "I",  # isort
+    "UP",  # pyupgrade
+    "W",  # pycodestyle warning
+]
+ignore = [
+    "E711",
+    "E712",
+    "UP007",  # Use X | Y for type annotations; doesn't work with some of our (stringy) type definitions - should aim to resolve this
+]
+
+[tool.ruff.lint.isort]
+order-by-type = false
+
+[tool.ruff.lint.per-file-ignores]
+"flaskbb/migrations/*" = ["E501"]
+
+[tool.coverage.run]
+branch = true
+relative_files = true
+source_pkgs = ["flaskbb"]
+omit = [
+    "*/flaskbb/static/*",
+    "*/flaskbb/templates/*",
+    "*/flaskbb/themes/*",
+    "*/flaskbb/migrations/*",
+    "*/flaskbb/translations/*"
+]
+
+[tool.coverage.paths]
+source = ["flaskbb", "*/site-packages/flaskbb"]
+
+[tool.coverage.report]
+exclude_also = [
+    "if t.TYPE_CHECKING",
+    "raise NotImplementedError",
+    ": \\.{3}",
+]
+
+[tool.mypy]
+python_version = "3.12"
+files = ["flaskbb/"]
+exclude = ["^flaskbb/migrations/"]
+warn_unused_configs = true
+show_error_codes = true
+pretty = true
+# TODO if all of these can be enabled we can just set 'strict = true'
+disallow_subclassing_any = true
+# disallow_untyped_calls = true
+# disallow_untyped_defs = true
+# disallow_incomplete_defs = true
+# check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+# warn_return_any = true
+# no_implicit_reexport = true
+strict_equality = true
+extra_checks = true
+
+# No py.typed and no stubs on typeshed
+[[tool.mypy.overrides]]
+module = [
+    "celery.*",
+    "flask_login.*",
+    "flask_wtf.*",
+    "kombu.*",
+    "wtforms_sqlalchemy.*",
+]
+follow_untyped_imports = true
+
+# Optional dependencies, imported lazily behind a try/except ImportError
+[[tool.mypy.overrides]]
+module = ["cookiecutter.*", "IPython.*", "traitlets.*"]
+ignore_missing_imports = true
+
+
+[tool.tox]
+env_list = [
+    "py3.15",
+    "py3.14",
+    "py3.13",
+    "py3.12",
+    "style",
+    "typing",
+    "docs",
+]
+
+[tool.tox.env_run_base]
+description = "pytest on latest dependency versions"
+runner = "uv-venv-lock-runner"
+package = "wheel"
+wheel_build_env = ".pkg"
+constrain_package_deps = true
+use_frozen_constraints = true
+dependency_groups = ["tests"]
+env_tmp_dir = "{toxworkdir}/tmp/{envname}"
+commands = [
+    [
+        "pytest", "-v", "--capture=tee-sys", "--tb=short", "--basetemp={env_tmp_dir}",
+        "--cov", "--cov-report=xml", "--cov-report=term",
+        {replace = "posargs", default = [], extend = true},
+    ],
+]
+
+[tool.tox.env.style]
+description = "run all pre-commit hooks on all files"
+dependency_groups = ["pre-commit"]
+skip_install = true
+commands = [["pre-commit", "run", "--all-files"]]
+
+[tool.tox.env.typing]
+description = "run static type checkers"
+dependency_groups = ["typing"]
+# Run both checkers even if the first one fails, so CI reports all findings.
+ignore_errors = true
+commands = [
+    ["mypy"],
+    #["basedpyright", "--pythonpath", "{envpython}"],
+]
+
+[tool.tox.env.docs]
+description = "build docs"
+dependency_groups = ["docs"]
+commands = [["sphinx-build", "-E", "-W", "-b", "html", "docs", "docs/_build/"]]
+
+[tool.tox.env.update-actions]
+description = "update GitHub Actions pins"
+labels = ["update"]
+dependency_groups = ["gha-update"]
+skip_install = true
+commands = [["gha-update"]]
+
+[tool.tox.env.update-pre_commit]
+description = "update pre-commit pins"
+labels = ["update"]
+dependency_groups = ["pre-commit"]
+skip_install = true
+commands = [["pre-commit", "autoupdate", "--freeze", "-j4"]]
+
+[tool.tox.env.update-requirements]
+description = "update uv lock"
+labels = ["update"]
+dependency_groups = []
+no_default_groups = true
+skip_install = true
+commands = [["uv", "lock", {replace = "posargs", default = ["-U"], extend = true}]]

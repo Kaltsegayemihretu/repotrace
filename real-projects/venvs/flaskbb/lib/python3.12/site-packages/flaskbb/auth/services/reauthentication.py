@@ -1,0 +1,95 @@
+"""
+flaskbb.auth.services.reauthentication
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Tools for handling reauthentication needs inside FlaskBB.
+
+:copyright: (c) 2014-2018 the FlaskBB Team
+:license: BSD, see LICENSE for more details
+"""
+
+import logging
+from typing import override, TYPE_CHECKING
+
+from flask_babelplus import gettext as _
+from flask_sqlalchemy.session import Session
+from sqlalchemy.orm import scoped_session
+from werkzeug.security import check_password_hash
+
+from ...core.auth.authentication import (
+    PostReauthenticateHandler,
+    ReauthenticateFailureHandler,
+    ReauthenticateManager,
+    ReauthenticateProvider,
+    StopAuthentication,
+)
+from ...utils.helpers import time_utcnow
+
+if TYPE_CHECKING:
+    from flaskbb.plugins.manager import FlaskBBPluginManager
+    from flaskbb.user.models import User
+
+logger = logging.getLogger(__name__)
+
+
+class DefaultFlaskBBReauthProvider(ReauthenticateProvider):
+    """
+    This is the default reauth provider in FlaskBB, it compares the provided
+    password against the current user's hashed password.
+    """
+
+    @override
+    def reauthenticate(self, user: "User", secret: str):
+        if check_password_hash(user.password, secret):
+            return True
+
+
+class ClearFailedLoginsOnReauth(PostReauthenticateHandler):
+    """
+    Handler that clears failed login attempts after a successful
+    reauthentication.
+    """
+
+    @override
+    def handle_post_reauth(self, user: "User"):
+        user.login_attempts = 0
+
+
+class MarkFailedReauth(ReauthenticateFailureHandler):
+    """
+    Failure handler that marks the failed reauth attempt as a failed login
+    and when it occurred.
+    """
+
+    @override
+    def handle_reauth_failure(self, user: "User"):
+        user.login_attempts += 1
+        user.last_failed_login = time_utcnow()
+
+
+class PluginReauthenticationManager(ReauthenticateManager):
+    """
+    Default reauthentication manager for FlaskBB, it relies on plugin hooks
+    to manage the reauthentication flow.
+    """
+
+    def __init__(self, plugin_manager: "FlaskBBPluginManager", session: scoped_session[Session]):
+        self.plugin_manager = plugin_manager
+        self.session = session
+
+    @override
+    def reauthenticate(self, user: "User", secret: str):
+        try:
+            result = self.plugin_manager.hook.flaskbb_reauth_attempt(user=user, secret=secret)
+            if not result:
+                raise StopAuthentication(_("Wrong password."))
+            self.plugin_manager.hook.flaskbb_post_reauth(user=user)
+        except StopAuthentication:
+            self.plugin_manager.hook.flaskbb_reauth_failed(user=user)
+            raise
+        finally:
+            try:
+                self.session.commit()
+            except Exception:
+                logger.exception("Exception while processing login")
+                self.session.rollback()
+                raise

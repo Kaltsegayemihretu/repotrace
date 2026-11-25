@@ -1,0 +1,73 @@
+import { Modal } from "bootstrap";
+
+// Usage:
+// <button type="button" class="btn btn-icon" data-bs-toggle="modal" data-bs-target="#confirmModal">
+//     <span class="far fa-trash-alt text-danger" data-bs-toggle="tooltip" title="{% trans %}Delete{% endtrans %}"></span>
+// </button>
+// PS: Don't forget to use "type=button" for buttons - otherwise you'll submit the form before the modal pops up
+//     or you gotta hijack the click event and add a preventDefault() to the form
+
+// delegated, so it keeps working after htmx pagination swapped the page content
+// and with it the modal
+document.addEventListener("show.bs.modal", (event) => {
+    const confirmModalElement = event.target;
+    if (
+        confirmModalElement.id !== "confirmModal" ||
+        event.relatedTarget == null ||
+        event.relatedTarget.dataset.bsTarget !== "#confirmModal"
+    ) {
+        return;
+    }
+
+    // Get the instance of this modal
+    const confirmModal = Modal.getInstance(confirmModalElement);
+
+    // Button that triggered the modal
+    const button = event.relatedTarget;
+
+    // form of the button that triggered this modal
+    const form = button.closest("form");
+
+    // the confirm button of the modal
+    const confirmButton = confirmModalElement.querySelector(".confirmBtn");
+    // dropped when the modal closes, so a cancelled dialog does not also
+    // submit its form once the next one is confirmed
+    const listeners = new AbortController();
+    confirmButton.addEventListener(
+        "click",
+        (e) => {
+            e.preventDefault();
+            confirmModal.hide();
+            // unlike submit(), requestSubmit() validates the form and fires
+            // the submit event htmx listens for
+            form.requestSubmit();
+        },
+        { signal: listeners.signal },
+    );
+    confirmModalElement.addEventListener("hidden.bs.modal", () => listeners.abort(), {
+        once: true,
+    });
+});
+
+// hx-confirm asks through the same modal instead of window.confirm()
+document.addEventListener("htmx:confirm", (event) => {
+    const modalElement = document.getElementById("confirmModal");
+    if (!modalElement || !event.detail.elt.hasAttribute("hx-confirm")) {
+        return;
+    }
+    event.preventDefault();
+
+    const modal = Modal.getOrCreateInstance(modalElement);
+    const listeners = new AbortController();
+    modalElement.querySelector(".confirmBtn").addEventListener(
+        "click",
+        (e) => {
+            e.preventDefault();
+            modal.hide();
+            event.detail.issueRequest(true);
+        },
+        { signal: listeners.signal },
+    );
+    modalElement.addEventListener("hidden.bs.modal", () => listeners.abort(), { once: true });
+    modal.show();
+});

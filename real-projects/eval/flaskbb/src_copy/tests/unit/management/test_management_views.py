@@ -1,0 +1,799 @@
+"""Authorization tests for the user management views.
+
+These cover the target-level authorization that ``EditUser``, ``BanUser`` and
+``UnbanUser`` apply on top of the actor-level checks in their decorators. The
+views are invoked directly rather than over HTTP, which skips the blueprint's
+``login_fresh()`` gate - that gate is orthogonal to what is tested here.
+"""
+
+import io
+import re
+
+import pytest
+from flask import g, get_flashed_messages
+from flask_login import login_user, logout_user
+from flaskbb.extensions import db
+from flaskbb.forum import views as forum_views
+from flaskbb.forum.models import Post, Topic
+from flaskbb.management import views
+from flaskbb.plugins.models import PluginRegistry
+from flaskbb.settings.definitions import SettingDefinition, SettingGroup
+from flaskbb.settings.registry import setting_registry
+from flaskbb.user import views as user_views
+from flaskbb.user.models import Group, GroupRole, User
+from werkzeug.exceptions import NotFound
+
+
+@pytest.fixture
+def no_csrf(application):
+    previous = application.config.get("WTF_CSRF_ENABLED", True)
+    application.config["WTF_CSRF_ENABLED"] = False
+    yield
+    application.config["WTF_CSRF_ENABLED"] = previous
+
+
+@pytest.fixture
+def plain_group(database):
+    """A group that grants no privileges, usable as a secondary group."""
+    group = Group(name="Contributors")
+    group.save()
+    return group
+
+
+def _edit(user_id, actor, **data):
+    view = views.EditUser.as_view("edit_user")
+    method = "POST" if data else "GET"
+
+    with views.current_app.test_request_context(method=method, data=data or None):
+        login_user(actor)
+        response = view(user_id=user_id)
+        messages = get_flashed_messages(with_categories=True)
+        logout_user()
+
+    return response, messages
+
+
+def test_moderator_cannot_edit_other_moderator(
+    default_settings, no_csrf, moderator_user, other_moderator_user
+):
+    """The advisory's repro: a moderator of one forum resetting the password of
+    a moderator of another forum, to log in as them and inherit their scope.
+    """
+    response, messages = _edit(
+        moderator_user.id,
+        other_moderator_user,
+        username=moderator_user.username,
+        email="attacker-controlled@example.test",
+        password="Known-Test-Password-Only",
+    )
+
+    assert response.status_code == 302
+    assert ("danger", "You are not allowed to edit this user.") in messages
+    assert not moderator_user.check_password("Known-Test-Password-Only")
+    assert moderator_user.check_password("test")
+    assert moderator_user.email == "test_mod@example.org"
+
+
+def test_moderator_cannot_open_other_moderators_edit_page(
+    default_settings, moderator_user, other_moderator_user
+):
+    response, messages = _edit(moderator_user.id, other_moderator_user)
+
+    assert response.status_code == 302
+    assert ("danger", "You are not allowed to edit this user.") in messages
+
+
+def test_moderator_cannot_edit_admin(default_settings, moderator_user, admin_user):
+    response, _messages = _edit(admin_user.id, moderator_user)
+
+    assert response.status_code == 302
+
+
+def test_moderator_cannot_edit_super_moderator(
+    default_settings, moderator_user, super_moderator_user
+):
+    response, _messages = _edit(super_moderator_user.id, moderator_user)
+
+    assert response.status_code == 302
+
+
+def test_moderator_cannot_reset_admin_password(
+    default_settings, no_csrf, moderator_user, admin_user
+):
+    response, _messages = _edit(
+        admin_user.id,
+        moderator_user,
+        username=admin_user.username,
+        password="Known-Test-Password-Only",
+    )
+
+    assert response.status_code == 302
+    assert not admin_user.check_password("Known-Test-Password-Only")
+
+
+def test_moderator_can_still_edit_a_member(default_settings, moderator_user, user):
+    """``mod_edituser`` must keep working for ordinary members."""
+    response, _messages = _edit(user.id, moderator_user)
+
+    assert "Edit User" in response
+
+
+def test_member_edit_page_hides_credential_fields_from_moderator(
+    default_settings, moderator_user, user
+):
+    response, _messages = _edit(user.id, moderator_user)
+
+    assert 'name="username"' in response
+    assert 'name="signature"' in response
+    for field in (
+        "email",
+        "password",
+        "activated",
+        "primary_group",
+        "secondary_groups",
+    ):
+        assert f'name="{field}"' not in response
+
+
+def test_admin_edit_page_shows_credential_fields(default_settings, admin_user, user):
+    response, _messages = _edit(user.id, admin_user)
+
+    for field in (
+        "email",
+        "password",
+        "activated",
+        "primary_group",
+        "secondary_groups",
+    ):
+        assert f'name="{field}"' in response
+
+
+def test_moderator_editing_member_cannot_change_credentials_or_groups(
+    default_settings, no_csrf, moderator_user, user, plain_group, default_groups
+):
+    user.save(groups=[plain_group])
+    original_email = user.email
+
+    response, _messages = _edit(
+        user.id,
+        moderator_user,
+        username=user.username,
+        email="attacker-controlled@example.test",
+        password="Known-Test-Password-Only",
+        primary_group=str(default_groups[2].id),
+        secondary_groups=str(default_groups[2].id),
+        signature="moderated by a mod",
+    )
+
+    assert response.status_code == 302
+    # the fields a moderator legitimately owns still apply
+    assert user.signature == "moderated by a mod"
+    # everything else is ignored, including the secondary groups, which used to
+    # be wiped by the unconditional user.save(groups=...)
+    assert user.email == original_email
+    assert not user.check_password("Known-Test-Password-Only")
+    assert user.activated
+    assert user.primary_group_id == default_groups[3].id
+    assert [group.id for group in user.secondary_groups] == [plain_group.id]
+
+
+def test_admin_can_still_change_a_moderators_password(
+    default_settings, no_csrf, admin_user, moderator_user, default_groups
+):
+    response, _messages = _edit(
+        moderator_user.id,
+        admin_user,
+        username=moderator_user.username,
+        email=moderator_user.email,
+        password="New-Admin-Set-Password",
+        primary_group=str(default_groups[2].id),
+        activated="y",
+    )
+
+    assert response.status_code == 302
+    assert moderator_user.check_password("New-Admin-Set-Password")
+
+
+def test_moderator_cannot_ban_super_moderator(
+    default_settings, no_csrf, moderator_user, super_moderator_user
+):
+    view = views.BanUser.as_view("ban_user")
+
+    with views.current_app.test_request_context(method="POST"):
+        login_user(moderator_user)
+        response = view(user_id=super_moderator_user.id)
+        messages = get_flashed_messages(with_categories=True)
+        logout_user()
+
+    assert response.status_code == 302
+    assert ("danger", "You are not allowed to ban this user.") in messages
+    assert not super_moderator_user.is_banned
+
+
+def test_moderator_cannot_unban_user_holding_admin_via_secondary_group(
+    default_settings, no_csrf, moderator_user, user, default_groups
+):
+    """``unban()`` drops the target into the member group, so unbanning is a
+    demotion and needs the same target check as banning.
+    """
+    user.save(groups=[default_groups[0]])
+    user.ban()
+    assert user.is_banned
+
+    view = views.UnbanUser.as_view("unban_user")
+
+    with views.current_app.test_request_context(method="POST"):
+        login_user(moderator_user)
+        response = view(user_id=user.id)
+        messages = get_flashed_messages(with_categories=True)
+        logout_user()
+
+    assert response.status_code == 302
+    assert ("danger", "You are not allowed to unban this user.") in messages
+    assert user.is_banned
+
+
+def _bulk(view_cls, actor, ids):
+    view = view_cls.as_view("bulk")
+
+    with views.current_app.test_request_context(
+        method="POST", data={"rowid": [str(id) for id in ids]}
+    ):
+        login_user(actor)
+        response = view()
+        messages = get_flashed_messages(with_categories=True)
+        logout_user()
+
+    return response, messages
+
+
+def test_bulk_ban_skips_self_and_outranked_users(
+    default_settings, moderator_user, super_moderator_user, user
+):
+    response, messages = _bulk(
+        views.BanUser, moderator_user, [moderator_user.id, super_moderator_user.id, user.id]
+    )
+
+    assert response.status_code == 302
+    assert ("success", "1 users banned.") in messages
+    assert user.is_banned
+    assert not moderator_user.is_banned
+    assert not super_moderator_user.is_banned
+
+
+def test_bulk_delete_groups(default_settings, admin_user, default_groups, plain_group):
+    response, messages = _bulk(views.DeleteGroup, admin_user, [plain_group.id])
+
+    assert response.status_code == 302
+    assert ("success", "1 groups deleted.") in messages
+    assert db.session.get(Group, plain_group.id) is None
+
+
+def test_bulk_delete_groups_refuses_standard_groups(
+    default_settings, admin_user, default_groups, plain_group
+):
+    response, messages = _bulk(
+        views.DeleteGroup, admin_user, [plain_group.id, default_groups[3].id]
+    )
+
+    assert response.status_code == 302
+    assert ("danger", "You cannot delete one of the standard groups.") in messages
+    assert db.session.get(Group, plain_group.id) is not None
+
+
+def _render(view, actor, **kwargs):
+    with views.current_app.test_request_context():
+        login_user(actor)
+        response = view(**kwargs)
+        logout_user()
+
+    return response
+
+
+def _edit_link(target):
+    """The href the templates emit - relative, unlike url_for() called outside
+    of a request context.
+    """
+    return f'"/admin/users/{target.id}/edit"'
+
+
+def test_users_list_renders_for_moderator(default_settings, moderator_user, admin_user, user):
+    """Covers the target-aware can_edit_user/can_ban_user filters in
+    management/users.html - a signature mismatch there is a template error.
+    """
+    response = _render(views.ManageUsers.as_view("users"), moderator_user)
+
+    assert user.username in response
+    assert admin_user.username in response
+    assert _edit_link(user) in response
+    assert _edit_link(admin_user) not in response
+    assert 'hx-post="/admin/users/ban"' in response
+    assert 'hx-post="/admin/users/delete"' not in response
+
+
+def test_users_list_renders_for_admin(default_settings, admin_user, moderator_user):
+    response = _render(views.ManageUsers.as_view("users"), admin_user)
+
+    assert _edit_link(moderator_user) in response
+    assert 'hx-post="/admin/users/delete"' in response
+
+
+def test_banned_users_list_renders_for_moderator(default_settings, moderator_user, user):
+    """Covers the same filters in management/banned_users.html."""
+    user.ban()
+    response = _render(views.BannedUsers.as_view("banned_users"), moderator_user)
+
+    assert user.username in response
+    assert _edit_link(user) in response
+
+
+def test_profile_page_renders_for_moderator(default_settings, moderator_user, admin_user):
+    """Covers the filters in user/profile_layout.html, which previously linked
+    to the edit page for any target.
+    """
+    response = _render(
+        user_views.UserProfile.as_view("profile"),
+        moderator_user,
+        username=admin_user.username,
+    )
+
+    assert admin_user.username in response
+    assert _edit_link(admin_user) not in response
+
+
+def test_topic_page_renders_admin_actions(default_settings, admin_user, topic, user):
+    """Covers the target-aware filters in forum/topic.html, whose author
+    actions block is only rendered for administrators.
+    """
+    view = forum_views.ViewTopic.as_view("view_topic")
+
+    with views.current_app.test_request_context():
+        # the forum/topic requirements on this view and its templates resolve
+        # their subject off of g when it is not in the URL
+        g.forum = topic.forum
+        g.topic = topic
+        login_user(admin_user)
+        response = view(topic_id=topic.id)
+        logout_user()
+
+    assert user.username in response
+    assert _edit_link(user) in response
+
+
+def test_secondary_groups_exclude_the_targets_primary_group(
+    default_settings, admin_user, moderator_user
+):
+    """User.save() refuses to add the primary group to the secondary groups, so
+    the secondary field must not offer it.
+    """
+    response, _messages = _edit(moderator_user.id, admin_user)
+
+    secondary = re.search(r'<select[^>]*name="secondary_groups".*?</select>', response, re.S)
+    assert secondary is not None
+    offered = re.findall(r'value="([^"]*)"', secondary.group(0))
+
+    assert str(moderator_user.primary_group_id) not in offered
+    # the other groups are still on offer, and primary_group still lists it
+    assert offered
+    assert f'value="{moderator_user.primary_group_id}"' in response
+
+
+def test_super_moderator_form_hides_credentials_but_keeps_groups(
+    default_settings, super_moderator_user, user
+):
+    response, _messages = _edit(user.id, super_moderator_user)
+
+    for field in ("email", "password", "activated"):
+        assert f'name="{field}"' not in response
+    for field in ("primary_group", "secondary_groups"):
+        assert f'name="{field}"' in response
+
+
+def test_super_moderator_can_promote_a_member_to_moderator(
+    default_settings, no_csrf, super_moderator_user, user, default_groups
+):
+    moderator_group = default_groups[2]
+
+    response, _messages = _edit(
+        user.id,
+        super_moderator_user,
+        username=user.username,
+        primary_group=str(moderator_group.id),
+    )
+
+    assert response.status_code == 302
+    assert user.primary_group_id == moderator_group.id
+
+
+def test_super_moderator_cannot_assign_the_administrator_group(
+    default_settings, no_csrf, super_moderator_user, user, default_groups
+):
+    """The choice list is the server-side gate - a submitted group that is not
+    offered must fail validation rather than be silently applied.
+    """
+    admin_group = default_groups[0]
+    original = user.primary_group_id
+
+    response, _messages = _edit(
+        user.id,
+        super_moderator_user,
+        username=user.username,
+        primary_group=str(admin_group.id),
+    )
+
+    # re-rendered form, not a redirect
+    assert not hasattr(response, "status_code")
+    assert user.primary_group_id == original
+
+
+def test_super_moderator_cannot_assign_the_super_moderator_group(
+    default_settings, no_csrf, super_moderator_user, user, default_groups
+):
+    smod_group = default_groups[1]
+    original = user.primary_group_id
+
+    response, _messages = _edit(
+        user.id,
+        super_moderator_user,
+        username=user.username,
+        primary_group=str(smod_group.id),
+    )
+
+    assert not hasattr(response, "status_code")
+    assert user.primary_group_id == original
+
+
+def test_super_moderator_cannot_smuggle_admin_in_as_a_secondary_group(
+    default_settings, no_csrf, super_moderator_user, user, default_groups
+):
+    """Unlike the single-select, wtforms-sqlalchemy drops an unofferable pk from
+    a multi-select instead of rejecting it - its pre_validate reads
+    _invalid_formdata before accessing .data is what sets it. The outcome is
+    what matters here: no administrator rights are granted either way.
+    """
+    admin_group = default_groups[0]
+    moderator_group = default_groups[2]
+
+    _edit(
+        user.id,
+        super_moderator_user,
+        username=user.username,
+        primary_group=str(moderator_group.id),
+        secondary_groups=str(admin_group.id),
+    )
+
+    assert [group.id for group in user.secondary_groups] == []
+    assert all(group.role is not GroupRole.ADMINISTRATOR for group in user.groups)
+
+
+def test_super_moderator_cannot_change_a_password(
+    default_settings, no_csrf, super_moderator_user, user, default_groups
+):
+    response, _messages = _edit(
+        user.id,
+        super_moderator_user,
+        username=user.username,
+        primary_group=str(default_groups[3].id),
+        password="Known-Test-Password-Only",
+        email="attacker-controlled@example.test",
+    )
+
+    assert response.status_code == 302
+    assert not user.check_password("Known-Test-Password-Only")
+    assert user.email == "test_normal@example.org"
+
+
+@pytest.fixture
+def second_admin_user(default_groups):
+    """A second administrator, so admin-on-admin edits stay testable."""
+    admin = User(
+        username="test_admin_two",
+        email="test_admin_two@example.org",
+        password="test",
+        primary_group=default_groups[0],
+        activated=True,
+    )
+    admin.save()
+    return admin
+
+
+def test_admin_editing_self_keeps_every_field(default_settings, admin_user):
+    """Administrators are trusted with their own account - nothing is taken
+    away, the template asks them to confirm instead.
+    """
+    response, _messages = _edit(admin_user.id, admin_user)
+
+    for field in (
+        "username",
+        "email",
+        "password",
+        "primary_group",
+        "secondary_groups",
+        "activated",
+    ):
+        assert f'name="{field}"' in response
+
+
+def test_admin_editing_self_gets_the_confirm_dialog(default_settings, admin_user):
+    response, _messages = _edit(admin_user.id, admin_user)
+
+    assert 'id="confirm-self-change"' in response
+    assert 'id="confirmModal"' in response
+    assert "Change your own account?" in response
+
+
+def test_admin_editing_someone_else_gets_no_confirm_dialog(default_settings, admin_user, user):
+    response, _messages = _edit(user.id, admin_user)
+
+    assert 'id="confirm-self-change"' not in response
+    assert "Change your own account?" not in response
+
+
+def test_super_moderator_self_edit_gets_no_confirm_dialog(default_settings, super_moderator_user):
+    """Nothing to confirm - they have neither the group nor the activation
+    field on their own account.
+    """
+    response, _messages = _edit(super_moderator_user.id, super_moderator_user)
+
+    assert 'id="confirm-self-change"' not in response
+
+
+def test_admin_can_still_ban_themselves_after_confirming(
+    default_settings, no_csrf, admin_user, default_groups
+):
+    """The dialog is a speed bump, not a prohibition - an administrator is
+    allowed to change anything, including their own group.
+    """
+    response, _messages = _edit(
+        admin_user.id,
+        admin_user,
+        username=admin_user.username,
+        email=admin_user.email,
+        primary_group=str(default_groups[4].id),
+        activated="y",
+    )
+
+    assert response.status_code == 302
+    assert admin_user.is_banned
+
+
+def test_admin_can_still_change_their_own_password(
+    default_settings, no_csrf, admin_user, default_groups
+):
+    response, _messages = _edit(
+        admin_user.id,
+        admin_user,
+        username=admin_user.username,
+        email=admin_user.email,
+        password="New-Self-Set-Password",
+        primary_group=str(default_groups[0].id),
+        activated="y",
+    )
+
+    assert response.status_code == 302
+    assert admin_user.check_password("New-Self-Set-Password")
+    assert admin_user.primary_group.role is GroupRole.ADMINISTRATOR
+
+
+def test_super_moderator_can_edit_themselves_without_groups(default_settings, super_moderator_user):
+    """A super moderator may hand out groups, but not to their own account -
+    that would be a self-demotion or self-ban.
+    """
+    response, _messages = _edit(super_moderator_user.id, super_moderator_user)
+
+    assert 'name="username"' in response
+    assert 'name="signature"' in response
+    for field in (
+        "email",
+        "password",
+        "activated",
+        "primary_group",
+        "secondary_groups",
+    ):
+        assert f'name="{field}"' not in response
+
+
+def test_super_moderator_self_edit_applies_profile_changes(
+    default_settings, no_csrf, super_moderator_user, default_groups
+):
+    original = super_moderator_user.primary_group_id
+
+    response, _messages = _edit(
+        super_moderator_user.id,
+        super_moderator_user,
+        username=super_moderator_user.username,
+        signature="edited by myself",
+        primary_group=str(default_groups[4].id),
+    )
+
+    assert response.status_code == 302
+    assert super_moderator_user.signature == "edited by myself"
+    assert super_moderator_user.primary_group_id == original
+    assert not super_moderator_user.is_banned
+
+
+def test_moderator_can_edit_themselves(default_settings, moderator_user):
+    response, _messages = _edit(moderator_user.id, moderator_user)
+
+    assert 'name="username"' in response
+    for field in ("email", "password", "activated", "primary_group"):
+        assert f'name="{field}"' not in response
+
+
+def test_the_self_restriction_does_not_apply_to_other_admins(
+    default_settings, no_csrf, admin_user, second_admin_user, default_groups
+):
+    """Only the acting user's own account is protected - an administrator can
+    still demote a different administrator.
+    """
+    response, _messages = _edit(
+        second_admin_user.id,
+        admin_user,
+        username=second_admin_user.username,
+        email=second_admin_user.email,
+        primary_group=str(default_groups[3].id),
+        activated="y",
+    )
+
+    assert response.status_code == 302
+    assert second_admin_user.primary_group_id == default_groups[3].id
+
+
+def test_admin_can_delete_all_of_a_users_posts(default_settings, no_csrf, admin_user, user, topic):
+    view = views.DeleteUserPosts.as_view("delete_user_posts")
+
+    with views.current_app.test_request_context(method="POST"):
+        login_user(admin_user)
+        response = view(user_id=user.id)
+        messages = get_flashed_messages(with_categories=True)
+        logout_user()
+
+    assert response.status_code == 302
+    assert (
+        "success",
+        f"All posts by {user.username} have been deleted.",
+    ) in messages
+    assert user.post_count == 0
+    assert db.session.get(Topic, topic.id) is None
+
+
+def test_deleting_a_users_posts_cascades_a_topic_they_started(
+    default_settings, no_csrf, admin_user, user, moderator_user, topic
+):
+    """A reply from a different user in the same topic is collateral - this
+    is the same cascade forum.views.DeletePost already has for a single post,
+    not a new behavior introduced here.
+    """
+    reply = Post(content="a reply from someone else")
+    reply.save(user=moderator_user, topic=topic)
+
+    view = views.DeleteUserPosts.as_view("delete_user_posts")
+    with views.current_app.test_request_context(method="POST"):
+        login_user(admin_user)
+        view(user_id=user.id)
+        logout_user()
+
+    assert db.session.get(Topic, topic.id) is None
+    assert db.session.get(Post, reply.id) is None
+
+
+def test_moderator_cannot_delete_a_users_posts(
+    default_settings, no_csrf, moderator_user, user, topic
+):
+    view = views.DeleteUserPosts.as_view("delete_user_posts")
+
+    with views.current_app.test_request_context(method="POST"):
+        login_user(moderator_user)
+        response = view(user_id=user.id)
+        messages = get_flashed_messages(with_categories=True)
+        logout_user()
+
+    assert response.status_code == 302
+    assert ("danger", "You are not allowed to manage users") in messages
+    assert db.session.get(Topic, topic.id) is not None
+
+
+def test_deleting_posts_for_a_user_with_none_is_a_no_op(
+    default_settings, no_csrf, admin_user, user
+):
+    view = views.DeleteUserPosts.as_view("delete_user_posts")
+
+    with views.current_app.test_request_context(method="POST"):
+        login_user(admin_user)
+        response = view(user_id=user.id)
+        logout_user()
+
+    assert response.status_code == 302
+
+
+def _add(actor, **data):
+    view = views.AddUser.as_view("add_user")
+
+    with views.current_app.test_request_context(method="POST", data=data):
+        login_user(actor)
+        response = view()
+        logout_user()
+
+    return response
+
+
+def test_admin_can_add_a_user(default_settings, no_csrf, admin_user, default_groups, plain_group):
+    response = _add(
+        admin_user,
+        username="added_member",
+        email="added_member@example.org",
+        password="Test-Password-Only",
+        primary_group=str(default_groups[3].id),
+        secondary_groups=str(plain_group.id),
+        activated="y",
+    )
+
+    assert response.status_code == 302
+    user = User.get(User.username == "added_member")
+    assert user is not None
+    assert user.check_password("Test-Password-Only")
+    assert user.activated
+    assert user.primary_group_id == default_groups[3].id
+    assert [group.id for group in user.secondary_groups] == [plain_group.id]
+    assert user.avatar is None
+
+
+def test_admin_can_add_a_user_with_an_avatar(
+    application,
+    default_settings,
+    no_csrf,
+    admin_user,
+    default_groups,
+    image_just_right,
+    tmp_path,
+    monkeypatch,
+):
+    monkeypatch.setitem(application.config, "AVATAR_UPLOAD_PATH", str(tmp_path))
+
+    response = _add(
+        admin_user,
+        username="added_avatar",
+        email="added_avatar@example.org",
+        password="Test-Password-Only",
+        primary_group=str(default_groups[3].id),
+        avatar=(io.BytesIO(image_just_right.body), "me.png"),
+    )
+
+    assert response.status_code == 302
+    user = User.get(User.username == "added_avatar")
+    assert user is not None
+    assert user.avatar == "avatar_added_avatar.png"
+    assert (tmp_path / "avatar_added_avatar.png").read_bytes() == image_just_right.body
+
+
+@pytest.mark.parametrize("target", [{"slug": "no-such-group"}, {"plugin": "settingless"}])
+def test_settings_of_a_group_that_does_not_exist_are_not_found(
+    default_settings, admin_user, target
+):
+    PluginRegistry(name="settingless").save()
+    view = views.ManagementSettings.as_view("settings")
+
+    with views.current_app.test_request_context():
+        login_user(admin_user)
+        with pytest.raises(NotFound):
+            view(**target)
+        logout_user()
+
+
+def test_settings_page_404s_for_a_plugin_group_slug(default_settings, admin_user):
+    group = SettingGroup(
+        key="myplugin",
+        name="My Plugin",
+        description="",
+        settings=(SettingDefinition(key="ENABLED", value=True, name="Enabled", description=""),),
+    )
+    setting_registry.register_group(group, is_plugin=True)
+    view = views.ManagementSettings.as_view("settings")
+    try:
+        with views.current_app.test_request_context():
+            login_user(admin_user)
+            with pytest.raises(NotFound):
+                view(slug="myplugin")
+            logout_user()
+    finally:
+        setting_registry.unregister_group("myplugin")

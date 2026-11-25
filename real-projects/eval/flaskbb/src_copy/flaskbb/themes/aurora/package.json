@@ -1,0 +1,61 @@
+{
+  "name": "flaskbb-theme-aurora",
+  "description": "The default theme for FlaskBB.",
+  "version": "1.0.0",
+  "license": "BSD-3-Clause",
+  "author": "Peter Justin <peter.justin@outlook.com>",
+  "url": "https://flaskbb.com",
+  "private": true,
+  "main": "src/app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flaskbb/flaskbb"
+  },
+  "bugs": "https://github.com/flaskbb/flaskbb/issues",
+  "keywords": [
+    "flaskbb",
+    "theme",
+    "aurora"
+  ],
+  "scripts": {
+    "clean": "rm -f node_modules",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development",
+    "lint": "biome lint ../../..",
+    "format": "biome format --write ../../..",
+    "check": "biome check ../../..",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "@flaskbb/markdown-toolbar-element": "^1.0.0",
+    "@fortawesome/fontawesome-free": "^7.3.1",
+    "@popperjs/core": "^2.11.8",
+    "@textcomplete/core": "^0.1.13",
+    "@textcomplete/textarea": "^0.1.13",
+    "bootstrap": "^5.3.8",
+    "core-js": "^3.51.0",
+    "emoji-regex": "11.0.0",
+    "emojilib": "4.0.3",
+    "htmx.org": "^2.0.11"
+  },
+  "devDependencies": {
+    "@babel/core": "^8.1.0",
+    "@babel/preset-env": "^8.0.7",
+    "@biomejs/biome": "2.6.6",
+    "@rolldown/plugin-babel": "^0.3.1",
+    "autoprefixer": "^10.6.2",
+    "babel-plugin-polyfill-corejs3": "^1.0.0",
+    "jsdom": "^31.0.0",
+    "postcss": "^8.5.32",
+    "sass": "1.108.1",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.7"
+  },
+  "browserslist": [
+    "> 0.25%",
+    "not dead"
+  ],
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

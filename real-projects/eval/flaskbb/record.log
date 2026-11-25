@@ -1,0 +1,50 @@
+........................................................................ [  8%]
+........................................................................ [ 17%]
+........................................................................ [ 26%]
+........................................................................ [ 35%]
+........................................................................ [ 44%]
+........................................................................ [ 53%]
+........................................................................ [ 62%]
+........................................................................ [ 70%]
+........................................................................ [ 79%]
+........................................................................ [ 88%]
+........................................................................ [ 97%]
+..................F.                                                     [100%]
+=================================== FAILURES ===================================
+_______________________ test_flaskbbdomain_translations ________________________
+
+default_settings = None
+
+    def test_flaskbbdomain_translations(default_settings):
+        domain = current_app.extensions.get("babel").domain
+    
+        with current_app.test_request_context():
+>           assert isinstance(domain.get_translations(), Translations)
+E           assert False
+E            +  where False = isinstance(<babel.support.NullTranslations object at 0x118b6b260>, Translations)
+E            +    where <babel.support.NullTranslations object at 0x118b6b260> = get_translations()
+E            +      where get_translations = <flaskbb.utils.translations.FlaskBBDomain object at 0x104c31f10>.get_translations
+
+../src_copy/tests/unit/utils/test_translations.py:10: AssertionError
+=============================== warnings summary ===============================
+tests/unit/management/test_management_views.py: 60 warnings
+tests/unit/search/test_global_search.py: 2 warnings
+  /Users/israelhayalsew/Desktop/real-projects/venvs/flaskbb/lib/python3.12/site-packages/wtforms/widgets/core.py:438: DeprecationWarning: Yielding raw tuples from iter_choices() or iter_groups() is deprecated; yield Choice instances instead. Will be removed in WTForms 4.0.
+    for choice in field._iter_choices_normalized():
+
+tests/unit/search/test_global_search.py: 18 warnings
+tests/unit/user/test_controllers.py: 8 warnings
+tests/unit/user/test_forms.py: 1 warning
+  /Users/israelhayalsew/Desktop/real-projects/venvs/flaskbb/lib/python3.12/site-packages/wtforms/fields/core.py:427: DeprecationWarning: Passing SelectField choices as tuples is deprecated and will be removed in wtforms 3.4. Please use SelectChoice instead.
+    return self.field_class(*self.args, **kw)
+
+tests/unit/test_migrations.py::test_group_roles_migration_moves_flags_and_permissions_to_rows[True]
+  /Users/israelhayalsew/Desktop/real-projects/venvs/flaskbb/lib/python3.12/site-packages/alembic/operations/batch.py:298: UserWarning: Unnamed CHECK constraint on reflected table 'groups' is being omitted from the table recreate; pass the constraint explicitly using batch_alter_table.table_args.  Naming CHECK constraints avoids this going forward.
+    util.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../src_copy/tests/unit/utils/test_translations.py::test_flaskbbdomain_translations
+1 failed, 811 passed, 90 warnings in 117.46s (0:01:57)
+Recorded 6752 distinct edges (415730 calls); exit 1.
+finished

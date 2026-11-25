@@ -126,6 +126,22 @@ class ReexportTests(unittest.TestCase):
                             'app.py': 'from api import save\ndef run(): save()\n'})
         self.assertEqual(self.call(report)['reason_code'], 'AMBIGUOUS_EXPORT')
 
+    def test_package_facade_uses_unique_literal_star_export(self):
+        files = {'pkg/__init__.py': 'from .storage import *\nfrom .other import *\n',
+                 'pkg/storage.py': '__all__ = ["save"]\ndef save(): pass\n',
+                 'pkg/other.py': '__all__ = ["open"]\ndef save(): pass\ndef open(): pass\n',
+                 'app.py': 'import pkg as p\ndef run(): p.save()\n'}
+        for collision in (False, True):
+            with self.subTest(collision=collision):
+                if collision:
+                    files['pkg/other.py'] = files['pkg/other.py'].replace('"open"', '"save"')
+                call = self.call(self.scan(files))
+                if collision:
+                    self.assertEqual(call['reason_code'], 'WILDCARD_NAMESPACE')
+                else:
+                    self.assertEqual(call['target_file'], 'pkg/storage.py')
+                    self.assertIn('from .storage import *', [item['statement'] for item in call['import_chain']])
+
     def test_wildcard_export_stays_unknown(self):
         report = self.scan({'storage.py': 'def save(): pass\n',
                             'api.py': 'from storage import *\n',

@@ -1,0 +1,249 @@
+"""
+flaskbb.forum.forms
+~~~~~~~~~~~~~~~~~~~
+
+It provides the forms that are needed for the forum views.
+
+:copyright: (c) 2014 by the FlaskBB Team.
+:license: BSD, see LICENSE for more details.
+"""
+
+import logging
+from typing import Any, override
+
+from flask_allows2 import Permission
+from flask_babelplus import lazy_gettext as _
+from flask_wtf import FlaskForm
+from wtforms import (
+    BooleanField,
+    StringField,
+    SubmitField,
+    TextAreaField,
+)
+from wtforms.validators import DataRequired, Length, Optional
+
+from flaskbb.exceptions import FlaskBBError
+from flaskbb.extensions import pluggy
+from flaskbb.forum.models import Forum, Post, Report, Topic
+from flaskbb.forum.utils import AttachmentFormMixin, handle_post_attachments
+from flaskbb.search import flaskbb_search
+from flaskbb.user.models import User
+from flaskbb.utils.helpers import time_utcnow
+from flaskbb.utils.requirements import can_moderate, Has
+
+logger = logging.getLogger(__name__)
+
+
+class PostForm(FlaskForm, AttachmentFormMixin):
+    content = TextAreaField(
+        _("Content"),
+        validators=[DataRequired(message=_("You cannot post a reply without content."))],
+    )
+
+    submit = SubmitField(_("Reply"))
+
+    def save(self, user: User, topic: Topic):
+        post = Post(content=self.content.data)
+        pluggy.hook.flaskbb_form_post_save(form=self, post=post)
+        post = post.save(user=user, topic=topic)
+        handle_post_attachments(self, post, user)
+        return post
+
+
+class QuickreplyForm(PostForm):
+    pass
+
+
+class ReplyForm(PostForm):
+    track_topic = BooleanField(
+        _("Track this topic"),
+        default=False,
+        description=_("Add this topic to your Topic Tracker."),
+        validators=[Optional()],
+    )
+
+    post: Post | None
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        self.post = kwargs.get("obj")
+        PostForm.__init__(self, *args, **kwargs)
+        self._set_attachment_choices(self.post)
+
+    @override
+    def _existing_attachment_count(self) -> int:
+        if self.post is None or not self.post.id:
+            return 0
+        return len(self.post.attachments)
+
+    @override
+    def save(self, user: User, topic: Topic):
+        # new post
+        if self.post is None:
+            self.post = Post(content=self.content.data)
+        else:
+            self.post.date_modified = time_utcnow()
+            self.post.modified_by = user.username
+
+        if self.track_topic.data:
+            user.track_topic(topic)
+        else:
+            user.untrack_topic(topic)
+
+        pluggy.hook.flaskbb_form_post_save(form=self, post=self.post)
+        post = self.post.save(user=user, topic=topic)
+        handle_post_attachments(self, post, user)
+        return post
+
+
+class TopicForm(FlaskForm, AttachmentFormMixin):
+    title = StringField(
+        _("Topic title"),
+        validators=[DataRequired(message=_("Please choose a title for your topic."))],
+    )
+
+    content = TextAreaField(
+        _("Content"),
+        validators=[DataRequired(message=_("You cannot post a reply without content."))],
+    )
+
+    track_topic = BooleanField(
+        _("Track this topic"),
+        default=False,
+        description=_("Add this topic to your Topic Tracker."),
+        validators=[Optional()],
+    )
+
+    important = BooleanField(
+        _("Highlight topic"),
+        default=False,
+        description=_("Keep this topic above regular topics in the forum."),
+        validators=[Optional()],
+    )
+
+    locked = BooleanField(
+        _("Lock topic"),
+        default=False,
+        description=_("Prevent regular members from replying."),
+        validators=[Optional()],
+    )
+
+    hidden = BooleanField(
+        _("Hide topic"),
+        default=False,
+        description=_("Hide this topic from regular forum listings."),
+        validators=[Optional()],
+    )
+
+    submit = SubmitField(_("Post topic"))
+
+    def save(self, user: User, forum: Forum):
+        topic = Topic(title=self.title.data, content=self.content.data)
+        moderates = bool(Permission(can_moderate(forum), identity=user))
+        can_hide = bool(Permission(Has("makehidden"), can_moderate(forum), identity=user))
+
+        if moderates:
+            topic.important = bool(self.important.data)
+            topic.locked = bool(self.locked.data)
+
+        if self.track_topic.data:
+            user.track_topic(topic)
+        else:
+            user.untrack_topic(topic)
+
+        pluggy.hook.flaskbb_form_topic_save(form=self, topic=topic)
+        topic = topic.save(user=user, forum=forum)
+        handle_post_attachments(self, topic.first_post, user)
+        if can_hide and self.hidden.data:
+            topic.hide(user)
+        return topic
+
+
+class NewTopicForm(TopicForm):
+    pass
+
+
+class EditTopicForm(TopicForm):
+    submit = SubmitField(_("Save topic"))
+
+    # the form is always built from the topic's first post
+    post: Post
+    topic: Topic
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        self.topic = kwargs["obj"]
+
+        if self.topic.first_post is None:
+            raise FlaskBBError("First post cannot be None when editing a topic")
+
+        self.post = self.topic.first_post
+        kwargs.setdefault("content", self.post.content)
+
+        TopicForm.__init__(self, *args, **kwargs)
+        self._set_attachment_choices(self.post)
+
+    @override
+    def _existing_attachment_count(self) -> int:
+        return len(self.post.attachments)
+
+    @override
+    def save(self, user: User, forum: Forum):
+        title = self.title.data
+        content = self.content.data
+
+        moderates = bool(Permission(can_moderate(forum), identity=user))
+        can_hide = bool(Permission(Has("makehidden"), can_moderate(forum), identity=user))
+
+        # cannot be None as it was already checked using the Required validators
+        self.topic.title = title  # type: ignore[assignment]  # pyright: ignore[reportAttributeAccessIssue]
+        self.post.content = content  # type: ignore[assignment]  # pyright: ignore[reportAttributeAccessIssue]
+
+        if self.track_topic.data:
+            user.track_topic(self.topic)
+        else:
+            user.untrack_topic(self.topic)
+
+        if moderates:
+            self.topic.important = bool(self.important.data)
+            self.topic.locked = bool(self.locked.data)
+
+        if self.topic.last_post_id == forum.last_post_id and title != forum.last_post_title:
+            forum.last_post_title = title
+
+        self.post.date_modified = time_utcnow()
+        self.post.modified_by = user.username
+
+        pluggy.hook.flaskbb_form_topic_save(form=self, topic=self.topic)
+        topic = self.topic.save(user=user, forum=forum)
+        handle_post_attachments(self, self.post, user)
+        if can_hide and self.hidden.data != topic.hidden:
+            if self.hidden.data:
+                topic.hide(user)
+            else:
+                topic.unhide()
+        return topic
+
+
+class ReportForm(FlaskForm):
+    reason = TextAreaField(
+        _("Reason"),
+        validators=[DataRequired(message=_("What is the reason for reporting this post?"))],
+    )
+
+    submit = SubmitField(_("Report post"))
+
+    def save(self, user: User, post: Post):
+        report = Report(reason=self.reason.data)
+        return report.save(post=post, user=user)
+
+
+class UserSearchForm(FlaskForm):
+    search_query = StringField(_("Search"), validators=[DataRequired(), Length(min=3, max=50)])
+
+    submit = SubmitField(_("Search"))
+
+    def get_results(self):
+        # search_query is DataRequired, so by the time get_results() is
+        # called (after a successful validate()) .data is never empty -
+        # the "or ''" is only to satisfy the type checker.
+        query = self.search_query.data or ""
+        return flaskbb_search.search(User, query)

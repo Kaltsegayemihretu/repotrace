@@ -1,0 +1,30 @@
+2c96e36ba complete changed=3 relevant=64 suggested=0 found=0 failing=0 | Fix toc crash on a heading with a valueless data-t
+dc26ab5c5 complete changed=3 relevant=62 suggested=0 found=0 failing=0 | Fix toc crash on a heading with a valueless id att
+a4d442886 complete changed=6 relevant=31 suggested=0 found=0 failing=0 | Fix quadratic processing time in the tables extens
+f368c7d91 complete changed=5 relevant=991 suggested=0 found=0 failing=0 | Avoid rescanning long blocks for hash headers and 
+7d0d95ab1 complete changed=8 relevant=1012 suggested=0 found=0 failing=0 | Stop list nesting short of the recursion limit
+26e43de46 complete changed=4 relevant=22 suggested=0 found=0 failing=0 | Stop definition list nesting short of the recursio
+86d1e46b4 complete changed=5 relevant=37 suggested=0 found=0 failing=0 | Fix quadratic processing time in fenced_code prepr
+a198bb39b complete changed=16 relevant=1038 suggested=758 found=720 failing=0 | Apply the CommonMark rule of 3 which we missed.
+0bfd8c3ef complete changed=23 relevant=813 suggested=0 found=0 failing=0 | Fix quadratic-time parsing of consecutive referenc
+3f2c5510b complete changed=3 relevant=984 suggested=0 found=0 failing=0 | Avoid rescanning for a comment close after unclose
+8bfb9aaa4 complete changed=2 relevant=31 suggested=0 found=0 failing=0 | Ignore empty abbreviation definitions in element t
+527b81ee8 complete changed=8 relevant=1014 suggested=735 found=697 failing=0 | Recognize additional URL schemes in automatic link
+e76f0b739 complete changed=4 relevant=62 suggested=2 found=2 failing=0 | Fix quadratic-time id generation in toc extension
+0f0a86041 complete changed=1 relevant=1 suggested=0 found=0 failing=0 | Fix quadratic-time backtracking in hash header reg
+5e335ef7e complete changed=4 relevant=70 suggested=12 found=12 failing=0 | Fix TOC labels for quoted HTML angle brackets
+b29a5b6de complete changed=1 relevant=1 suggested=0 found=0 failing=0 | Fix quadratic-time backtracking in attr_list attri
+59f6dbc53 complete changed=4 relevant=90 suggested=0 found=0 failing=0 | Fix uneven backtick handling
+3d70cfccd complete changed=2 relevant=0 suggested=22 found=0 failing=0 | Escape language name in codehilite non-Pygments ou
+a27428b6f complete changed=7 relevant=44 suggested=0 found=0 failing=0 | Sanitize attribute names in fenced_code and legacy
+97233efa0 complete changed=33 relevant=984 suggested=705 found=667 failing=0 | Revert enforcement of CommonMark punctuation rules
+0bf535bc4 complete changed=19 relevant=948 suggested=0 found=0 failing=0 | Keep a comment inside raw inline HTML in the same 
+7c265bc79 complete changed=4 relevant=243 suggested=0 found=0 failing=0 | Ensure that unterminated HTML tags do not cause te
+7a29324e0 complete changed=2 relevant=956 suggested=686 found=648 failing=0 | Fix inline HTML case
+30025751d complete changed=1 relevant=927 suggested=0 found=0 failing=0 | Fix ancestor handling
+5d1363ce4 complete changed=5 relevant=5 suggested=0 found=0 failing=0 | Fix quadratic-time backtracking when a reference l
+175fb5aec complete changed=3 relevant=40 suggested=0 found=0 failing=0 | Ensure removing Abbreviations does not raise an er
+c74b8d84a complete changed=6 relevant=205 suggested=0 found=0 failing=0 | Honor block-level tags registered after md_in_html
+8a9ae23fd complete changed=1 relevant=81 suggested=0 found=0 failing=0 | Walk backtick spans instead of matching them with 
+136df23a5 complete changed=1 relevant=1 suggested=0 found=0 failing=0 | Add support for Python 3.15 and Drop support for P
+152a16fb1 complete changed=7 relevant=863 suggested=1 found=1 failing=0 | Fix quadratic rendering time for many inline links

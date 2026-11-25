@@ -1,0 +1,266 @@
+{
+ "project": "cachetools",
+ "real_source_calls": 392,
+ "strong": 67,
+ "name_only": 98,
+ "missed": 227,
+ "by_shape": [
+  [
+   "no call on that line (implicit: operator, property, iteration, with, class creation)",
+   119
+  ],
+  [
+   "self.method()",
+   79
+  ],
+  [
+   "name.method() (local, global or module)",
+   53
+  ],
+  [
+   "parameter called: p()",
+   25
+  ],
+  [
+   "self.field.method()",
+   18
+  ],
+  [
+   "computed callee: x[k]() or f()()",
+   13
+  ],
+  [
+   "bare name: f()",
+   11
+  ],
+  [
+   "call().method()",
+   7
+  ]
+ ],
+ "by_bucket": [
+  [
+   "receiver typed, but the target is not a plain method (property, attribute, inherited from unknown)",
+   112
+  ],
+  [
+   "implicit: operator, iteration, with",
+   94
+  ],
+  [
+   "dynamic: callable passed in or computed",
+   41
+  ],
+  [
+   "implicit: property read",
+   25
+  ],
+  [
+   "field typing refused",
+   19
+  ],
+  [
+   "super() call",
+   7
+  ],
+  [
+   "local receiver assigned conditionally, in a loop, or more than once",
+   7
+  ],
+  [
+   "other: internal_linked",
+   6
+  ],
+  [
+   "other: A property, descriptor or custom decorator may replace the m",
+   4
+  ],
+  [
+   "other: UNKNOWN_BINDING",
+   3
+  ],
+  [
+   "other: 'self' is not a known imported target or definition.",
+   2
+  ],
+  [
+   "other: 'heapq' is external, excluded, or missing from the selected ",
+   2
+  ],
+  [
+   "other: unresolved",
+   2
+  ],
+  [
+   "class has an unreadable or builtin base: collections.abc.MutableMapping",
+   1
+  ]
+ ],
+ "bucket_examples": {
+  "receiver typed, but the target is not a plain method (property, attribute, inherited from unknown)": [
+   "src/cachetools/__init__.py:560  self.timer  ->  _TimedCache._Timer.__call__",
+   "src/cachetools/__init__.py:560  self.timer  ->  _TimedCache.timer",
+   "src/cachetools/__init__.py:710  self.timer  ->  _TimedCache._Timer.__call__"
+  ],
+  "super() call": [
+   "src/cachetools/__init__.py:202  super().__copy__  ->  Cache.__copy__",
+   "src/cachetools/__init__.py:281  super().__copy__  ->  Cache.__copy__",
+   "src/cachetools/__init__.py:366  super().__copy__  ->  Cache.__copy__"
+  ],
+  "local receiver assigned conditionally, in a loop, or more than once": [
+   "src/cachetools/__init__.py:289  link.insert  ->  LFUCache._Link.insert",
+   "src/cachetools/__init__.py:614  link.insert  ->  TTLCache._Link.insert",
+   "src/cachetools/__init__.py:585  link.unlink  ->  TTLCache._Link.unlink"
+  ],
+  "class has an unreadable or builtin base: collections.abc.MutableMapping": [
+   "src/cachetools/__init__.py:477  self.__timer.__copy__  ->  _TimedCache._Timer.__copy__"
+  ],
+  "dynamic: callable passed in or computed": [
+   "src/cachetools/__init__.py:829  cache_delitem  ->  Cache.__delitem__",
+   "src/cachetools/__init__.py:198  cache_delitem  ->  Cache.__delitem__",
+   "src/cachetools/__init__.py:274  cache_delitem  ->  Cache.__delitem__"
+  ],
+  "other: 'self' is not a known imported target or definition.": [
+   "src/cachetools/__init__.py:278  link.unlink  ->  LFUCache._Link.unlink",
+   "src/cachetools/__init__.py:592  link.unlink  ->  TTLCache._Link.unlink"
+  ],
+  "implicit: operator, iteration, with": [
+   "src/cachetools/__init__.py:744  None  ->  _TimedCache._Timer.__enter__",
+   "src/cachetools/__init__.py:744  None  ->  _TimedCache._Timer.__exit__",
+   "src/cachetools/__init__.py:601  None  ->  _TimedCache._Timer.__enter__"
+  ],
+  "implicit: property read": [
+   "src/cachetools/__init__.py:744  None  ->  _TimedCache.timer",
+   "src/cachetools/__init__.py:601  None  ->  _TimedCache.timer",
+   "src/cachetools/__init__.py:755  None  ->  _TimedCache.timer"
+  ],
+  "other: 'heapq' is external, excluded, or missing from the selected ": [
+   "src/cachetools/__init__.py:741  heapq.heappush  ->  TLRUCache._Item.__lt__",
+   "src/cachetools/__init__.py:795  heapq.heappop  ->  TLRUCache._Item.__lt__"
+  ],
+  "other: UNKNOWN_BINDING": [
+   "src/cachetools/__init__.py:299  sorted  ->  LFUCache.__setstate__.<lambda>@299:38",
+   "src/cachetools/__init__.py:625  sorted  ->  TTLCache.__setstate__.<lambda>@625:54",
+   "src/cachetools/__init__.py:494  super  ->  Cache.currsize"
+  ],
+  "other: A property, descriptor or custom decorator may replace the m": [
+   "src/cachetools/__init__.py:493  self.expire  ->  TTLCache.expire",
+   "src/cachetools/__init__.py:493  self.expire  ->  TLRUCache.expire",
+   "src/cachetools/_cachedmethod.py:60  self.__cond  ->  _WrapperBase.__none"
+  ],
+  "other: unresolved": [
+   "src/cachetools/__init__.py:651  cache_delitem  ->  Cache.__delitem__",
+   "src/cachetools/__init__.py:798  cache_delitem  ->  Cache.__delitem__"
+  ],
+  "field typing refused": [
+   "src/cachetools/_decorator.py:158  cache.setdefault  ->  Cache.setdefault",
+   "src/cachetools/_decorator.py:57  cache.setdefault  ->  Cache.setdefault",
+   "src/cachetools/_decorator.py:127  self.cache.clear  ->  Cache.clear"
+  ],
+  "other: internal_linked": [
+   "src/cachetools/func.py:46  _cache  ->  FIFOCache.__init__",
+   "src/cachetools/func.py:60  _cache  ->  LFUCache.__init__",
+   "src/cachetools/func.py:74  _cache  ->  LRUCache.__init__"
+  ]
+ },
+ "by_reason": [
+  [
+   "The receiver has no supported callable declaration.",
+   119
+  ],
+  [
+   "implicit",
+   119
+  ],
+  [
+   "unresolved",
+   27
+  ],
+  [
+   "A class attribute or method has the same name as this field.",
+   19
+  ],
+  [
+   "COMPUTED_TARGET",
+   13
+  ],
+  [
+   "internal_linked",
+   6
+  ],
+  [
+   "Only unconditional simple receiver assignments are inferred.",
+   4
+  ],
+  [
+   "A property, descriptor or custom decorator may replace the method.",
+   4
+  ],
+  [
+   "The receiver is reassigned or ambiguous.",
+   3
+  ],
+  [
+   "UNKNOWN_BINDING",
+   3
+  ],
+  [
+   "The callable is a computed expression.",
+   3
+  ],
+  [
+   "'self' is not a known imported target or definition.",
+   2
+  ]
+ ],
+ "examples": {
+  "self.method()": [
+   "src/cachetools/__init__.py:560  self.timer  ->  _TimedCache._Timer.__call__",
+   "src/cachetools/__init__.py:560  self.timer  ->  _TimedCache.timer",
+   "src/cachetools/__init__.py:710  self.timer  ->  _TimedCache._Timer.__call__",
+   "src/cachetools/__init__.py:710  self.timer  ->  _TimedCache.timer"
+  ],
+  "call().method()": [
+   "src/cachetools/__init__.py:202  super().__copy__  ->  Cache.__copy__",
+   "src/cachetools/__init__.py:281  super().__copy__  ->  Cache.__copy__",
+   "src/cachetools/__init__.py:366  super().__copy__  ->  Cache.__copy__",
+   "src/cachetools/__init__.py:396  super().__copy__  ->  Cache.__copy__"
+  ],
+  "name.method() (local, global or module)": [
+   "src/cachetools/__init__.py:282  LFUCache._Link  ->  LFUCache._Link.__init__",
+   "src/cachetools/__init__.py:287  LFUCache._Link  ->  LFUCache._Link.__init__",
+   "src/cachetools/__init__.py:289  link.insert  ->  LFUCache._Link.insert",
+   "src/cachetools/__init__.py:463  _TimedCache._Timer  ->  _TimedCache._Timer.__init__"
+  ],
+  "self.field.method()": [
+   "src/cachetools/__init__.py:477  self.__timer.__copy__  ->  _TimedCache._Timer.__copy__",
+   "src/cachetools/_decorator.py:127  self.cache.clear  ->  Cache.clear",
+   "src/cachetools/_decorator.py:127  self.cache.clear  ->  _WrapperBase.cache",
+   "src/cachetools/_decorator.py:164  self.cache.clear  ->  Cache.clear"
+  ],
+  "parameter called: p()": [
+   "src/cachetools/__init__.py:829  cache_delitem  ->  Cache.__delitem__",
+   "src/cachetools/__init__.py:198  cache_delitem  ->  Cache.__delitem__",
+   "src/cachetools/__init__.py:274  cache_delitem  ->  Cache.__delitem__",
+   "src/cachetools/__init__.py:362  cache_delitem  ->  Cache.__delitem__"
+  ],
+  "no call on that line (implicit: operator, property, iteration, with, class creation)": [
+   "src/cachetools/__init__.py:744  None  ->  _TimedCache._Timer.__enter__",
+   "src/cachetools/__init__.py:744  None  ->  _TimedCache._Timer.__exit__",
+   "src/cachetools/__init__.py:744  None  ->  _TimedCache.timer",
+   "src/cachetools/__init__.py:601  None  ->  _TimedCache._Timer.__enter__"
+  ],
+  "bare name: f()": [
+   "src/cachetools/__init__.py:299  sorted  ->  LFUCache.__setstate__.<lambda>@299:38",
+   "src/cachetools/__init__.py:625  sorted  ->  TTLCache.__setstate__.<lambda>@625:54",
+   "src/cachetools/__init__.py:494  super  ->  Cache.currsize",
+   "src/cachetools/__init__.py:651  cache_delitem  ->  Cache.__delitem__"
+  ],
+  "computed callee: x[k]() or f()()": [
+   "src/cachetools/_descriptor.py:147  self.__descriptor.__get__(obj)  ->  _InfoMixin.__call__",
+   "src/cachetools/_descriptor.py:147  self.__descriptor.__get__(obj)  ->  _BasicMixin.__call__",
+   "src/cachetools/func.py:28  cached(cache=cache, key=key, condition=Condition(), info=True)  ->  cached.decorator",
+   "src/cachetools/func.py:44  _cache(FIFOCache(128), 128, typed)  ->  FIFOCache.__init__"
+  ]
+ }
+}

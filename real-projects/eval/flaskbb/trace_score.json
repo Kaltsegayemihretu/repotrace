@@ -1,0 +1,442 @@
+{
+ "schema_version": "0.1",
+ "report_kind": "trace_score",
+ "recall": {
+  "scopes": {
+   "all_project_code": {
+    "distinct_calls": 2780,
+    "by_tier": {
+     "uncertain": 257,
+     "confident": 866,
+     "missed": 609,
+     "name_only": 1048
+    },
+    "call_weighted": {
+     "uncertain": 40695,
+     "confident": 27408,
+     "missed": 8028,
+     "name_only": 114837
+    },
+    "covered_any_tier": 2171,
+    "covered_percent": 78.1,
+    "confident_or_uncertain_percent": 40.4
+   },
+   "source_only": {
+    "distinct_calls": 1197,
+    "by_tier": {
+     "uncertain": 147,
+     "confident": 418,
+     "name_only": 382,
+     "missed": 250
+    },
+    "call_weighted": {
+     "uncertain": 40546,
+     "confident": 25003,
+     "name_only": 111619,
+     "missed": 7495
+    },
+    "covered_any_tier": 947,
+    "covered_percent": 79.1,
+    "confident_or_uncertain_percent": 47.2
+   }
+  },
+  "not_scored": {
+   "called back through library code (callbacks, asyncio, sorted(key=...))": 2667,
+   "class body running at import (not a function call)": 340,
+   "function not found in analysis (generated code, ambiguous lambda)": 164,
+   "entered_from_outside (test runner, thread start)": 801
+  },
+  "missed_reasons": [
+   [
+    "unsupported_context: unsupported_context",
+    94
+   ],
+   [
+    "no call recorded on that line (implicit: operator, property, iteration, context manager or class creation)",
+    62
+   ],
+   [
+    "import_not_found: MODULE_NOT_FOUND",
+    17
+   ],
+   [
+    "unresolved: COMPUTED_TARGET",
+    11
+   ],
+   [
+    "unresolved: This binding is not a supported function or class definition.",
+    11
+   ],
+   [
+    "builtin_reference: UNKNOWN_BINDING",
+    10
+   ],
+   [
+    "resolved to different targets than what ran",
+    8
+   ],
+   [
+    "external_or_missing: MODULE_NOT_FOUND",
+    6
+   ],
+   [
+    "unresolved: UNSUPPORTED_TARGET",
+    4
+   ],
+   [
+    "unresolved: UNKNOWN_BINDING",
+    4
+   ],
+   [
+    "unresolved: 'sqlalchemy' is external, excluded, or missing from the selected roots.",
+    4
+   ],
+   [
+    "unresolved: unresolved",
+    3
+   ]
+  ],
+  "by_pattern": {},
+  "by_difficulty": {},
+  "missed_examples": [
+   {
+    "file": "flaskbb/app.py",
+    "line": 741,
+    "caller": "upgrade_installed_plugin_settings@732:0",
+    "callee": "PluginRegistry.is_updatable@66:4",
+    "why": "no call recorded on that line (implicit: operator, property, iteration, context manager or class creation)"
+   },
+   {
+    "file": "flaskbb/auth/forms.py",
+    "line": 39,
+    "caller": "module",
+    "callee": "add_recaptcha_field.decorator@90:4",
+    "why": "unsupported_context: unsupported_context"
+   },
+   {
+    "file": "flaskbb/auth/forms.py",
+    "line": 56,
+    "caller": "module",
+    "callee": "add_recaptcha_field.decorator@90:4",
+    "why": "unsupported_context: unsupported_context"
+   },
+   {
+    "file": "flaskbb/auth/forms.py",
+    "line": 104,
+    "caller": "module",
+    "callee": "add_recaptcha_field.decorator@90:4",
+    "why": "unsupported_context: unsupported_context"
+   },
+   {
+    "file": "flaskbb/auth/plugins.py",
+    "line": 112,
+    "caller": "flaskbb_registration_post_processor@109:0",
+    "callee": "FlaskBBConfigProxy.__getitem__@32:4",
+    "why": "no call recorded on that line (implicit: operator, property, iteration, context manager or class creation)"
+   },
+   {
+    "file": "flaskbb/auth/services/password.py",
+    "line": 72,
+    "caller": "ResetPasswordService._verify_token@67:4",
+    "callee": "ValidationError.__init__@35:4",
+    "why": "unresolved: unresolved"
+   },
+   {
+    "file": "flaskbb/auth/services/registration.py",
+    "line": 235,
+    "caller": "RegistrationService._validate_registration@229:4",
+    "callee": "UserValidator.__call__@50:4",
+    "why": "unresolved: unresolved"
+   },
+   {
+    "file": "flaskbb/auth/services/registration.py",
+    "line": 194,
+    "caller": "AutoActivateUserPostProcessor.post_process@193:4",
+    "callee": "FlaskBBConfigProxy.__getitem__@32:4",
+    "why": "no call recorded on that line (implicit: operator, property, iteration, context manager or class creation)"
+   },
+   {
+    "file": "flaskbb/auth/views.py",
+    "line": 442,
+    "caller": "flaskbb_load_blueprints.<lambda>@442:20",
+    "callee": "FlaskBBConfigProxy.__getitem__@32:4",
+    "why": "no call recorded on that line (implicit: operator, property, iteration, context manager or class creation)"
+   },
+   {
+    "file": "flaskbb/auth/views.py",
+    "line": 165,
+    "caller": "Register.form@163:4",
+    "callee": "add_recaptcha_field.decorator.decorated_class@92:8",
+    "why": "unresolved: UNSUPPORTED_TARGET"
+   },
+   {
+    "file": "flaskbb/auth/views.py",
+    "line": 168,
+    "caller": "Register.form@163:4",
+    "callee": "FlaskBBConfigProxy.__getitem__@32:4",
+    "why": "no call recorded on that line (implicit: operator, property, iteration, context manager or class creation)"
+   },
+   {
+    "file": "flaskbb/auth/views.py",
+    "line": 213,
+    "caller": "ForgotPassword.form@212:4",
+    "callee": "add_recaptcha_field.decorator.decorated_class@92:8",
+    "why": "unresolved: UNSUPPORTED_TARGET"
+   },
+   {
+    "file": "flaskbb/auth/views.py",
+    "line": 96,
+    "caller": "Login.form@95:4",
+    "callee": "add_recaptcha_field.decorator.decorated_class@92:8",
+    "why": "unresolved: UNSUPPORTED_TARGET"
+   },
+   {
+    "file": "flaskbb/auth/views.py",
+    "line": 407,
+    "caller": "login_rate_limit@403:0",
+    "callee": "FlaskBBConfigProxy.__getitem__@32:4",
+    "why": "builtin_object_method: The callable is a computed expression."
+   },
+   {
+    "file": "flaskbb/auth/views.py",
+    "line": 408,
+    "caller": "login_rate_limit@403:0",
+    "callee": "FlaskBBConfigProxy.__getitem__@32:4",
+    "why": "builtin_object_method: The callable is a computed expression."
+   }
+  ]
+ },
+ "precision": {
+  "LIKELY": {
+   "arrows_total": 1151,
+   "counts": {
+    "right (called at that line)": 869,
+    "not_run (cannot judge)": 263,
+    "not seen (line ran, target not called)": 8,
+    "cannot judge (call may be skipped on a line that ran, e.g. a or f())": 11
+   },
+   "judged": 877,
+   "right": 869,
+   "percent_right": 99.1,
+   "not_seen_examples": [
+    {
+     "file": "flaskbb/cli/bootstrap.py",
+     "line": 66,
+     "expression": "run_flaskbb",
+     "drawn_targets": [
+      "run_flaskbb@186:0"
+     ],
+     "what_ran_there": [
+      "steps.<lambda>@19:8"
+     ]
+    },
+    {
+     "file": "flaskbb/cli/bootstrap.py",
+     "line": 69,
+     "expression": "run_flaskbb",
+     "drawn_targets": [
+      "run_flaskbb@186:0"
+     ],
+     "what_ran_there": [
+      "steps.<lambda>@19:8"
+     ]
+    },
+    {
+     "file": "flaskbb/cli/plugins.py",
+     "line": 82,
+     "expression": "revert_plugin_migrations",
+     "drawn_targets": [
+      "revert_plugin_migrations@185:0"
+     ],
+     "what_ran_there": [
+      "reverted.revert@84:4"
+     ]
+    },
+    {
+     "file": "flaskbb/cli/plugins.py",
+     "line": 147,
+     "expression": "apply_plugin_migrations",
+     "drawn_targets": [
+      "apply_plugin_migrations@174:0"
+     ],
+     "what_ran_there": [
+      "failing_migrations.apply@73:4",
+      "migrations.apply@62:4"
+     ]
+    },
+    {
+     "file": "flaskbb/management/views.py",
+     "line": 1385,
+     "expression": "apply_plugin_migrations",
+     "drawn_targets": [
+      "apply_plugin_migrations@174:0"
+     ],
+     "what_ran_there": [
+      "failing_migrations.apply@73:4",
+      "migrations.apply@62:4"
+     ]
+    },
+    {
+     "file": "flaskbb/management/views.py",
+     "line": 1467,
+     "expression": "apply_plugin_migrations",
+     "drawn_targets": [
+      "apply_plugin_migrations@174:0"
+     ],
+     "what_ran_there": [
+      "migrations.apply@62:4"
+     ]
+    },
+    {
+     "file": "flaskbb/management/views.py",
+     "line": 1527,
+     "expression": "revert_plugin_migrations",
+     "drawn_targets": [
+      "revert_plugin_migrations@185:0"
+     ],
+     "what_ran_there": [
+      "reverted.revert@84:4",
+      "test_failed_revert_keeps_settings.revert@232:4"
+     ]
+    },
+    {
+     "file": "flaskbb/user/views.py",
+     "line": 206,
+     "expression": "delete_avatar_file",
+     "drawn_targets": [
+      "delete_avatar_file@48:0"
+     ],
+     "what_ran_there": []
+    }
+   ]
+  },
+  "POSSIBLE": {
+   "arrows_total": 367,
+   "counts": {
+    "right (called at that line)": 276,
+    "not_run (cannot judge)": 83,
+    "not seen (line ran, target not called)": 8
+   },
+   "judged": 284,
+   "right": 276,
+   "percent_right": 97.2,
+   "not_seen_examples": [
+    {
+     "file": "flaskbb/auth/plugins.py",
+     "line": 113,
+     "expression": "SendActivationPostProcessor",
+     "drawn_targets": [
+      "SendActivationPostProcessor.__init__@153:4"
+     ],
+     "what_ran_there": [
+      "account_activator_factory@40:0"
+     ]
+    },
+    {
+     "file": "flaskbb/core/auth/permissions.py",
+     "line": 52,
+     "expression": "user.is_authenticated",
+     "drawn_targets": [
+      "Identity.is_authenticated@33:4"
+     ],
+     "what_ran_there": [
+      "User.is_active@370:4"
+     ]
+    },
+    {
+     "file": "flaskbb/core/auth/permissions.py",
+     "line": 100,
+     "expression": "forum.id",
+     "drawn_targets": [
+      "ForumLike.id@22:4"
+     ],
+     "what_ran_there": [
+      "UTCDateTime.process_result_value@178:4"
+     ]
+    },
+    {
+     "file": "flaskbb/core/auth/permissions.py",
+     "line": 104,
+     "expression": "forum.id",
+     "drawn_targets": [
+      "ForumLike.id@22:4"
+     ],
+     "what_ran_there": []
+    },
+    {
+     "file": "flaskbb/core/auth/permissions.py",
+     "line": 101,
+     "expression": "forum.id",
+     "drawn_targets": [
+      "ForumLike.id@22:4"
+     ],
+     "what_ran_there": []
+    },
+    {
+     "file": "flaskbb/core/tokens.py",
+     "line": 142,
+     "expression": "self.verify_token",
+     "drawn_targets": [
+      "TokenVerifier.verify_token@131:4"
+     ],
+     "what_ran_there": [
+      "EmailMatchesUserToken.verify_token@34:4"
+     ]
+    },
+    {
+     "file": "flaskbb/forum/utils.py",
+     "line": 177,
+     "expression": "self._existing_attachment_count",
+     "drawn_targets": [
+      "AttachmentFormMixin._existing_attachment_count@154:4"
+     ],
+     "what_ran_there": [
+      "ReplyForm._existing_attachment_count@73:4"
+     ]
+    },
+    {
+     "file": "tests/unit/auth/test_password.py",
+     "line": 27,
+     "expression": "ValidationError",
+     "drawn_targets": [
+      "ValidationError.__init__@35:4"
+     ],
+     "what_ran_there": []
+    }
+   ],
+   "candidates_per_right_site_seen_percent": 99.6
+  },
+  "NAME_ONLY": {
+   "name unique in the project": {
+    "sites_not_run": 152,
+    "sites_that_ran": 497,
+    "real_calls": 323,
+    "other_objects": 174,
+    "sites_cannot_judge": 46,
+    "percent_real": 65.0
+   },
+   "name shared by several project functions": {
+    "sites_that_ran": 8069,
+    "real_calls": 663,
+    "other_objects": 7406,
+    "sites_not_run": 1085,
+    "sites_cannot_judge": 77,
+    "percent_real": 8.2
+   },
+   "common library-style name": {
+    "sites_not_run": 1016,
+    "sites_that_ran": 7037,
+    "other_objects": 6938,
+    "sites_cannot_judge": 629,
+    "real_calls": 99,
+    "percent_real": 1.4
+   }
+  }
+ },
+ "runtime_edges_total": 6752,
+ "limitations": [
+  "Only code that ran is judged; unrun arrows are counted as not judgeable.",
+  "Runtime sees project functions only: a library callee at a drawn line looks like \"not seen\".",
+  "A recorded run is not every possible run; it is evidence from the runs given."
+ ]
+}

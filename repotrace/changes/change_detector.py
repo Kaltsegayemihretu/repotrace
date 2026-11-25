@@ -235,6 +235,10 @@ def detect_changes(before, after):
             olds, news = old_groups.get(key, []), new_groups.get(key, [])
             entry = {'file': name, 'qualified_name': qualified_name, 'kind': kind}
             if len(olds) > 1 or len(news) > 1:
+                old_hashes = [symbol.get('syntax_sha256') for symbol in olds]
+                new_hashes = [symbol.get('syntax_sha256') for symbol in news]
+                if None not in old_hashes + new_hashes and old_hashes == new_hashes:
+                    continue
                 gaps.append({'file': name, 'type': 'ambiguous_definition',
                              'qualified_name': qualified_name,
                              'message': 'Several definitions share this name on one side; '

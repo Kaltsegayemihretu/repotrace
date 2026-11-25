@@ -1,0 +1,92 @@
+// category specific values
+.category {
+
+    .category-header {
+        font-weight: bold;
+    }
+
+    .category-body {
+        padding: 0;
+    }
+
+    .category-meta {
+        font-weight: bold;
+        padding-top: 0.5em;
+        height: 2.5em;
+        background-color: $page-meta-bg;
+        border-bottom: 1px solid $page-meta-border;
+
+        .forum-name, .forum-stats, .forum-last-post {
+            font-weight: bold;
+        }
+    }
+
+    .category-row {
+        margin: 0;
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
+
+        &:not(:last-child) {
+            border-bottom: 1px solid $page-border;
+        }
+
+        &.hover:hover {
+            background-color: $page-hover;
+        }
+
+        // a single name line is shorter than the icon
+        &:has(> .forum-info > .forum-name:last-child) {
+            align-items: center;
+        }
+    }
+
+    .forum-info {
+        position: relative;
+
+        .forum-status {
+            float: left;
+            font-size: 2em;
+            padding-right: 0.5em;
+        }
+
+        // a floated icon lets the last line wrap underneath it and out of the row
+        &:has(> .forum-status) {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            align-content: start;
+
+            > .forum-status {
+                grid-row: span 3;
+            }
+
+            > :not(.forum-status) {
+                grid-column: 2;
+            }
+
+            > .forum-name:last-child {
+                grid-row: span 3;
+                align-self: center;
+            }
+        }
+
+        .forum-name {
+            font-weight: bold;
+        }
+
+        .forum-description {
+            & > p {
+                margin-bottom: 0;
+            }
+        }
+
+        .forum-moderators {
+            font-style: italic;
+        }
+    }
+
+    .forum-last-post {
+        .last-post-title {
+            font-weight: bold;
+        }
+    }
+}

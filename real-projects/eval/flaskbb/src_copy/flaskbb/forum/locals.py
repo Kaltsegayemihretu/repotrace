@@ -1,0 +1,51 @@
+"""
+flaskbb.forum.locals
+~~~~~~~~~~~~~~~~~~~~
+Thread local helpers for FlaskBB
+
+:copyright: 2017, the FlaskBB Team
+:license: BSD, see license for more details
+"""
+
+from typing import Any, cast
+
+from flask import g, request
+from werkzeug.local import LocalProxy
+
+from flaskbb.extensions import db
+
+from .models import Category, Forum, Post, Topic
+
+
+def _get_item(model: Any, view_arg: str, name: str):
+    if g and not getattr(g, name, None) and request.view_args and view_arg in request.view_args:
+        setattr(g, name, db.session.get(model, request.view_args[view_arg]))
+    return getattr(g, name, None)
+
+
+def _get_current_post() -> Post | None:
+    return _get_item(Post, "post_id", "post")
+
+
+def _get_current_topic() -> Topic | None:
+    if current_post:
+        return current_post.topic
+    return _get_item(Topic, "topic_id", "topic")
+
+
+def _get_current_forum() -> Forum | None:
+    if current_topic:
+        return current_topic.forum
+    return _get_item(Forum, "forum_id", "forum")
+
+
+def _get_current_category() -> Category | None:
+    if current_forum:
+        return current_forum.category
+    return _get_item(Category, "category_id", "category")
+
+
+current_post: Post | None = cast(Any, LocalProxy(_get_current_post))
+current_topic: Topic | None = cast(Any, LocalProxy(_get_current_topic))
+current_forum: Forum | None = cast(Any, LocalProxy(_get_current_forum))
+current_category: Category | None = cast(Any, LocalProxy(_get_current_category))

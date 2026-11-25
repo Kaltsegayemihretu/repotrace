@@ -1,0 +1,30 @@
+6d7c4fc3e complete changed=3 relevant=2 suggested=0 found=0 failing=0 | fix: do not treat str/bytes as sequences in Query.
+717616bc3 complete changed=2 relevant=96 suggested=0 found=0 failing=0 | fix: persist_empty must not wipe existing table da
+e83efcdf7 complete changed=3 relevant=5 suggested=0 found=0 failing=0 | fix: include regex flags in matches/search query h
+18d73a150 complete changed=6 relevant=10 suggested=10 found=10 failing=0 | fix: reject CachingMiddleware reads and writes aft
+bd034d0e9 complete changed=4 relevant=93 suggested=0 found=0 failing=0 | fix: don't reuse IDs in mixed insert_multiple batc
+19066e031 complete changed=3 relevant=35 suggested=0 found=0 failing=0 | fix: fix LRUCache treating stored None values as m
+770486ff8 complete changed=7 relevant=82 suggested=82 found=82 failing=0 | fix: freeze unhashable args in Query.test to preve
+e70f9b1d9 complete changed=4 relevant=23 suggested=0 found=0 failing=0 | fix: correct Table.update transform type hints (#6
+59ee5933d complete changed=1 relevant=87 suggested=4 found=4 failing=0 | fix: prevent FileNotFoundError when storages.touch
+bffba79bb complete changed=12 relevant=7 suggested=7 found=7 failing=0 | fix: use MutableMapping for operations
+76d21d26c complete changed=8 relevant=31 suggested=0 found=0 failing=0 | fix: skip missing doc_ids in Table.update and Tabl
+3517ddc0b complete changed=0 relevant=0 suggested=0 found=0 failing=0 | refactor: add more precise type hints for Table.ge
+c43d82022 complete changed=1 relevant=1 suggested=0 found=0 failing=0 | refactor: use f-strings for __repr__
+dcf0a0137 complete changed=2 relevant=34 suggested=0 found=0 failing=0 | fix: correctly handle falsy values in LRUCache
+781fb6ca7 complete changed=2 relevant=33 suggested=0 found=0 failing=0 | fix: LRUCache.set update cache value when key exis
+75b089529 complete changed=0 relevant=0 suggested=0 found=0 failing=0 | chore: add param to docstring
+b596c924e complete changed=2 relevant=84 suggested=0 found=0 failing=0 | feat: add option to persist empty tables
+bc93aad6c complete changed=4 relevant=81 suggested=0 found=0 failing=0 | fix: isinstance with self.document_class iso Docum
+3786a8022 complete changed=0 relevant=0 suggested=0 found=0 failing=0 | refactor(queries): always import `Protocol` from `
+fb83651e8 complete changed=4 relevant=23 suggested=0 found=0 failing=0 | chore: code cleanup
+6f03ec6c2 complete changed=2 relevant=23 suggested=0 found=0 failing=0 | feat: add `doc_ids` parameter to `Table.get`
+505d782e2 complete changed=1 relevant=78 suggested=3 found=3 failing=0 | feat: add warning about data loss/corruption with 
+d0416e909 complete changed=0 relevant=0 suggested=0 found=0 failing=0 | chore: add warning about data loss/corruption with
+cd0b71942 complete changed=3 relevant=98 suggested=10 found=10 failing=0 | chore: fix MyPy type errors
+b431412be complete changed=1 relevant=46 suggested=0 found=0 failing=0 | refactor(queries): add `__hash__` return type hint
+fcb1a8684 complete changed=1 relevant=0 suggested=0 found=0 failing=0 | chore: add return type for __hash__ function of Qu
+569447981 complete changed=4 relevant=75 suggested=1 found=1 failing=0 | Revert "feat: use atomic writes to avoid data corr
+cbeaf5ca9 complete changed=4 relevant=75 suggested=1 found=1 failing=0 | fix(storages): add support for atomic writes on Wi
+2a2abe52e complete changed=1 relevant=75 suggested=1 found=1 failing=0 | feat: use atomic writes to avoid data corruption i
+6bcd28ae4 complete changed=2 relevant=46 suggested=0 found=0 failing=0 | refactor(table): skip unneeded document ID convers

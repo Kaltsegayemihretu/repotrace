@@ -1,0 +1,12 @@
+dfedbce27 complete changed=1 relevant=5 suggested=3 found=3 failing=0 | Fix typing and pre-commit CI
+0cc2ae192 complete changed=2 relevant=4 suggested=0 found=0 failing=0 | prepare v3.0.0rc6
+30af819d0 complete changed=1 relevant=2 suggested=0 found=0 failing=0 | fix typing
+7d5650567 complete changed=3 relevant=75 suggested=0 found=0 failing=0 | update fontawesome from 6 to 7
+277cbd555 complete changed=8 relevant=38 suggested=2 found=2 failing=0 | couple of small bug fixes
+78e03a921 complete changed=7 relevant=8 suggested=2 found=2 failing=0 | Check if celery is running when sending mails
+e69a7ee07 complete changed=11 relevant=600 suggested=5 found=5 failing=0 | fix 'flaskbb populate --force'
+2a3856c28 complete changed=2 relevant=2 suggested=0 found=0 failing=0 | fix typing errors
+4dc8a5cd8 complete changed=1 relevant=0 suggested=0 found=0 failing=0 | fix trusted_hosts when using "make devconfig"
+6278bf549 complete changed=2 relevant=2 suggested=0 found=0 failing=0 | use selectinload to load groups and moderators ins
+878e67840 complete changed=2 relevant=0 suggested=0 found=0 failing=0 | Add indices
+5e782bd38 complete changed=9 relevant=7 suggested=5 found=5 failing=0 | raise an exception when an explicit config is used

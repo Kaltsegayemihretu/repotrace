@@ -1,0 +1,214 @@
+{
+ "project": "more-itertools",
+ "real_source_calls": 134,
+ "strong": 64,
+ "name_only": 11,
+ "missed": 59,
+ "by_shape": [
+  [
+   "bare name: f()",
+   51
+  ],
+  [
+   "self.method()",
+   10
+  ],
+  [
+   "no call on that line (implicit: operator, property, iteration, with, class creation)",
+   6
+  ],
+  [
+   "parameter called: p()",
+   2
+  ],
+  [
+   "self.field.method()",
+   1
+  ]
+ ],
+ "by_bucket": [
+  [
+   "other: UNKNOWN_BINDING",
+   37
+  ],
+  [
+   "receiver typed, but the target is not a plain method (property, attribute, inherited from unknown)",
+   8
+  ],
+  [
+   "implicit: operator, iteration, with",
+   6
+  ],
+  [
+   "other: BUILTIN_MODULE",
+   5
+  ],
+  [
+   "dynamic: callable passed in or computed",
+   3
+  ],
+  [
+   "other: unresolved",
+   2
+  ],
+  [
+   "other: A property, descriptor or custom decorator may replace the m",
+   2
+  ],
+  [
+   "other: unsupported_context",
+   2
+  ],
+  [
+   "other: EXPLICIT_IMPORT",
+   1
+  ],
+  [
+   "other: internal_linked",
+   1
+  ],
+  [
+   "call outside a function body (MODULE_BODY)",
+   1
+  ],
+  [
+   "other: UNSUPPORTED_TARGET",
+   1
+  ],
+  [
+   "other: MODULE_NOT_FOUND",
+   1
+  ]
+ ],
+ "bucket_examples": {
+  "receiver typed, but the target is not a plain method (property, attribute, inherited from unknown)": [
+   "more_itertools/more.py:1203  self._validator  ->  bucket.__init__.<lambda>@1200:27",
+   "more_itertools/more.py:2364  self.index  ->  numeric_range.index",
+   "more_itertools/more.py:1252  self._validator  ->  bucket.__init__.<lambda>@1200:27"
+  ],
+  "other: UNKNOWN_BINDING": [
+   "more_itertools/more.py:1207  next  ->  bucket._get_values",
+   "more_itertools/more.py:2713  iter  ->  islice_extended.__iter__",
+   "more_itertools/more.py:2723  next  ->  _islice_helper"
+  ],
+  "other: unresolved": [
+   "more_itertools/more.py:2399  numeric_range  ->  numeric_range.__init__",
+   "more_itertools/more.py:3159  SequenceView  ->  SequenceView.__init__"
+  ],
+  "other: BUILTIN_MODULE": [
+   "more_itertools/more.py:2794  islice  ->  islice_extended.__iter__",
+   "more_itertools/more.py:2794  islice  ->  islice_extended.__next__",
+   "more_itertools/more.py:2907  groupby  ->  consecutive_groups.<lambda>@2903:14"
+  ],
+  "other: A property, descriptor or custom decorator may replace the m": [
+   "more_itertools/more.py:2451  self._before_stop  ->  numeric_range._before_stop",
+   "more_itertools/more.py:2453  self._before_stop  ->  numeric_range._before_stop"
+  ],
+  "implicit: operator, iteration, with": [
+   "more_itertools/more.py:1460  None  ->  collapse",
+   "more_itertools/more.py:3500  None  ->  windowed",
+   "more_itertools/more.py:243  None  ->  take"
+  ],
+  "other: EXPLICIT_IMPORT": [
+   "more_itertools/more.py:5336  nth  ->  iter_index"
+  ],
+  "dynamic: callable passed in or computed": [
+   "more_itertools/more.py:3146  self._source.peek  ->  peekable.peek",
+   "more_itertools/more.py:756  too_short  ->  strictly_n.<lambda>@737:20",
+   "more_itertools/more.py:760  too_long  ->  strictly_n.<lambda>@743:19"
+  ],
+  "other: unsupported_context": [
+   "more_itertools/more.py:3449  locate  ->  locate",
+   "more_itertools/recipes.py:1275  _strong_probable_prime  ->  _strong_probable_prime"
+  ],
+  "other: internal_linked": [
+   "more_itertools/more.py:1534  chunked  ->  take"
+  ],
+  "call outside a function body (MODULE_BODY)": [
+   "more_itertools/recipes.py:1070  sieve  ->  sieve"
+  ],
+  "other: UNSUPPORTED_TARGET": [
+   "more_itertools/recipes.py:1211  _shift_to_odd  ->  _shift_to_odd"
+  ],
+  "other: MODULE_NOT_FOUND": [
+   "more_itertools/recipes.py:197  deque  ->  side_effect"
+  ]
+ },
+ "by_reason": [
+  [
+   "UNKNOWN_BINDING",
+   37
+  ],
+  [
+   "The receiver has no supported callable declaration.",
+   8
+  ],
+  [
+   "implicit",
+   6
+  ],
+  [
+   "BUILTIN_MODULE",
+   5
+  ],
+  [
+   "unsupported_context",
+   3
+  ],
+  [
+   "unresolved",
+   2
+  ],
+  [
+   "A property, descriptor or custom decorator may replace the method.",
+   2
+  ],
+  [
+   "AMBIGUOUS_BINDING",
+   2
+  ],
+  [
+   "EXPLICIT_IMPORT",
+   1
+  ],
+  [
+   "The callable is a computed expression.",
+   1
+  ],
+  [
+   "internal_linked",
+   1
+  ],
+  [
+   "UNSUPPORTED_TARGET",
+   1
+  ]
+ ],
+ "examples": {
+  "self.method()": [
+   "more_itertools/more.py:1203  self._validator  ->  bucket.__init__.<lambda>@1200:27",
+   "more_itertools/more.py:2364  self.index  ->  numeric_range.index",
+   "more_itertools/more.py:1252  self._validator  ->  bucket.__init__.<lambda>@1200:27",
+   "more_itertools/more.py:2396  self._get_by_index  ->  numeric_range._get_by_index"
+  ],
+  "bare name: f()": [
+   "more_itertools/more.py:1207  next  ->  bucket._get_values",
+   "more_itertools/more.py:2399  numeric_range  ->  numeric_range.__init__",
+   "more_itertools/more.py:2713  iter  ->  islice_extended.__iter__",
+   "more_itertools/more.py:2723  next  ->  _islice_helper"
+  ],
+  "no call on that line (implicit: operator, property, iteration, with, class creation)": [
+   "more_itertools/more.py:1460  None  ->  collapse",
+   "more_itertools/more.py:3500  None  ->  windowed",
+   "more_itertools/more.py:243  None  ->  take",
+   "more_itertools/more.py:2611  None  ->  windowed"
+  ],
+  "self.field.method()": [
+   "more_itertools/more.py:3146  self._source.peek  ->  peekable.peek"
+  ],
+  "parameter called: p()": [
+   "more_itertools/more.py:756  too_short  ->  strictly_n.<lambda>@737:20",
+   "more_itertools/more.py:760  too_long  ->  strictly_n.<lambda>@743:19"
+  ]
+ }
+}

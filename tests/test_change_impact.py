@@ -65,6 +65,18 @@ class RepoCase(unittest.TestCase):
 
 
 class ChangeImpactTests(RepoCase):
+    def test_duplicate_nested_names_only_flag_real_edits(self):
+        code = ('def changed():\n    return 1\n\n'
+                'def build(flag):\n    if flag:\n        def helper():\n            return 2\n'
+                '    else:\n        def helper():\n            return 3\n    return helper\n')
+        base = self.commit({'app.py': code})
+        head = self.commit({'app.py': code.replace('return 1', 'return 4')})
+        self.assertEqual(self.run_report(base, head)['gaps'], [])
+        updated = self.commit({'app.py': code.replace('return 2', 'return 5')})
+        gaps = self.run_report(head, updated)['gaps']
+        self.assertIn(('ambiguous_definition', 'build.helper'),
+                      [(gap['type'], gap.get('qualified_name')) for gap in gaps])
+
     def test_modified_function_finds_direct_and_indirect_callers(self):
         base = self.commit(CHAIN)
         head = self.commit({'pricing.py': 'def calculate_total(price):\n    return price * 1.2\n'})

@@ -1,0 +1,152 @@
+{
+ "project": "python-dotenv",
+ "real_source_calls": 86,
+ "strong": 60,
+ "name_only": 20,
+ "missed": 6,
+ "by_shape": [
+  [
+   "bare name: f()",
+   17
+  ],
+  [
+   "no call on that line (implicit: operator, property, iteration, with, class creation)",
+   3
+  ],
+  [
+   "name.method() (local, global or module)",
+   2
+  ],
+  [
+   "self.field.method()",
+   2
+  ],
+  [
+   "other attribute chain",
+   1
+  ],
+  [
+   "parameter.method()",
+   1
+  ]
+ ],
+ "by_bucket": [
+  [
+   "call outside a function body (MODULE_BODY)",
+   15
+  ],
+  [
+   "implicit: operator, iteration, with",
+   3
+  ],
+  [
+   "other: unsupported_context",
+   2
+  ],
+  [
+   "other: Object or function attributes need later resolution.",
+   2
+  ],
+  [
+   "call outside a function body (DECORATOR)",
+   1
+  ],
+  [
+   "other: MODULE_NOT_FOUND",
+   1
+  ],
+  [
+   "dynamic: callable passed in or computed",
+   1
+  ],
+  [
+   "parameter with no type evidence",
+   1
+  ]
+ ],
+ "bucket_examples": {
+  "call outside a function body (DECORATOR)": [
+   "src/dotenv/cli.py:43  enumerate_env  ->  enumerate_env"
+  ],
+  "other: MODULE_NOT_FOUND": [
+   "src/dotenv/main.py:91  OrderedDict  ->  DotEnv.parse"
+  ],
+  "implicit: operator, iteration, with": [
+   "src/dotenv/main.py:423  None  ->  _walk_to_root",
+   "src/dotenv/main.py:339  None  ->  DotEnv.parse",
+   "src/dotenv/main.py:33  None  ->  parse_stream"
+  ],
+  "dynamic: callable passed in or computed": [
+   "src/dotenv/main.py:351  ''.join  ->  parse_variables"
+  ],
+  "other: unsupported_context": [
+   "src/dotenv/main.py:351  atom.resolve  ->  Literal.resolve",
+   "src/dotenv/main.py:351  atom.resolve  ->  Variable.resolve"
+  ],
+  "call outside a function body (MODULE_BODY)": [
+   "src/dotenv/parser.py:18  make_regex  ->  make_regex",
+   "src/dotenv/parser.py:19  make_regex  ->  make_regex",
+   "src/dotenv/parser.py:20  make_regex  ->  make_regex"
+  ],
+  "parameter with no type evidence": [
+   "src/dotenv/parser.py:111  regex.sub  ->  decode_escapes.decode_match"
+  ],
+  "other: Object or function attributes need later resolution.": [
+   "src/dotenv/parser.py:103  self.position.advance  ->  Position.advance",
+   "src/dotenv/parser.py:81  self.mark.set  ->  Position.set"
+  ]
+ },
+ "by_reason": [
+  [
+   "unsupported_context",
+   18
+  ],
+  [
+   "implicit",
+   3
+  ],
+  [
+   "Object or function attributes need later resolution.",
+   2
+  ],
+  [
+   "MODULE_NOT_FOUND",
+   1
+  ],
+  [
+   "The callable is a computed expression.",
+   1
+  ],
+  [
+   "The parameter has no supported receiver evidence.",
+   1
+  ]
+ ],
+ "examples": {
+  "bare name: f()": [
+   "src/dotenv/cli.py:43  enumerate_env  ->  enumerate_env",
+   "src/dotenv/main.py:91  OrderedDict  ->  DotEnv.parse",
+   "src/dotenv/parser.py:18  make_regex  ->  make_regex",
+   "src/dotenv/parser.py:19  make_regex  ->  make_regex"
+  ],
+  "no call on that line (implicit: operator, property, iteration, with, class creation)": [
+   "src/dotenv/main.py:423  None  ->  _walk_to_root",
+   "src/dotenv/main.py:339  None  ->  DotEnv.parse",
+   "src/dotenv/main.py:33  None  ->  parse_stream"
+  ],
+  "other attribute chain": [
+   "src/dotenv/main.py:351  ''.join  ->  parse_variables"
+  ],
+  "name.method() (local, global or module)": [
+   "src/dotenv/main.py:351  atom.resolve  ->  Literal.resolve",
+   "src/dotenv/main.py:351  atom.resolve  ->  Variable.resolve"
+  ],
+  "parameter.method()": [
+   "src/dotenv/parser.py:111  regex.sub  ->  decode_escapes.decode_match"
+  ],
+  "self.field.method()": [
+   "src/dotenv/parser.py:103  self.position.advance  ->  Position.advance",
+   "src/dotenv/parser.py:81  self.mark.set  ->  Position.set"
+  ]
+ }
+}

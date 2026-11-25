@@ -1,0 +1,267 @@
+{
+ "project": "tinydb",
+ "real_source_calls": 210,
+ "strong": 79,
+ "name_only": 53,
+ "missed": 78,
+ "by_shape": [
+  [
+   "bare name: f()",
+   49
+  ],
+  [
+   "self.field.method()",
+   29
+  ],
+  [
+   "self.method()",
+   28
+  ],
+  [
+   "parameter called: p()",
+   12
+  ],
+  [
+   "no call on that line (implicit: operator, property, iteration, with, class creation)",
+   9
+  ],
+  [
+   "computed callee: x[k]() or f()()",
+   2
+  ],
+  [
+   "other attribute chain",
+   1
+  ],
+  [
+   "call().method()",
+   1
+  ]
+ ],
+ "by_bucket": [
+  [
+   "other: unresolved",
+   27
+  ],
+  [
+   "receiver typed, but the target is not a plain method (property, attribute, inherited from unknown)",
+   24
+  ],
+  [
+   "dynamic: callable passed in or computed",
+   15
+  ],
+  [
+   "class has an unreadable or builtin base: TableBase",
+   14
+  ],
+  [
+   "other: unsupported_context",
+   9
+  ],
+  [
+   "other: 'self' is not a known imported target or definition.",
+   8
+  ],
+  [
+   "other: AMBIGUOUS_BINDING",
+   8
+  ],
+  [
+   "other: UNKNOWN_BINDING",
+   6
+  ],
+  [
+   "implicit: property read",
+   5
+  ],
+  [
+   "implicit: operator, iteration, with",
+   4
+  ],
+  [
+   "class has an unreadable or builtin base: abc.MutableMapping",
+   4
+  ],
+  [
+   "other: METHOD_CANDIDATE",
+   3
+  ],
+  [
+   "other: internal_linked",
+   2
+  ],
+  [
+   "call outside a function body (MODULE_BODY)",
+   1
+  ],
+  [
+   "other: builtin_reference",
+   1
+  ]
+ ],
+ "bucket_examples": {
+  "call outside a function body (MODULE_BODY)": [
+   "tinydb/database.py:14  with_typehint  ->  with_typehint"
+  ],
+  "receiver typed, but the target is not a plain method (property, attribute, inherited from unknown)": [
+   "tinydb/database.py:249  self.close  ->  TinyDB.close",
+   "tinydb/database.py:255  self.table  ->  TinyDB.table",
+   "tinydb/database.py:274  self.table  ->  TinyDB.table"
+  ],
+  "other: unresolved": [
+   "tinydb/database.py:95  storage  ->  Middleware.__call__",
+   "tinydb/database.py:95  storage  ->  MemoryStorage.__init__",
+   "tinydb/database.py:95  storage  ->  JSONStorage.__init__"
+  ],
+  "other: UNKNOWN_BINDING": [
+   "tinydb/database.py:268  len  ->  Table.__len__",
+   "tinydb/database.py:161  set  ->  TinyDB.storage",
+   "tinydb/queries.py:103  hash  ->  QueryInstance.__hash__"
+  ],
+  "other: unsupported_context": [
+   "tinydb/database.py:106  self.table  ->  TinyDB.table",
+   "tinydb/database.py:106  self.tables  ->  TinyDB.tables",
+   "tinydb/queries.py:405  freeze  ->  freeze"
+  ],
+  "other: builtin_reference": [
+   "tinydb/database.py:106  len  ->  Table.__len__"
+  ],
+  "class has an unreadable or builtin base: TableBase": [
+   "tinydb/database.py:230  self.storage.close  ->  TinyDB.storage",
+   "tinydb/database.py:230  self.storage.close  ->  Middleware.__getattr__",
+   "tinydb/database.py:230  self.storage.close  ->  CachingMiddleware.close"
+  ],
+  "other: 'self' is not a known imported target or definition.": [
+   "tinydb/middlewares.py:140  self.storage.close  ->  JSONStorage.close",
+   "tinydb/middlewares.py:140  self.storage.close  ->  Storage.close",
+   "tinydb/middlewares.py:129  self.storage.write  ->  JSONStorage.write"
+  ],
+  "other: AMBIGUOUS_BINDING": [
+   "tinydb/queries.py:439  test  ->  Query.any.test",
+   "tinydb/queries.py:439  test  ->  Query.any.test",
+   "tinydb/queries.py:472  test  ->  Query.all.test"
+  ],
+  "dynamic: callable passed in or computed": [
+   "tinydb/queries.py:197  type(self)  ->  Query.__init__",
+   "tinydb/queries.py:520  type(self)  ->  Query.__init__",
+   "tinydb/table.py:118  'name={!r}'.format  ->  Table.name"
+  ],
+  "other: internal_linked": [
+   "tinydb/queries.py:432  is_sequence  ->  QueryInstance.__call__",
+   "tinydb/queries.py:465  is_sequence  ->  QueryInstance.__call__"
+  ],
+  "other: METHOD_CANDIDATE": [
+   "tinydb/table.py:789  self._storage.read  ->  CachingMiddleware.read",
+   "tinydb/table.py:818  self._storage.read  ->  CachingMiddleware.read",
+   "tinydb/table.py:851  self._storage.write  ->  CachingMiddleware.write"
+  ],
+  "implicit: property read": [
+   "tinydb/table.py:797  None  ->  Table.name",
+   "tinydb/table.py:825  None  ->  Table.name",
+   "tinydb/table.py:845  None  ->  Table.name"
+  ],
+  "implicit: operator, iteration, with": [
+   "tinydb/table.py:295  None  ->  LRUCache.__setitem__",
+   "tinydb/utils.py:76  None  ->  QueryInstance.__hash__",
+   "tinydb/utils.py:107  None  ->  QueryInstance.__hash__"
+  ],
+  "class has an unreadable or builtin base: abc.MutableMapping": [
+   "tinydb/utils.py:97  self.cache.get  ->  QueryInstance.__eq__",
+   "tinydb/utils.py:97  self.cache.get  ->  QueryInstance.__hash__",
+   "tinydb/utils.py:100  self.cache.move_to_end  ->  QueryInstance.__eq__"
+  ]
+ },
+ "by_reason": [
+  [
+   "unresolved",
+   38
+  ],
+  [
+   "The receiver has no supported callable declaration.",
+   24
+  ],
+  [
+   "Unknown base classes: TableBase",
+   14
+  ],
+  [
+   "unsupported_context",
+   11
+  ],
+  [
+   "implicit",
+   9
+  ],
+  [
+   "'self' is not a known imported target or definition.",
+   8
+  ],
+  [
+   "AMBIGUOUS_BINDING",
+   8
+  ],
+  [
+   "UNKNOWN_BINDING",
+   6
+  ],
+  [
+   "Unknown base classes: abc.MutableMapping",
+   4
+  ],
+  [
+   "METHOD_CANDIDATE",
+   3
+  ],
+  [
+   "COMPUTED_TARGET",
+   2
+  ],
+  [
+   "internal_linked",
+   2
+  ]
+ ],
+ "examples": {
+  "bare name: f()": [
+   "tinydb/database.py:14  with_typehint  ->  with_typehint",
+   "tinydb/database.py:95  storage  ->  Middleware.__call__",
+   "tinydb/database.py:95  storage  ->  MemoryStorage.__init__",
+   "tinydb/database.py:95  storage  ->  JSONStorage.__init__"
+  ],
+  "self.method()": [
+   "tinydb/database.py:249  self.close  ->  TinyDB.close",
+   "tinydb/database.py:255  self.table  ->  TinyDB.table",
+   "tinydb/database.py:274  self.table  ->  TinyDB.table",
+   "tinydb/database.py:268  self.table  ->  TinyDB.table"
+  ],
+  "self.field.method()": [
+   "tinydb/database.py:230  self.storage.close  ->  TinyDB.storage",
+   "tinydb/database.py:230  self.storage.close  ->  Middleware.__getattr__",
+   "tinydb/database.py:230  self.storage.close  ->  CachingMiddleware.close",
+   "tinydb/database.py:230  self.storage.close  ->  JSONStorage.close"
+  ],
+  "computed callee: x[k]() or f()()": [
+   "tinydb/queries.py:197  type(self)  ->  Query.__init__",
+   "tinydb/queries.py:520  type(self)  ->  Query.__init__"
+  ],
+  "other attribute chain": [
+   "tinydb/table.py:118  'name={!r}'.format  ->  Table.name"
+  ],
+  "no call on that line (implicit: operator, property, iteration, with, class creation)": [
+   "tinydb/table.py:797  None  ->  Table.name",
+   "tinydb/table.py:825  None  ->  Table.name",
+   "tinydb/table.py:845  None  ->  Table.name",
+   "tinydb/table.py:295  None  ->  LRUCache.__setitem__"
+  ],
+  "parameter called: p()": [
+   "tinydb/table.py:840  updater  ->  Table.__init__.<lambda>@114:31",
+   "tinydb/table.py:840  updater  ->  Table.truncate.<lambda>@704:27",
+   "tinydb/table.py:840  updater  ->  Table.insert.updater",
+   "tinydb/table.py:840  updater  ->  Table.insert_multiple.updater"
+  ],
+  "call().method()": [
+   "tinydb/table.py:274  self._read_table  ->  Table._read_table"
+  ]
+ }
+}

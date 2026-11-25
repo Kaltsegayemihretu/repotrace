@@ -1,0 +1,367 @@
+{
+ "project": "markdown",
+ "real_source_calls": 782,
+ "strong": 442,
+ "name_only": 264,
+ "missed": 76,
+ "by_shape": [
+  [
+   "name.method() (local, global or module)",
+   106
+  ],
+  [
+   "self.method()",
+   89
+  ],
+  [
+   "other attribute chain",
+   60
+  ],
+  [
+   "bare name: f()",
+   29
+  ],
+  [
+   "parameter.method()",
+   15
+  ],
+  [
+   "no call on that line (implicit: operator, property, iteration, with, class creation)",
+   13
+  ],
+  [
+   "self.field.method()",
+   12
+  ],
+  [
+   "call().method()",
+   9
+  ],
+  [
+   "computed callee: x[k]() or f()()",
+   4
+  ],
+  [
+   "x[k].method()",
+   3
+  ]
+ ],
+ "by_bucket": [
+  [
+   "local receiver assigned conditionally, in a loop, or more than once",
+   90
+  ],
+  [
+   "receiver typed, but the target is not a plain method (property, attribute, inherited from unknown)",
+   87
+  ],
+  [
+   "other: 'md' is not a known imported target or definition.",
+   30
+  ],
+  [
+   "parameter with no type evidence",
+   15
+  ],
+  [
+   "class has an unreadable or builtin base: list",
+   14
+  ],
+  [
+   "other: 'self' is not a known imported target or definition.",
+   13
+  ],
+  [
+   "other: unresolved",
+   12
+  ],
+  [
+   "dynamic: callable passed in or computed",
+   10
+  ],
+  [
+   "super() call",
+   9
+  ],
+  [
+   "implicit: property read",
+   9
+  ],
+  [
+   "call outside a function body (DECORATOR)",
+   8
+  ],
+  [
+   "other: The expression is not an established class binding.",
+   6
+  ],
+  [
+   "other: unsupported_context",
+   6
+  ],
+  [
+   "class has an unreadable or builtin base: htmlparser.HTMLParser",
+   6
+  ],
+  [
+   "other: 're' is external, excluded, or missing from the selected roo",
+   4
+  ],
+  [
+   "implicit: operator, iteration, with",
+   4
+  ],
+  [
+   "call outside a function body (MODULE_BODY)",
+   3
+  ],
+  [
+   "other: UNKNOWN_BINDING",
+   3
+  ],
+  [
+   "other: This binding is not a supported function or class definition",
+   3
+  ],
+  [
+   "field typing refused",
+   2
+  ],
+  [
+   "other: CLASS_CONSTRUCTION",
+   2
+  ],
+  [
+   "other: internal_linked",
+   2
+  ],
+  [
+   "other: METHOD_CANDIDATE",
+   2
+  ]
+ ],
+ "bucket_examples": {
+  "call outside a function body (MODULE_BODY)": [
+   "markdown/__meta__.py:51  _get_version  ->  _get_version",
+   "markdown/extensions/abbr.py:181  deprecated  ->  deprecated",
+   "markdown/extensions/abbr.py:181  deprecated('This class has been renamed to `AbbrBlockprocessor`.')  ->  deprecated.wrapper"
+  ],
+  "other: The expression is not an established class binding.": [
+   "markdown/blockparser.py:96  util.Registry  ->  Registry.__init__",
+   "markdown/core.py:127  util.HtmlStash  ->  HtmlStash.__init__",
+   "markdown/inlinepatterns.py:74  util.Registry  ->  Registry.__init__"
+  ],
+  "local receiver assigned conditionally, in a loop, or more than once": [
+   "markdown/blockparser.py:157  processor.test  ->  ListIndentProcessor.test",
+   "markdown/blockparser.py:157  processor.test  ->  CodeBlockProcessor.test",
+   "markdown/blockparser.py:157  processor.test  ->  BlockQuoteProcessor.test"
+  ],
+  "class has an unreadable or builtin base: list": [
+   "markdown/blockprocessors.py:234  self.parser.state.isstate  ->  State.isstate",
+   "markdown/blockprocessors.py:190  self.parser.state.set  ->  State.set",
+   "markdown/blockprocessors.py:219  self.parser.state.reset  ->  State.reset"
+  ],
+  "other: unsupported_context": [
+   "markdown/blockprocessors.py:305  self.clean  ->  BlockQuoteProcessor.clean",
+   "markdown/core.py:218  util.get_installed_extensions  ->  get_installed_extensions",
+   "markdown/extensions/__init__.py:83  self.getConfig  ->  Extension.getConfig"
+  ],
+  "other: unresolved": [
+   "markdown/core.py:221  ext  ->  Extension.__init__",
+   "markdown/core.py:221  ext  ->  AbbrExtension.__init__",
+   "markdown/core.py:221  ext  ->  CodeHiliteExtension.__init__"
+  ],
+  "dynamic: callable passed in or computed": [
+   "markdown/core.py:238  getattr(module, class_name)  ->  FootnoteExtension.__init__",
+   "markdown/extensions/toc.py:383  self.md.treeprocessors['prettify'].run  ->  PrettifyTreeprocessor.run",
+   "markdown/extensions/toc.py:383  self.md.treeprocessors['prettify'].run  ->  Registry.__getitem__"
+  ],
+  "receiver typed, but the target is not a plain method (property, attribute, inherited from unknown)": [
+   "markdown/core.py:379  self.serializer  ->  to_html_string",
+   "markdown/core.py:379  self.serializer  ->  to_xhtml_string",
+   "markdown/extensions/md_in_html.py:81  self.handle_endtag  ->  HTMLExtractorExtra.handle_endtag"
+  ],
+  "field typing refused": [
+   "markdown/core.py:276  self.delimiters.reset  ->  DelimiterProcessor.reset",
+   "markdown/treeprocessors.py:470  self.RE.sub  ->  UnescapeTreeprocessor._unescape"
+  ],
+  "call outside a function body (DECORATOR)": [
+   "markdown/extensions/abbr.py:184  deprecated  ->  deprecated",
+   "markdown/extensions/abbr.py:184  deprecated  ->  deprecated.wrapper",
+   "markdown/extensions/toc.py:90  deprecated  ->  deprecated"
+  ],
+  "parameter with no type evidence": [
+   "markdown/extensions/abbr.py:85  md.registerExtension  ->  Markdown.registerExtension",
+   "markdown/extensions/admonition.py:53  md.registerExtension  ->  Markdown.registerExtension",
+   "markdown/extensions/attr_list.py:240  md.registerExtension  ->  Markdown.registerExtension"
+  ],
+  "other: 'md' is not a known imported target or definition.": [
+   "markdown/extensions/abbr.py:86  md.treeprocessors.register  ->  Registry.register",
+   "markdown/extensions/abbr.py:87  md.parser.blockprocessors.register  ->  Registry.register",
+   "markdown/extensions/admonition.py:55  md.parser.blockprocessors.register  ->  Registry.register"
+  ],
+  "other: UNKNOWN_BINDING": [
+   "markdown/extensions/footnotes.py:480  sorted  ->  FootnoteReorderingProcessor.reorder_footnotes.order_by_id",
+   "markdown/extensions/md_in_html.py:61  set  ->  HTMLExtractorExtra.block_level_tags",
+   "markdown/treeprocessors.py:134  len  ->  Registry.__len__"
+  ],
+  "other: 're' is external, excluded, or missing from the selected roo": [
+   "markdown/extensions/legacy_attrs.py:62  ATTR_RE.sub  ->  LegacyAttrs.handleAttributes.attributeCallback",
+   "markdown/htmlparser.py:309  blank_line_re.match  ->  HTMLExtractor.line_offset",
+   "markdown/htmlparser.py:256  blank_line_re.match  ->  HTMLExtractor.line_offset"
+  ],
+  "super() call": [
+   "markdown/extensions/md_in_html.py:51  super().__init__  ->  HTMLExtractor.__init__",
+   "markdown/extensions/md_in_html.py:77  super().close  ->  HTMLExtractor.close",
+   "markdown/extensions/md_in_html.py:265  super().handle_data  ->  HTMLExtractor.handle_data"
+  ],
+  "implicit: property read": [
+   "markdown/extensions/md_in_html.py:99  None  ->  HTMLExtractorExtra.block_tags",
+   "markdown/extensions/md_in_html.py:100  None  ->  HTMLExtractorExtra.span_and_blocks_tags",
+   "markdown/extensions/md_in_html.py:103  None  ->  HTMLExtractorExtra.span_and_blocks_tags"
+  ],
+  "other: 'self' is not a known imported target or definition.": [
+   "markdown/extensions/md_in_html.py:275  self.md.htmlStash.store  ->  HtmlStash.store",
+   "markdown/extensions/md_in_html.py:277  self.md.htmlStash.store  ->  HtmlStash.store",
+   "markdown/extensions/md_in_html.py:208  self.md.htmlStash.store  ->  HtmlStash.store"
+  ],
+  "other: This binding is not a supported function or class definition": [
+   "markdown/extensions/md_in_html.py:226  blank_line_re.match  ->  HTMLExtractor.line_offset",
+   "markdown/inlinepatterns.py:252  util.INLINE_PLACEHOLDER_RE.sub  ->  Pattern.unescape.get_stash",
+   "markdown/inlinepatterns.py:548  util.INLINE_PLACEHOLDER_RE.sub  ->  HtmlInlineProcessor.unescape.get_stash"
+  ],
+  "class has an unreadable or builtin base: htmlparser.HTMLParser": [
+   "markdown/extensions/md_in_html.py:259  self.md.is_block_level  ->  Markdown.is_block_level",
+   "markdown/extensions/md_in_html.py:317  parser.close  ->  HTMLExtractorExtra.close",
+   "markdown/htmlparser.py:326  self.md.is_block_level  ->  Markdown.is_block_level"
+  ],
+  "other: CLASS_CONSTRUCTION": [
+   "markdown/extensions/smarty.py:276  Registry  ->  Registry.__init__",
+   "markdown/preprocessors.py:88  HTMLExtractor  ->  HTMLExtractor.__init__"
+  ],
+  "other: internal_linked": [
+   "markdown/extensions/toc.py:163  unescape  ->  to_xhtml_string",
+   "markdown/extensions/toc.py:407  unique  ->  slugify_unicode"
+  ],
+  "implicit: operator, iteration, with": [
+   "markdown/extensions/toc.py:155  None  ->  Registry.__iter__",
+   "markdown/inlinepatterns.py:553  None  ->  Registry.__getitem__",
+   "markdown/inlinepatterns.py:239  None  ->  Registry.__getitem__"
+  ],
+  "other: METHOD_CANDIDATE": [
+   "markdown/inlinepatterns.py:544  self.unescape  ->  to_xhtml_string",
+   "markdown/treeprocessors.py:137  self.__applyPattern  ->  Registry.__getitem__"
+  ]
+ },
+ "by_reason": [
+  [
+   "The receiver has no supported callable declaration.",
+   96
+  ],
+  [
+   "Only unconditional simple receiver assignments are inferred.",
+   70
+  ],
+  [
+   "'md' is not a known imported target or definition.",
+   30
+  ],
+  [
+   "The receiver is reassigned or ambiguous.",
+   20
+  ],
+  [
+   "unsupported_context",
+   17
+  ],
+  [
+   "Unknown base classes: list",
+   14
+  ],
+  [
+   "implicit",
+   13
+  ],
+  [
+   "'self' is not a known imported target or definition.",
+   13
+  ],
+  [
+   "unresolved",
+   12
+  ],
+  [
+   "The parameter has no supported receiver evidence.",
+   9
+  ],
+  [
+   "The callable is a computed expression.",
+   8
+  ],
+  [
+   "METHOD_CANDIDATE",
+   8
+  ]
+ ],
+ "examples": {
+  "bare name: f()": [
+   "markdown/__meta__.py:51  _get_version  ->  _get_version",
+   "markdown/core.py:221  ext  ->  Extension.__init__",
+   "markdown/core.py:221  ext  ->  AbbrExtension.__init__",
+   "markdown/core.py:221  ext  ->  CodeHiliteExtension.__init__"
+  ],
+  "name.method() (local, global or module)": [
+   "markdown/blockparser.py:96  util.Registry  ->  Registry.__init__",
+   "markdown/blockparser.py:157  processor.test  ->  ListIndentProcessor.test",
+   "markdown/blockparser.py:157  processor.test  ->  CodeBlockProcessor.test",
+   "markdown/blockparser.py:157  processor.test  ->  BlockQuoteProcessor.test"
+  ],
+  "other attribute chain": [
+   "markdown/blockprocessors.py:234  self.parser.state.isstate  ->  State.isstate",
+   "markdown/blockprocessors.py:190  self.parser.state.set  ->  State.set",
+   "markdown/blockprocessors.py:219  self.parser.state.reset  ->  State.reset",
+   "markdown/blockprocessors.py:316  self.parser.state.set  ->  State.set"
+  ],
+  "self.method()": [
+   "markdown/blockprocessors.py:305  self.clean  ->  BlockQuoteProcessor.clean",
+   "markdown/core.py:379  self.serializer  ->  to_html_string",
+   "markdown/core.py:379  self.serializer  ->  to_xhtml_string",
+   "markdown/extensions/__init__.py:83  self.getConfig  ->  Extension.getConfig"
+  ],
+  "computed callee: x[k]() or f()()": [
+   "markdown/core.py:238  getattr(module, class_name)  ->  FootnoteExtension.__init__",
+   "markdown/extensions/abbr.py:181  deprecated  ->  deprecated",
+   "markdown/extensions/abbr.py:181  deprecated('This class has been renamed to `AbbrBlockprocessor`.')  ->  deprecated.wrapper",
+   "markdown/extensions/wikilinks.py:79  self.config['build_url']  ->  build_url"
+  ],
+  "self.field.method()": [
+   "markdown/core.py:276  self.delimiters.reset  ->  DelimiterProcessor.reset",
+   "markdown/extensions/footnotes.py:222  self.parser.parseChunk  ->  BlockParser.parseChunk",
+   "markdown/extensions/md_in_html.py:259  self.md.is_block_level  ->  Markdown.is_block_level",
+   "markdown/extensions/md_in_html.py:428  self.md.serializer  ->  to_xhtml_string"
+  ],
+  "parameter.method()": [
+   "markdown/extensions/abbr.py:85  md.registerExtension  ->  Markdown.registerExtension",
+   "markdown/extensions/admonition.py:53  md.registerExtension  ->  Markdown.registerExtension",
+   "markdown/extensions/attr_list.py:240  md.registerExtension  ->  Markdown.registerExtension",
+   "markdown/extensions/codehilite.py:352  md.registerExtension  ->  Markdown.registerExtension"
+  ],
+  "call().method()": [
+   "markdown/extensions/md_in_html.py:51  super().__init__  ->  HTMLExtractor.__init__",
+   "markdown/extensions/md_in_html.py:77  super().close  ->  HTMLExtractor.close",
+   "markdown/extensions/md_in_html.py:265  super().handle_data  ->  HTMLExtractor.handle_data",
+   "markdown/extensions/md_in_html.py:272  super().handle_empty_tag  ->  HTMLExtractor.handle_empty_tag"
+  ],
+  "no call on that line (implicit: operator, property, iteration, with, class creation)": [
+   "markdown/extensions/md_in_html.py:99  None  ->  HTMLExtractorExtra.block_tags",
+   "markdown/extensions/md_in_html.py:100  None  ->  HTMLExtractorExtra.span_and_blocks_tags",
+   "markdown/extensions/md_in_html.py:103  None  ->  HTMLExtractorExtra.span_and_blocks_tags",
+   "markdown/extensions/md_in_html.py:105  None  ->  HTMLExtractorExtra.block_level_tags"
+  ],
+  "x[k].method()": [
+   "markdown/extensions/toc.py:383  self.md.treeprocessors['prettify'].run  ->  PrettifyTreeprocessor.run",
+   "markdown/extensions/toc.py:383  self.md.treeprocessors['prettify'].run  ->  Registry.__getitem__",
+   "markdown/htmlparser.py:205  self.rawdata[self.line_offset:self.line_offset + self.offset].strip  ->  HTMLExtractor.line_offset"
+  ]
+ }
+}

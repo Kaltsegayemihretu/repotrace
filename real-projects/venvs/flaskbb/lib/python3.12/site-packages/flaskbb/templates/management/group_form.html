@@ -1,0 +1,45 @@
+{% extends theme("management/management_layout.html") %}
+{% set page_title = title %}
+{% set active = "management.add_group" if title == _("Add Group") else "management.groups" %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb flaskbb-breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('forum.index') }}">{% trans %}Forum{% endtrans %}</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('management.overview') }}">{% trans %}Management{% endtrans %}</a></li>
+        <li class="breadcrumb-item active">{% trans %}Manage Groups{% endtrans %}</li>
+    </ol>
+{% endblock %}
+
+{% block management_content %}
+    {%- from theme('_macros/pagination.html') import render_pagination -%}
+    {%- from theme('_macros/form.html') import render_field -%}
+
+    <div class="col-md-12 settings-col">
+        <div class="card settings">
+            <div class="card-header settings-header">
+                <span class="fa fa-user-plus"></span> {{ title }}
+            </div>
+            <div class="card-body settings-body">
+                <form class="row p-2" role="form" method="post">
+                    {{ form.hidden_tag() }}
+                    {{ render_field(form.name) }}
+
+                    {{ render_field(form.description, control_class="w-75") }}
+                    {{ render_field(form.role, control_class="w-50") }}
+
+                    <p class="col-12 mt-3 mb-0 text-muted">
+                        {% trans %}A member has a permission when any of their groups allows it. Deny leaves the decision to their other groups, never revokes it whatever their other groups say.{% endtrans %}
+                    </p>
+                    {% for section, fields in form.permission_sections() %}
+                        <h5 class="col-12 mt-3">{{ _(section) }}</h5>
+                        {% for field in fields %}
+                            {{ render_field(field, control_class="w-50") }}
+                        {% endfor %}
+                    {% endfor %}
+
+                    {{ render_field(form.submit) }}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
